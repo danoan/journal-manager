@@ -21,20 +21,20 @@ journal-manager build --with-http-server language-models
 
 #### Click on the plus sign to add a quick note
 
-![Click on the plus sign to add a quick note](dev/assets/figures/feature-quick-note-1.png)
+![Click on the plus sign to add a quick note](docs/assets/figures/feature-quick-note-1.png)
 
 #### Enter your quick note in markdown format
 
-![Enter quick note in markdown format](dev/assets/figures/feature-quick-note-2.png)
+![Enter quick note in markdown format](docs/assets/figures/feature-quick-note-2.png)
 
 #### Visualize all your quick notes in the Quick Notes link
 
-![Visualize all your quick notes in the Quick Notes link](dev/assets/figures/feature-quick-note-3.png)
+![Visualize all your quick notes in the Quick Notes link](docs/assets/figures/feature-quick-note-3.png)
 
 
 ### Journals TOC
 
 A table of content is automatically generates as the index page.
 
-![Automatically generated table of contents](dev/assets/figures/feature-toc.png)
+![Automatically generated table of contents](docs/assets/figures/feature-toc.png)
 
