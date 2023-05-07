@@ -25,7 +25,7 @@ def deactivate(journal_names: List[str], **kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "deactivate"
-    command_description = deactivate.__doc__
+    command_description = deactivate.__doc__ if deactivate.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

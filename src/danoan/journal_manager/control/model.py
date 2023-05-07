@@ -1,7 +1,7 @@
 from danoan.utils.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
 
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, TypeVar, Type, Dict, Any
 
 
 @dataclass
@@ -11,17 +11,21 @@ class Parameters(TomlDataClassIO):
 
 @dataclass
 class ConfigurationFile(TomlDataClassIO):
+    T = TypeVar("T", bound="ConfigurationFile")
+
     default_journal_folder: str
+    default_template_folder: str
+
     journal_data_filepath: str
     template_data_filepath: str
     parameters: Parameters
 
     @classmethod
-    def from_dict(cls, d):
+    def from_dict(cls: Type[T], d: Dict[str, Any]) -> T:
         d["parameters"] = Parameters(**d["parameters"])
         return cls(**d)
 
-    def as_dict(self):
+    def as_dict(self) -> Dict[str, Any]:
         d = self.__dict__
         d["parameters"] = d["parameters"].as_dict()
 
@@ -59,6 +63,6 @@ class BuildInstructions(TomlDataClassIO):
     build_index: bool = True
     with_http_server: bool = False
 
-    journals_names_to_build: List[str] = None
-    journals_locations_to_build: List[str] = None
-    include_all_folder: str = None
+    journals_names_to_build: Optional[List[str]] = None
+    journals_locations_to_build: Optional[List[str]] = None
+    include_all_folder: Optional[str] = None

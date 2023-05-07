@@ -15,6 +15,8 @@ def remove(template_name: str, **kwargs):
     Returns:
         Nothing.
     """
+    config_file = config.get_configuration_file()
+
     template_list_file = config.get_template_list_file()
     updated_template_list = []
     for entry in template_list_file.list_of_template_data:
@@ -22,7 +24,7 @@ def remove(template_name: str, **kwargs):
             updated_template_list.append(entry)
         else:
             dir_to_remove = Path(entry.filepath).parent
-            if dir_to_remove.parent.parent == config.get_configuration_filepath().parent:
+            if dir_to_remove.parent.as_posix() == config_file.default_template_folder:
                 shutil.rmtree(dir_to_remove)
             else:
                 print(
@@ -61,7 +63,11 @@ def register(template_name: str, template_filepath: str, **kwargs):
     Returns:
         Nothing.
     """
-    target_template_filepath = config.get_template_folder().joinpath(template_name, "mkdocs.yml")
+    config_file = config.get_configuration_file()
+
+    target_template_filepath = Path(config_file.default_template_folder).joinpath(
+        template_name, "mkdocs.yml"
+    )
     target_template_filepath.parent.mkdir(parents=True)
     shutil.copyfile(template_filepath, target_template_filepath)
 
@@ -118,20 +124,26 @@ def get_parser(subparser_action=None):
 
     subparsers = parser.add_subparsers()
 
+    register_command_description = register.__doc__ if register.__doc__ else ""
+    register_command_help = register_command_description.split(".")[0]
+
     register_subparser = subparsers.add_parser(
         "register",
-        help=register.__doc__.split(".")[0],
-        description=register.__doc__,
+        help=register_command_help,
+        description=register_command_description,
         formatter_class=argparse.RawTextHelpFormatter,
     )
     register_subparser.add_argument("template_name", help="Template name")
     register_subparser.add_argument("template_filepath", help="Template filepath")
     register_subparser.set_defaults(func=register)
 
+    remove_command_description = remove.__doc__ if remove.__doc__ else ""
+    remove_command_help = remove_command_description.split(".")[0]
+
     remove_subparser = subparsers.add_parser(
         "remove",
-        help=remove.__doc__.split(".")[0],
-        description=remove.__doc__,
+        help=remove_command_help,
+        description=remove_command_description,
         formatter_class=argparse.RawTextHelpFormatter,
     )
     remove_subparser.add_argument("template_name", help="Template name")

@@ -29,7 +29,7 @@ def deregister(journal_names: List[str], **kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "deregister"
-    command_description = deregister.__doc__
+    command_description = deregister.__doc__ if deregister.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

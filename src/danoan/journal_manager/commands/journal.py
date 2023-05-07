@@ -1,3 +1,4 @@
+from danoan.journal_manager.control import utils
 from danoan.journal_manager.commands.journal_commands import (
     activate,
     create,
@@ -23,9 +24,7 @@ def get_parser(subparser_action=None):
             command_name, description=command_description, help=command_help, aliases=["j"]
         )
     else:
-        parser = argparse.ArgumentParser(
-            command_name, description=command_description, help=command_help
-        )
+        parser = argparse.ArgumentParser(command_name, description=command_description)
 
     list_of_commands = [activate, create, deactivate, deregister, edit, list, show, register]
 

@@ -11,10 +11,11 @@ from pathlib import Path
 import pytest
 
 
+@pytest.mark.usefixtures("f_set_env_variable")
 class TestBuild:
     def create_mock_journals(self, base_path: Path):
-        jm.create.create("journal-1")
-        jm.create.create("journal-2")
+        jm.create.create("journal-1", base_path)
+        jm.create.create("journal-2", base_path)
 
     @pytest.mark.parametrize("build_index", [True, False])
     def test_build_all(self, f_setup_init, tmp_path, build_index):
@@ -134,6 +135,7 @@ class TestBuild:
         )
         build_instructions_path = tmp_path.joinpath("build-instructions.toml")
         build_instructions.write(build_instructions_path)
+
 
         build_journal(
             default_build_location.expanduser().as_posix(),

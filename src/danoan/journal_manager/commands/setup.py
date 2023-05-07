@@ -14,9 +14,7 @@ def get_parser(subparser_action=None):
             command_name, description=command_description, help=command_help, aliases=["s"]
         )
     else:
-        parser = argparse.ArgumentParser(
-            command_name, help=command_help, description=command_description
-        )
+        parser = argparse.ArgumentParser(command_name, description=command_description)
 
     list_of_commands = [init, template, parameters]
 

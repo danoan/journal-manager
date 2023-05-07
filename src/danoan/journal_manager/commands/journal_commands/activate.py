@@ -30,7 +30,7 @@ def activate(journal_names: List[str], **kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "activate"
-    command_description = activate.__doc__
+    command_description = activate.__doc__ if activate.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

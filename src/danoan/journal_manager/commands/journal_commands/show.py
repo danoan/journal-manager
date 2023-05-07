@@ -38,7 +38,7 @@ def show(journal_name: str, attribute_names: List[str] = [], **kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "show"
-    command_description = show.__doc__
+    command_description = show.__doc__ if show.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

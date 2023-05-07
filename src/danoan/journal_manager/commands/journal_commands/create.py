@@ -5,6 +5,7 @@ import argparse
 from importlib_resources import files, as_file
 from pathlib import Path
 import shutil
+from typing import Optional
 
 from jinja2 import FileSystemLoader, Environment, Template, PackageLoader
 
@@ -47,7 +48,7 @@ def create_mkdocs_from_template_name(journal_data: model.JournalData, template_n
 
     journal_template_list = model.JournalTemplateList.read(
         config_file.template_data_filepath
-    ).list_of_template_data
+    )
 
     template_entry = utils.find_template_by_name(journal_template_list, template_name)
     if not template_entry:
@@ -56,9 +57,9 @@ def create_mkdocs_from_template_name(journal_data: model.JournalData, template_n
         )
         exit(1)
 
-    env = Environment(loader=FileSystemLoader(config.get_template_folder()))
+    env = Environment(loader=FileSystemLoader(config_file.default_template_folder))
     relative_path_to_template = Path(template_entry.filepath).relative_to(
-        config.get_template_folder().as_posix()
+        config_file.default_template_folder
     )
     template = env.get_template(str(relative_path_to_template))
 
@@ -67,8 +68,8 @@ def create_mkdocs_from_template_name(journal_data: model.JournalData, template_n
 
 def create(
     journal_title: str,
-    journal_location_folder: str = None,
-    mkdocs_template_name: str = None,
+    journal_location_folder: Path,
+    mkdocs_template_name: Optional[str] = None,
     **kwargs,
 ):
     """
@@ -92,17 +93,12 @@ def create(
     """
     config_file = config.get_configuration_file()
 
-    if not journal_location_folder:
-        journal_location_folder = config.get_configuration_file().default_journal_folder
-
     journal_name = utils.journal_name_from_title(journal_title)
 
     journal_data_file = model.JournalDataList.read(config_file.journal_data_filepath)
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
 
-    journal_folder = Path(journal_location_folder).expanduser()
-
-    journal_location = journal_folder.joinpath(journal_name)
+    journal_location = journal_location_folder.joinpath(journal_name).expanduser()
     journal_location.mkdir(parents=True)
 
     journal_data = model.JournalData(journal_name, journal_location.as_posix(), True, journal_title)
@@ -117,13 +113,10 @@ def create(
 
 
 def get_parser(subparser_action=None):
-    if not config.get_configuration_filepath().exists():
-        journal_folder_default = "Undefined"
-    else:
-        journal_folder_default = config.get_configuration_file().default_journal_folder
-
+    journal_folder_default = config.get_configuration_file().default_journal_folder
+   
     command_name = "create"
-    command_description = create.__doc__
+    command_description = create.__doc__ if create.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None
@@ -147,13 +140,17 @@ def get_parser(subparser_action=None):
         "--journal-folder",
         dest="journal_location_folder",
         help=f"Location where the journal folder will be stored. If empty, the default location is chosen. Default location: {journal_folder_default}.",
-        default=journal_folder_default,
+        type=Path,
+        default=Path(journal_folder_default),
     )
     parser.add_argument(
         "--template-name",
         dest="mkdocs_template_name",
         help="Template for a mkdocs configuration file. Templates are registered via the setup subcommand.",
     )
-    parser.set_defaults(func=create)
+
+    parser.set_defaults(
+        func=create, journal_location_folder=config.get_configuration_file().default_journal_folder
+    )
 
     return parser

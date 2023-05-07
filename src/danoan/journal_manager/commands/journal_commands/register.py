@@ -2,9 +2,10 @@ from danoan.journal_manager.control import config, model, utils
 
 import argparse
 from pathlib import Path
+from typing import Optional
 
 
-def register(location_folder: str, journal_title: str = None):
+def register(location_folder: Path, journal_title: Optional[str] = None):
     """
     Register an existing journal structure to the list of managed journals.
 
@@ -31,7 +32,7 @@ def register(location_folder: str, journal_title: str = None):
     journal_name = utils.journal_name_from_title(journal_title)
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
 
-    journal_data = model.JournalData(journal_name, location_folder, True, journal_title)
+    journal_data = model.JournalData(journal_name, location_folder.as_posix(), True, journal_title)
     journal_data_file.list_of_journal_data.append(journal_data)
 
     journal_data_file.write(config.get_configuration_file().journal_data_filepath)
@@ -39,7 +40,7 @@ def register(location_folder: str, journal_title: str = None):
 
 def get_parser(subparser_action=None):
     command_name = "register"
-    command_description = register.__doc__
+    command_description = register.__doc__ if register.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

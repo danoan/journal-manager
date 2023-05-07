@@ -2,9 +2,10 @@ from danoan.journal_manager.control import config
 
 import argparse
 from pathlib import Path
+from typing import Optional
 
 
-def set_parameters(editor: str = None, **kwargs):
+def set_parameters(editor: Optional[Path], **kwargs):
     """
     Set the parameter's values passed as arguments.
 
@@ -17,7 +18,7 @@ def set_parameters(editor: str = None, **kwargs):
     config_file = config.get_configuration_file()
 
     if editor:
-        config_file.parameters.default_text_editor_path = Path(editor).expanduser().as_posix()
+        config_file.parameters.default_text_editor_path = editor.expanduser().as_posix()
 
     config_file.write(config.get_configuration_filepath())
 
@@ -45,7 +46,7 @@ def list_or_set(**kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "parameters"
-    command_description = list_or_set.__doc__
+    command_description = list_or_set.__doc__ if list_or_set.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

@@ -4,15 +4,19 @@ import subprocess
 
 
 def create(journal_location: Path):
-    cmd_args = ["mkdocs", "new", journal_location]
-    subprocess.run(cmd_args)
+    """
+    Create a mkdocs journal.
+    """
+    subprocess.run(["mkdocs", "new", journal_location])
 
 
 def build(journal_location: Path, build_location: Path):
+    """
+    Build a static html page with mkdocs.
+    """
     cwd = os.getcwd()
 
     os.chdir(journal_location)
-    cmd_args = ["mkdocs", "build", "-d", build_location]
-    subprocess.run(cmd_args)
+    subprocess.run(["mkdocs", "build", "-d", build_location])
 
     os.chdir(cwd)

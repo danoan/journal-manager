@@ -19,7 +19,7 @@ def list(**kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "list"
-    command_description = list.__doc__
+    command_description = list.__doc__ if list.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

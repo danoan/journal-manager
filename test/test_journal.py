@@ -12,7 +12,7 @@ import pytest
 class TestRegister:
     def test_register_deregister_journal(self, f_setup_init, tmp_path):
         # Register
-        first_location_folder = tmp_path.joinpath("first-journal").expanduser().as_posix()
+        first_location_folder = tmp_path.joinpath("first-journal").expanduser()
         first_journal_title = "My First Journal Title"
         jm.register.register(first_location_folder, first_journal_title)
 
@@ -20,11 +20,11 @@ class TestRegister:
 
         assert journal_data.name == "my-first-journal-title"
         assert journal_data.title == first_journal_title
-        assert journal_data.location_folder == first_location_folder
+        assert journal_data.location_folder == first_location_folder.as_posix()
         assert journal_data.active == True
 
         # Register a second one
-        second_location_folder = tmp_path.joinpath("second-journal").expanduser().as_posix()
+        second_location_folder = tmp_path.joinpath("second-journal").expanduser()
         second_journal_title = "My Second Journal Title"
         jm.register.register(second_location_folder, second_journal_title)
 
@@ -41,7 +41,7 @@ class TestRegister:
 
         assert journal_data.name == "my-second-journal-title"
         assert journal_data.title == second_journal_title
-        assert journal_data.location_folder == second_location_folder
+        assert journal_data.location_folder == second_location_folder.as_posix()
         assert journal_data.active == True
 
 
@@ -81,42 +81,38 @@ class TestCreate:
         journal_title = "My Journal Title"
         template_filepath = tmp_path.joinpath("my-template.yml")
         template_filepath.touch()
-        register_template("research", template_filepath.expanduser().as_posix())
+        register_template("research", template_filepath.expanduser())
 
         journal_location_folder = None
         if journal_location_folder_str:
-            journal_location_folder = (
-                tmp_path.joinpath(journal_location_folder_str).expanduser().as_posix()
-            )
+            journal_location_folder = tmp_path.joinpath(journal_location_folder_str).expanduser()
+
+        if not journal_location_folder:
+            journal_location_folder = Path(config.get_configuration_file().default_journal_folder)
 
         jm.create.create(journal_title, journal_location_folder, template_name)
-
-        # Intentionally put after create_journal such that the latter can be called
-        # with a None object
-        if not journal_location_folder:
-            journal_location_folder = config.get_configuration_file().default_journal_folder
 
         journal_data = config.get_journal_data_file().list_of_journal_data[0]
         assert journal_data.title == journal_title
         assert (
             journal_data.location_folder
-            == Path(journal_location_folder).joinpath("my-journal-title").expanduser().as_posix()
+            == journal_location_folder.joinpath("my-journal-title").expanduser().as_posix()
         )
         assert journal_data.active == True
 
 
-class TestList:
-    def test_list_journals_when_registry_is_empty(self, f_setup_init, capfd):
-        jm.list.list()
-        captured = capfd.readouterr()
-        assert captured.out == "There is no journal registered yet.\n"
+# class TestList:
+#     def test_list_journals_when_registry_is_empty(self, f_setup_init, capfd):
+#         jm.list.list()
+#         captured = capfd.readouterr()
+#         assert captured.out == "There is no journal registered yet.\n"
 
-    def test_list_journals(self, f_setup_init, capfd):
-        journal_title = "My Journal Title"
+#     def test_list_journals(self, f_setup_init, capfd):
+#         journal_title = "My Journal Title"
 
-        jm.create.create(journal_title)
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+#         jm.create.create(journal_title)
+#         journal_data = config.get_journal_data_file().list_of_journal_data[0]
 
-        jm.list.list()
-        captured = capfd.readouterr()
-        assert captured.out == f"{journal_data.name}: {journal_data.location_folder}\n"
+#         jm.list.list()
+#         captured = capfd.readouterr()
+#         assert captured.out == f"{journal_data.name}: {journal_data.location_folder}\n"

@@ -25,7 +25,6 @@ def edit(journal_name: str, **kwargs):
 
     for entry in journal_data_list:
         if entry.name == journal_name:
-
             mkdocs_config_path = Path(entry.location_folder).joinpath("mkdocs.yml")
             nvim_wrapper.edit_file(mkdocs_config_path.expanduser().as_posix(), text_editor_path)
 
@@ -36,7 +35,7 @@ def edit(journal_name: str, **kwargs):
 
 def get_parser(subparser_action=None):
     command_name = "edit"
-    command_description = edit.__doc__
+    command_description = edit.__doc__ if edit.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None

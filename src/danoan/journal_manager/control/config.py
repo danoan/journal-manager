@@ -8,71 +8,23 @@ from textwrap import dedent
 ENV_JOURNAL_MANAGER_CONFIG_FOLDER = "JOURNAL_MANAGER_CONFIG_FOLDER"
 
 
-def create_configuration_file(journal_folder_default):
-    config.get_configuration_folder().mkdir(parents=True)
-    config.get_template_folder().mkdir(parents=True)
-
-    journal_data_filepath = (
-        Path.expanduser(config.get_configuration_filepath().parent)
-        .joinpath("journal_data.toml")
-        .as_posix()
-    )
-    journal_template_data_filepath = (
-        Path.expanduser(config.get_configuration_filepath().parent)
-        .joinpath("template_data.toml")
-        .as_posix()
-    )
-
-    parameters = model.Parameters()
-    model.ConfigurationFile(
-        journal_folder_default,
-        journal_data_filepath,
-        journal_template_data_filepath,
-        parameters,
-    ).write(config.get_configuration_filepath().as_posix())
-    model.JournalDataList([]).write(journal_data_filepath)
-    model.JournalTemplateList([]).write(journal_template_data_filepath)
+class ConfigurationFileDoesNotExist(BaseException):
+    pass
 
 
-def check_or_create_configuration_file():
-    if not config.get_configuration_filepath().exists():
-        config.get_configuration_folder().mkdir(parents=True)
-        config.get_template_folder().mkdir(parents=True)
-        print(
-            dedent(
-                f"""
-                The configuration file is being created for the first time. 
-                It is located at: {config.get_configuration_filepath()}.
-
-                Please inform the requested values.
-                """
-            )
-        )
-
-        journal_folder_default = (
-            Path(input("""Default location for created journals:""")).expanduser().as_posix()
-        )
-
-        create_configuration_file(journal_folder_default)
-        return False
-    else:
-        return True
+class ConfigurationFolderDoesNotExist(BaseException):
+    pass
 
 
-def get_configuration_folder():
+def get_configuration_folder() -> Path:
+    """
+    Return the value contained in environment variable JOURNAL_MANAGER_CONFIG_FOLDER
+
+    If the environment variable is not set, a message with instructions on how to set
+    is displayed.
+    """
     if ENV_JOURNAL_MANAGER_CONFIG_FOLDER not in os.environ:
-        print(
-            dedent(
-                f"""
-                There is no environment variable set for journal-manager.
-                Create the environment variable {ENV_JOURNAL_MANAGER_CONFIG_FOLDER} and try again
-
-                Example:
-                export JOURNAL_MANAGER_CONFIG_FOLDER={Path.home().joinpath(".config","journal-manager")}
-                """
-            )
-        )
-        exit(1)
+        raise ConfigurationFolderDoesNotExist()
 
     return Path(os.environ[ENV_JOURNAL_MANAGER_CONFIG_FOLDER]).expanduser()
 
@@ -81,34 +33,68 @@ def get_configuration_filepath():
     return get_configuration_folder().joinpath("config.toml")
 
 
-def get_configuration_file():
+def get_configuration_file() -> model.ConfigurationFile:
+    """
+    Return a python dataclass representation of the journal-manager configuration file.
+
+    If the file does not exist, an error message is printed and the program exits.
+    """
     if not get_configuration_filepath().exists():
-        print(
-            dedent(
-                """
-                The configuration file for journal-manager does not exist. 
-                You can create one with the command: journal-manager init
-                """
-            )
-        )
-        exit(1)
+        raise ConfigurationFileDoesNotExist()
 
     return model.ConfigurationFile.read(get_configuration_filepath())
 
 
-def get_template_folder():
-    return get_configuration_folder().joinpath("templates")
-
-
-def get_quick_notes_folder():
-    return get_configuration_folder().joinpath("quick-notes")
-
-
-def get_template_list_file():
+def get_template_list_file() -> model.JournalTemplateList:
+    """
+    Return a dataclass representation of the list of journal templates register file.
+    """
     config_file = get_configuration_file()
     return model.JournalTemplateList.read(config_file.template_data_filepath)
 
 
 def get_journal_data_file() -> model.JournalDataList:
+    """
+    Return a dataclass representation of the list of journals register file.
+    """
     config_file = get_configuration_file()
     return model.JournalDataList.read(config_file.journal_data_filepath)
+
+
+def create_configuration_file(journal_folder_default: Path, templates_folder_default: Path):
+    """
+    Create journal-manager application configuration file.
+
+    Additionally, it creates two more configuration files:
+        - journal_data.toml
+        - template_data.toml
+
+    and a folder to store journal templates.
+
+    Args:
+        journal_folder_default: Default location to store journals.
+        templates_folder_default: Default location to store journal templates.
+    Returns:
+        Nothing.
+    """
+    config.get_configuration_folder().mkdir(parents=True)
+    journal_folder_default.mkdir(parents=True)
+    templates_folder_default.mkdir(parents=True)
+
+    journal_data_filepath = (
+        Path.expanduser(config.get_configuration_folder()).joinpath("journal_data.toml").as_posix()
+    )
+    journal_template_data_filepath = (
+        Path.expanduser(config.get_configuration_folder()).joinpath("template_data.toml").as_posix()
+    )
+
+    parameters = model.Parameters()
+    model.ConfigurationFile(
+        journal_folder_default.as_posix(),
+        templates_folder_default.as_posix(),
+        journal_data_filepath,
+        journal_template_data_filepath,
+        parameters,
+    ).write(get_configuration_filepath().as_posix())
+    model.JournalDataList([]).write(journal_data_filepath)
+    model.JournalTemplateList([]).write(journal_template_data_filepath)

@@ -19,5 +19,6 @@ def f_set_env_variable(jm_config_folder_path, monkeypatch):
 
 @pytest.fixture(scope="function")
 def f_setup_init(f_set_env_variable, tmp_path):
-    default_journal_folder = tmp_path.joinpath("journals").expanduser().as_posix()
-    init.init(default_journal_folder)
+    default_journal_folder = tmp_path.joinpath("journals").expanduser()
+    default_template_folder = tmp_path.joinpath("templates").expanduser()
+    init.init(default_journal_folder, default_template_folder)

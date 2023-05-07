@@ -6,7 +6,7 @@ import sys
 from danoan.journal_manager.commands import build, journal, setup
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Manager application for mkdocs journals")
 
     list_of_commands = [build, journal, setup]
