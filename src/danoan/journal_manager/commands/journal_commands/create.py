@@ -46,9 +46,7 @@ def create_mkdocs_from_quick_notes_template(journal_data: model.JournalData):
 def create_mkdocs_from_template_name(journal_data: model.JournalData, template_name: str):
     config_file = config.get_configuration_file()
 
-    journal_template_list = model.JournalTemplateList.read(
-        config_file.template_data_filepath
-    )
+    journal_template_list = model.JournalTemplateList.read(config_file.template_data_filepath)
 
     template_entry = utils.find_template_by_name(journal_template_list, template_name)
     if not template_entry:
@@ -70,7 +68,6 @@ def create(
     journal_title: str,
     journal_location_folder: Path,
     mkdocs_template_name: Optional[str] = None,
-    **kwargs,
 ):
     """
     Creates a mkdocs journal file structure.
@@ -112,9 +109,19 @@ def create(
     journal_data_file.write(config_file.journal_data_filepath)
 
 
+def __create__(
+    journal_title: str,
+    journal_location_folder: Optional[Path] = None,
+    mkdocs_template_name: Optional[str] = None,
+    **kwargs,
+):
+    utils.ensure_configuration_file_exists()
+    if journal_location_folder is None:
+        journal_location_folder = config.get_configuration_file().default_journal_folder
+    create(journal_title, journal_location_folder, mkdocs_template_name)
+
+
 def get_parser(subparser_action=None):
-    journal_folder_default = config.get_configuration_file().default_journal_folder
-   
     command_name = "create"
     command_description = create.__doc__ if create.__doc__ else ""
     command_help = command_description.split(".")[0]
@@ -139,9 +146,8 @@ def get_parser(subparser_action=None):
     parser.add_argument(
         "--journal-folder",
         dest="journal_location_folder",
-        help=f"Location where the journal folder will be stored. If empty, the default location is chosen. Default location: {journal_folder_default}.",
+        help=f"Location where the journal folder will be stored. If empty, the default location is chosen.",
         type=Path,
-        default=Path(journal_folder_default),
     )
     parser.add_argument(
         "--template-name",
@@ -149,8 +155,6 @@ def get_parser(subparser_action=None):
         help="Template for a mkdocs configuration file. Templates are registered via the setup subcommand.",
     )
 
-    parser.set_defaults(
-        func=create, journal_location_folder=config.get_configuration_file().default_journal_folder
-    )
+    parser.set_defaults(func=__create__)
 
     return parser

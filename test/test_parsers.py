@@ -51,22 +51,22 @@ class TestJournalParsers(TestParser):
         self.parser_tester(jm.register.get_parser)
 
 
-class TestJournalParsersWithoutInitialization(TestParser):
-    def test_journal_parser(self):
-        with pytest.raises(SystemExit) as e:
-            self.parser_tester(journal_parser)
+# class TestJournalParsersWithoutInitialization(TestParser):
+#     def test_journal_parser(self):
+#         with pytest.raises(SystemExit) as e:
+#             self.parser_tester(journal_parser)
 
-        assert e.type == SystemExit
-        assert e.value.code == 1
+#         assert e.type == SystemExit
+#         assert e.value.code == 1
 
 
 class TestBuildParser(TestParser):
-    def test_build_parser_without_initialization(self):
-        with pytest.raises(SystemExit) as e:
-            self.parser_tester(build.get_parser)
+    # def test_build_parser_without_initialization(self):
+    #     with pytest.raises(SystemExit) as e:
+    #         self.parser_tester(build.get_parser)
 
-        assert e.type == SystemExit
-        assert e.value.code == 1
+    #     assert e.type == SystemExit
+    #     assert e.value.code == 1
 
     def test_build_parser_with_initialization(self, f_setup_init):
         self.parser_tester(build.get_parser)

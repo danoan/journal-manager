@@ -45,7 +45,7 @@ def register_journals_by_location(locations: List[str]):
 
     for journal_location in locations:
         print(f"Registering journal location: {journal_location}")
-        register_journal(journal_location)
+        register_journal(Path(journal_location))
 
 
 def collect_journal_names_from_location(list_of_locations: List[str]) -> List[str]:

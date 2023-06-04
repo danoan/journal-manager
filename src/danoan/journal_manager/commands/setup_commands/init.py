@@ -79,11 +79,13 @@ def get_parser(subparser_action=None):
 
     parser.add_argument(
         "--default-journal-folder",
+        type=Path,
         help="Directory where journals will be created by default",
         default=config.get_configuration_folder().joinpath("journals"),
     )
     parser.add_argument(
         "--default-template-folder",
+        type=Path,
         help="Directory where journals will be created by default",
         default=config.get_configuration_folder().joinpath("templates"),
     )
