@@ -6,7 +6,7 @@ PROJECT_PATH="${SCRIPT_PATH%journal-manager*}journal-manager"
 OUTPUT_FOLDER="${SCRIPT_PATH}/output"
 mkdir -p "${OUTPUT_FOLDER}"
 
-pushd "${PROJET_PATH}" > /dev/null
+pushd "${PROJECT_PATH}" > /dev/null
 
 source .venv/bin/activate
 
