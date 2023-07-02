@@ -78,7 +78,6 @@ source = [
 [tool.coverage.paths]
 source = [
   "src/danoan/journal_manager",
-  "*/site-packages/danoan/journal_manager"
 ]
 
 [tool.coverage.report]
@@ -103,5 +102,8 @@ pretty = true
 namespace_packages = true
 check_untyped_defs = true
 ignore_missing_imports = true # libraries without py.typed marker raises an error if this is set to false
+mypy_path = "src:test" # To make sure all intra-package references are tested. Without that, a module is tested on itself. Imports are not considered.
+explicit_package_bases = true # To solve import conflicts of mypy
+
 
 
