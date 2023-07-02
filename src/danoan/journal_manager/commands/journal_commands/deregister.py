@@ -1,10 +1,13 @@
-from danoan.journal_manager.control import config
+from danoan.journal_manager.control import config, utils
 
 import argparse
 from typing import List
 
 
-def deregister(journal_names: List[str], **kwargs):
+# -------------------- API --------------------
+
+
+def deregister(journal_names: List[str]):
     """
     Deregister a journal from the list of registered journals.
 
@@ -25,6 +28,14 @@ def deregister(journal_names: List[str], **kwargs):
     else:
         journal_data_file.list_of_journal_data = updated_list_of_journal_data
         journal_data_file.write(config.get_configuration_file().journal_data_filepath)
+
+
+# -------------------- CLI --------------------
+
+
+def __deregister__(journal_names: List[str], **kwargs):
+    utils.ensure_configuration_file_exists()
+    deregister(journal_names)
 
 
 def get_parser(subparser_action=None):
@@ -54,6 +65,6 @@ def get_parser(subparser_action=None):
         nargs="+",
         help="Name of the journal to be deregistered",
     )
-    parser.set_defaults(subcommand_help=parser.print_help, func=deregister)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__deregister__)
 
     return parser

@@ -6,7 +6,10 @@ from pathlib import Path
 from textwrap import dedent
 
 
-def init(default_journal_folder: Path, default_template_folder: Path, **kwargs):
+# -------------------- API --------------------
+
+
+def init_journal_manager(default_journal_folder: Path, default_template_folder: Path):
     """
     Initialize journal-manager settings.
 
@@ -55,11 +58,17 @@ def init(default_journal_folder: Path, default_template_folder: Path, **kwargs):
         )
 
 
-def get_parser(subparser_action=None):
-    utils.ensure_configuration_folder_exists()
+# -------------------- CLI --------------------
 
+
+def __init_journal_manager__(default_journal_folder: Path, default_template_folder: Path, **kwargs):
+    utils.ensure_configuration_folder_exists()
+    init_journal_manager(default_journal_folder, default_template_folder)
+
+
+def get_parser(subparser_action=None):
     command_name = "init"
-    command_description = init.__doc__ if init.__doc__ else ""
+    command_description = init_journal_manager.__doc__ if init_journal_manager.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None
@@ -89,6 +98,6 @@ def get_parser(subparser_action=None):
         help="Directory where journals will be created by default",
         default=config.get_configuration_folder().joinpath("templates"),
     )
-    parser.set_defaults(subcommand_help=parser.print_help, func=init)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__init_journal_manager__)
 
     return parser

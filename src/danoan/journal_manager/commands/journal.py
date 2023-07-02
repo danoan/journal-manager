@@ -1,4 +1,3 @@
-from danoan.journal_manager.control import utils
 from danoan.journal_manager.commands.journal_commands import (
     activate,
     create,
@@ -15,7 +14,7 @@ import argparse
 
 def get_parser(subparser_action=None):
     command_name = "journal"
-    command_description = "Execute tasks involving journals"
+    command_description = "Collection of commands to edit journals."
     command_help = command_description
 
     parser = None

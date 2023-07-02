@@ -1,11 +1,14 @@
-from danoan.journal_manager.control import config, model
+from danoan.journal_manager.control import config, model, utils
 
 import argparse
 from pathlib import Path
 import shutil
 
 
-def remove(template_name: str, **kwargs):
+# -------------------- API --------------------
+
+
+def remove(template_name: str):
     """
     Remove a template from the registered templates list.
 
@@ -39,7 +42,7 @@ def remove(template_name: str, **kwargs):
         template_list_file.write(config.get_configuration_file().template_data_filepath)
 
 
-def register(template_name: str, template_filepath: str, **kwargs):
+def register(template_name: str, template_filepath: str):
     """
     Register a journal template.
 
@@ -59,7 +62,6 @@ def register(template_name: str, template_filepath: str, **kwargs):
     Args:
         template_name: Name of the template to be registered.
         template_filepath: Path to the template file taken as model.
-        **kwargs: Any extra keyword argument is accepted, but ignored by the function.
     Returns:
         Nothing.
     """
@@ -80,7 +82,7 @@ def register(template_name: str, template_filepath: str, **kwargs):
     template_list_file.write(config.get_configuration_file().template_data_filepath)
 
 
-def list(**kwargs):
+def list_templates():
     """
     List registered templates.
 
@@ -96,6 +98,24 @@ def list(**kwargs):
 
     for entry in template_list:
         print(f"{entry.name}={entry.filepath}")
+
+
+# -------------------- CLI --------------------
+
+
+def __remove_template__(template_name: str, **kwargs):
+    utils.ensure_configuration_file_exists()
+    remove(template_name)
+
+
+def __register_template__(template_name: str, template_filepath: str, **kwargs):
+    utils.ensure_configuration_file_exists()
+    register(template_name, template_filepath)
+
+
+def __list_templates__(**kwargs):
+    utils.ensure_configuration_file_exists()
+    list_templates()
 
 
 def get_parser(subparser_action=None):
@@ -135,7 +155,7 @@ def get_parser(subparser_action=None):
     )
     register_subparser.add_argument("template_name", help="Template name")
     register_subparser.add_argument("template_filepath", help="Template filepath")
-    register_subparser.set_defaults(func=register)
+    register_subparser.set_defaults(func=__register_template__)
 
     remove_command_description = remove.__doc__ if remove.__doc__ else ""
     remove_command_help = remove_command_description.split(".")[0]
@@ -147,8 +167,8 @@ def get_parser(subparser_action=None):
         formatter_class=argparse.RawTextHelpFormatter,
     )
     remove_subparser.add_argument("template_name", help="Template name")
-    remove_subparser.set_defaults(func=remove)
+    remove_subparser.set_defaults(func=__remove_template__)
 
-    parser.set_defaults(subcommand_help=parser.print_help, func=list)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__list_templates__)
 
     return parser

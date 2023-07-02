@@ -1,9 +1,12 @@
-from danoan.journal_manager.control import config
+from danoan.journal_manager.control import config, utils
 
 import argparse
 
 
-def list(**kwargs):
+# -------------------- API --------------------
+
+
+def list_journals():
     """
     List registered journals.
     """
@@ -15,6 +18,14 @@ def list(**kwargs):
 
     for entry in list_of_journal_data:
         print(f"{entry.name}: {entry.location_folder}")
+
+
+# -------------------- CLI --------------------
+
+
+def __list_journals__(**kwargs):
+    utils.ensure_configuration_file_exists()
+    list_journals()
 
 
 def get_parser(subparser_action=None):
@@ -38,6 +49,6 @@ def get_parser(subparser_action=None):
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
 
-    parser.set_defaults(subcommand_help=parser.print_help, func=list)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__list_journals__)
 
     return parser

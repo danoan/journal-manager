@@ -9,6 +9,8 @@ from typing import Optional
 
 from jinja2 import FileSystemLoader, Environment, Template, PackageLoader
 
+# -------------------- API --------------------
+
 
 def create_mkdocs_from_template(journal_data: model.JournalData, template: Template):
     journal_configuration_file = Path(journal_data.location_folder).joinpath("mkdocs.yml")
@@ -109,6 +111,9 @@ def create(
     journal_data_file.write(config_file.journal_data_filepath)
 
 
+# -------------------- CLI --------------------
+
+
 def __create__(
     journal_title: str,
     journal_location_folder: Optional[Path] = None,
@@ -155,6 +160,6 @@ def get_parser(subparser_action=None):
         help="Template for a mkdocs configuration file. Templates are registered via the setup subcommand.",
     )
 
-    parser.set_defaults(func=__create__)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__create__)
 
     return parser

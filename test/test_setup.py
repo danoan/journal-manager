@@ -19,7 +19,7 @@ class TestInit:
         with pytest.raises(config.ConfigurationFolderDoesNotExist) as e:
             default_journal_folder = tmp_path.joinpath("journals").expanduser()
             default_template_folder = tmp_path.joinpath("templates").expanduser()
-            init.init(default_journal_folder, default_template_folder)
+            init.init_journal_manager(default_journal_folder, default_template_folder)
 
         assert e.type == config.ConfigurationFolderDoesNotExist
 
@@ -27,16 +27,16 @@ class TestInit:
         journal_manager_config_folder = f_set_env_variable["journal_manager_config_folder"]
         default_journal_folder = tmp_path.joinpath("journals").expanduser()
         default_template_folder = tmp_path.joinpath("templates").expanduser()
-        init.init(default_journal_folder, default_template_folder)
+        init.init_journal_manager(default_journal_folder, default_template_folder)
 
         config_file = config.get_configuration_file()
 
-        expected_journal_data_filepath = (
-            journal_manager_config_folder.joinpath("journal_data.toml").expanduser()
-        )
-        expected_template_data_filepath = (
-            journal_manager_config_folder.joinpath("template_data.toml").expanduser()
-        )
+        expected_journal_data_filepath = journal_manager_config_folder.joinpath(
+            "journal_data.toml"
+        ).expanduser()
+        expected_template_data_filepath = journal_manager_config_folder.joinpath(
+            "template_data.toml"
+        ).expanduser()
 
         assert config_file.default_journal_folder == default_journal_folder.as_posix()
         assert config_file.journal_data_filepath == expected_journal_data_filepath.as_posix()
@@ -53,13 +53,9 @@ class TestInit:
         config_file = config.get_configuration_file()
         assert config_file.default_journal_folder == first_default_journal_folder.as_posix()
 
-        second_default_journal_folder = (
-            tmp_path.joinpath("journals_another_path").expanduser()
-        )
-        second_default_template_folder = (
-            tmp_path.joinpath("templates_another_path").expanduser()
-        )
-        init.init(second_default_journal_folder, second_default_template_folder)
+        second_default_journal_folder = tmp_path.joinpath("journals_another_path").expanduser()
+        second_default_template_folder = tmp_path.joinpath("templates_another_path").expanduser()
+        init.init_journal_manager(second_default_journal_folder, second_default_template_folder)
         config_file = config.get_configuration_file()
 
         assert config_file.default_journal_folder == second_default_journal_folder.as_posix()

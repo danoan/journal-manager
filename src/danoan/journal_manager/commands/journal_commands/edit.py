@@ -1,11 +1,14 @@
-from danoan.journal_manager.control import config
+from danoan.journal_manager.control import config, utils
 from danoan.journal_manager.control.wrappers import nvim_wrapper
 
 import argparse
 from pathlib import Path
 
 
-def edit(journal_name: str, **kwargs):
+# -------------------- API --------------------
+
+
+def edit(journal_name: str):
     """
     Edit journal files.
 
@@ -15,7 +18,7 @@ def edit(journal_name: str, **kwargs):
     journal_data_list = config.get_journal_data_file().list_of_journal_data
 
     config_file = config.get_configuration_file()
-    text_editor_path = config_file.parameters.default_text_editor_path
+    text_editor_path = Path(config_file.parameters.default_text_editor_path)
 
     if not Path(text_editor_path).name.startswith("vim") and not Path(
         text_editor_path
@@ -26,11 +29,19 @@ def edit(journal_name: str, **kwargs):
     for entry in journal_data_list:
         if entry.name == journal_name:
             mkdocs_config_path = Path(entry.location_folder).joinpath("mkdocs.yml")
-            nvim_wrapper.edit_file(mkdocs_config_path.expanduser().as_posix(), text_editor_path)
+            nvim_wrapper.edit_file(mkdocs_config_path.expanduser(), text_editor_path)
 
             return
 
     print(f"Journal {journal_name} does not exist. Please enter an existent journal name.")
+
+
+# -------------------- CLI --------------------
+
+
+def __edit__(journal_name: str, **kwargs):
+    utils.ensure_configuration_file_exists()
+    edit(journal_name)
 
 
 def get_parser(subparser_action=None):
@@ -55,6 +66,6 @@ def get_parser(subparser_action=None):
         )
 
     parser.add_argument("journal_name", help="Journal name")
-    parser.set_defaults(subcommand_help=parser.print_help, func=edit)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__edit__)
 
     return parser

@@ -13,6 +13,9 @@ import signal
 from typing import List, Iterator, Iterable, Any, Optional, Dict, Tuple
 
 
+# -------------------- API --------------------
+
+
 class NamesNotFoundInRegistry(Exception):
     def __init__(self, names: Iterable[str]):
         self.names = names
@@ -26,6 +29,31 @@ class InvalidLocations(Exception):
 class IncludeAllFolderDoesNotExist(Exception):
     def __init__(self, path: str):
         self.path = path
+
+
+def merge_build_instructions(
+    build_location: Path, build_instructions_path: Optional[Path] = None, **kwargs
+):
+    """
+    Helper function to merge build instructions.
+
+    The cli parser offer several options to build journals. This helper function
+    merge all these parameters in a unique object.
+    """
+    build_instructions = None
+    if build_instructions_path is None:
+        build_instructions = model.BuildInstructions(build_location)
+    else:
+        build_instructions = model.BuildInstructions.read(build_instructions_path)
+
+    if not build_instructions.build_location:
+        build_instructions.build_location = build_location
+
+    for keyword, value in kwargs.items():
+        if value is not None:
+            build_instructions.__dict__[keyword] = value
+
+    return build_instructions
 
 
 def register_journals_by_location(locations: List[str]):
@@ -50,9 +78,11 @@ def register_journals_by_location(locations: List[str]):
 
 def collect_journal_names_from_location(list_of_locations: List[str]) -> List[str]:
     journal_data_file = config.get_journal_data_file()
-    return list(
-        map(lambda x: utils.find_journal_by_location(journal_data_file, x).name, list_of_locations)
+    journals = map(
+        lambda location: utils.find_journal_by_location(journal_data_file, location),
+        list_of_locations,
     )
+    return list(map(lambda journal: journal.name if journal else "", journals))
 
 
 def validate_journal_names_in_registry(names: List[str]) -> Tuple[List[str], List[str]]:
@@ -169,6 +199,9 @@ def get_journals_names_to_build(build_instructions: model.BuildInstructions):
     return journals_names_to_build
 
 
+# -------------------- Model Utilities --------------------
+
+
 class BuildStep:
     """
     Base class for a build step in the process of building a journal.
@@ -183,7 +216,7 @@ class BuildStep:
         .build()
         .next(MySecondBuildStep(another_parameters))
 
-    The parameters passed to a build step persist for the following step.
+    The parameters passed to a build step persist in following steps.
     If a parameter of same name had been set before, it will be overwritten.
     """
 
@@ -224,6 +257,10 @@ class BuildJournals(BuildStep):
     def __init__(self, build_instructions: model.BuildInstructions, **kwargs):
         super().__init__(**kwargs)
         self.build_instructions = build_instructions
+
+        if not self.build_instructions.build_location:
+            raise RuntimeError("Journal could not be built because a location was not specified.")
+
         self.journals_site_folder = Path(self.build_instructions.build_location).joinpath("site")
 
     def build(self):
@@ -232,8 +269,8 @@ class BuildJournals(BuildStep):
             for journal_name in get_journals_names_to_build(self.build_instructions):
                 journal_data_file = config.get_journal_data_file()
                 journal_data = utils.find_journal_by_name(journal_data_file, journal_name)
-                print(journal_name)
-                if journal_data.name == journal_name and journal_data.active:
+
+                if journal_data and journal_data.name == journal_name and journal_data.active:
                     mkdocs_wrapper.build(
                         Path(journal_data.location_folder),
                         f"{self.journals_site_folder}/{journal_data.name}",
@@ -385,32 +422,26 @@ def start_http_server(http_server_folder: Path, file_monitor_script: Path):
         t2.join(0.1)
 
 
-def merge_build_instructions(
-    build_location: Path, build_instructions_path: Optional[Path], **kwargs
-):
+def build(build_instructions: model.BuildInstructions):
     """
-    Helper function to merge build instructions.
-
-    The cli parser offer several options to build journals. This helper function
-    merge all these parameters in a unique object.
+    Build html static pages from journals.
     """
-    build_instructions = None
-    if build_instructions_path is None:
-        build_instructions = model.BuildInstructions(build_location)
-    else:
-        build_instructions = model.BuildInstructions.read(build_instructions_path)
 
-    if not build_instructions.build_location:
-        build_instructions.build_location = build_location
+    build_location = Path(build_instructions.build_location)
+    build_location.mkdir(exist_ok=True)
 
-    for keyword, value in kwargs.items():
-        if value is not None:
-            build_instructions.__dict__[keyword] = value
-
-    return build_instructions
+    return (
+        BuildJournals(build_instructions=build_instructions)
+        .build()
+        .next(BuildIndexPage)
+        .next(BuildHttpServer)
+    )
 
 
-def build(
+# -------------------- CLI --------------------
+
+
+def __build__(
     build_location: Path,
     build_instructions_path: Optional[Path] = None,
     build_index: Optional[bool] = None,
@@ -420,9 +451,7 @@ def build(
     ignore_safety_questions: bool = False,
     **kwargs,
 ):
-    """
-    Build html static pages from journals.
-    """
+    utils.ensure_configuration_file_exists()
     build_location = Path(build_location).absolute()
 
     if build_location.exists():
@@ -436,8 +465,6 @@ def build(
 
         shutil.rmtree(build_location)
 
-    build_location.mkdir()
-
     build_instructions = merge_build_instructions(
         build_location.expanduser(),
         build_instructions_path,
@@ -447,31 +474,32 @@ def build(
         with_http_server=with_http_server,
     )
 
-    build_result = (
-        BuildJournals(build_instructions=build_instructions)
-        .build()
-        .next(BuildIndexPage)
-        .next(BuildHttpServer)
-    )
+    build_result = build(build_instructions)
 
     if not isinstance(build_result, FailedStep):
         if with_http_server:
             start_http_server(build_result.http_server_folder, build_result.file_monitor_script)
     else:
         print(f"Build was not successful with error: {build_result.msg}")
+    pass
 
 
 def get_parser(subparser_action=None):
     command_name = "build"
-    command_description = "Render journals in a static web page"
+    command_description = build.__doc__ if build.__doc__ else ""
+    command_help = command_description.split(".")[0]
 
     parser = None
     if subparser_action:
         parser = subparser_action.add_parser(
-            command_name, description=command_description, help=command_description, aliases=["b"]
+            command_name, description=command_description, help=command_help, aliases=["b"]
         )
     else:
-        parser = argparse.ArgumentParser(command_name, description=command_description)
+        parser = argparse.ArgumentParser(
+            command_name,
+            description=command_description,
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+        )
 
     parser.add_argument(
         "--build-location",
@@ -516,6 +544,6 @@ def get_parser(subparser_action=None):
         action="store_true",
         help="If specified, the program will overwrite the contents of BUILD_LOCATION without previous warning.",
     )
-    parser.set_defaults(func=build)
+    parser.set_defaults(func=__build__)
 
     return parser

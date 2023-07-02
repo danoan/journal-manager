@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Optional
 
 
+# -------------------- API --------------------
+
+
 def register(location_folder: Path, journal_title: Optional[str] = None):
     """
     Register an existing journal structure to the list of managed journals.
@@ -38,6 +41,14 @@ def register(location_folder: Path, journal_title: Optional[str] = None):
     journal_data_file.write(config.get_configuration_file().journal_data_filepath)
 
 
+# -------------------- CLI --------------------
+
+
+def __register__(location_folder: Path, journal_title: Optional[str] = None, **kwargs):
+    utils.ensure_configuration_file_exists()
+    register(location_folder, journal_title)
+
+
 def get_parser(subparser_action=None):
     command_name = "register"
     command_description = register.__doc__ if register.__doc__ else ""
@@ -62,6 +73,6 @@ def get_parser(subparser_action=None):
     parser.add_argument("location_folder", help="Journal location folder")
     parser.add_argument("--title", dest="journal_title", help="Journal title")
 
-    parser.set_defaults(subcommand_print=parser.print_help, func=register)
+    parser.set_defaults(subcommand_print=parser.print_help, func=__register__)
 
     return parser

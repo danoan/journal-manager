@@ -5,7 +5,7 @@ import argparse
 
 def get_parser(subparser_action=None):
     command_name = "setup"
-    command_description = "Configure journal-manager settings"
+    command_description = "Configure journal-manager settings."
     command_help = command_description
 
     parser = None

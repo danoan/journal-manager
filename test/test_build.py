@@ -1,4 +1,4 @@
-from danoan.journal_manager.commands.build import build as build_journal
+from danoan.journal_manager.commands.build import build as build_journal, merge_build_instructions
 import danoan.journal_manager.commands.journal_commands as jm
 
 from danoan.journal_manager.control import config
@@ -23,11 +23,11 @@ class TestBuild:
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
 
-        build_journal(
-            build_location.expanduser().as_posix(),
-            build_index=build_index,
-            ignore_safety_questions=True,
+        build_instructions = merge_build_instructions(
+            build_location.expanduser().as_posix(), build_index=build_index
         )
+
+        build_journal(build_instructions)
 
         if build_index:
             assert build_location.joinpath("site", "index.html").exists()
@@ -47,12 +47,13 @@ class TestBuild:
             config.get_journal_data_file(), "journal-2"
         ).location_folder
 
-        build_journal(
+        build_instructions = merge_build_instructions(
             build_location.expanduser().as_posix(),
             journals_locations_to_build=[journal_2_location_folder],
             build_index=build_index,
-            ignore_safety_questions=True,
         )
+
+        build_journal(build_instructions)
 
         if build_index:
             assert build_location.joinpath("site", "index.html").exists()
@@ -71,12 +72,13 @@ class TestBuild:
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
 
-        build_journal(
+        build_instructions = merge_build_instructions(
             build_location.expanduser().as_posix(),
             journals_names_to_build=journal_names_to_build,
             build_index=build_index,
-            ignore_safety_questions=True,
         )
+
+        build_journal(build_instructions)
 
         if build_index:
             assert build_location.joinpath("site", "index.html").exists()
@@ -94,10 +96,10 @@ class TestBuild:
         "build_location, build_index, journals_names_to_build, journals_locations_to_build, include_all_folder",
         [
             ("build", True, ["journal-1", "journal-2"], None, None),
-            (None, True, ["journal-1", "journal-2"], None, None),
-            (None, True, None, ["journals/journal-1"], None),
-            (None, True, None, None, "journals"),
-            (None, False, None, None, "journals"),
+            ("build", True, ["journal-1", "journal-2"], None, None),
+            ("build", True, None, ["journals/journal-1"], None),
+            ("build", True, None, None, "journals"),
+            ("build", False, None, None, "journals"),
         ],
     )
     def test_build_by_build_instructions(
@@ -136,12 +138,7 @@ class TestBuild:
         build_instructions_path = tmp_path.joinpath("build-instructions.toml")
         build_instructions.write(build_instructions_path)
 
-
-        build_journal(
-            default_build_location.expanduser().as_posix(),
-            build_instructions_path=build_instructions_path,
-            ignore_safety_questions=True,
-        )
+        build_journal(build_instructions)
 
         if build_index:
             assert default_build_location.joinpath("site", "index.html").exists()

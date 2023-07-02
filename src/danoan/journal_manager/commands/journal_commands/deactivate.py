@@ -1,10 +1,12 @@
-from danoan.journal_manager.control import config, model
+from danoan.journal_manager.control import config, model, utils
 
 import argparse
 from typing import List
 
+# -------------------- API --------------------
 
-def deactivate(journal_names: List[str], **kwargs):
+
+def deactivate(journal_names: List[str]):
     """
     Deactivate a journal to be built.
     """
@@ -21,6 +23,14 @@ def deactivate(journal_names: List[str], **kwargs):
 
     journal_data_list = model.JournalDataList(updated_journal_data_list)
     journal_data_list.write(config_file.journal_data_filepath)
+
+
+# -------------------- CLI --------------------
+
+
+def __deactivate__(journal_names: List[str], **kwargs):
+    utils.ensure_configuration_file_exists()
+    deactivate(journal_names)
 
 
 def get_parser(subparser_action=None):
@@ -47,6 +57,6 @@ def get_parser(subparser_action=None):
     parser.add_argument(
         "journal_names", nargs="*", action="store", help="Names of journals to deactivate"
     )
-    parser.set_defaults(subcommand_help=parser.print_help, func=deactivate)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__deactivate__)
 
     return parser

@@ -1,8 +1,11 @@
-from danoan.journal_manager.control import config
+from danoan.journal_manager.control import config, utils
 
 import argparse
 from pathlib import Path
 from typing import Optional
+
+
+# -------------------- API --------------------
 
 
 def set_parameters(editor: Optional[Path], **kwargs):
@@ -23,12 +26,13 @@ def set_parameters(editor: Optional[Path], **kwargs):
     config_file.write(config.get_configuration_filepath())
 
 
-def list_or_set(**kwargs):
+def list_parameters():
     """
-    List or set parameters.
+    List parameters.
 
-    This function will list the parameters available if no argument is given.
-    If arguments are given, it will set the correspondent parameter.
+    This function will list the parameters available to configure a journal
+    if no argument is given. If arguments are given, it will set the
+    correspondent parameter.
 
     Args:
         **kwargs: Any keyword argument type is accepted, but it will be ignored if the
@@ -36,17 +40,29 @@ def list_or_set(**kwargs):
     Returns:
         Nothing.
     """
+    config_file = config.get_configuration_file()
+    print(f"default_text_editor_path: {config_file.parameters.default_text_editor_path}")
+
+
+# -------------------- CLI --------------------
+
+
+def __list_or_set__(**kwargs):
+    """
+    List or set parameters.
+    """
+    utils.ensure_configuration_file_exists()
+
     parameter_list = ["editor"]
     if any([p in kwargs.keys() and kwargs[p] for p in parameter_list]):
         set_parameters(**kwargs)
     else:
-        config_file = config.get_configuration_file()
-        print(f"default_text_editor_path: {config_file.parameters.default_text_editor_path}")
+        list_parameters()
 
 
 def get_parser(subparser_action=None):
     command_name = "parameters"
-    command_description = list_or_set.__doc__ if list_or_set.__doc__ else ""
+    command_description = __list_or_set__.__doc__ if __list_or_set__.__doc__ else ""
     command_help = command_description.split(".")[0]
 
     parser = None
@@ -68,6 +84,6 @@ def get_parser(subparser_action=None):
         "--editor", help="Path to the default text editor to use when editing files."
     )
 
-    parser.set_defaults(subcommand_help=parser.print_help, func=list_or_set)
+    parser.set_defaults(subcommand_help=parser.print_help, func=__list_or_set__)
 
     return parser
