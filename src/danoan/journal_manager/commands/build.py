@@ -270,7 +270,8 @@ class BuildJournals(BuildStep):
                 journal_data_file = config.get_journal_data_file()
                 journal_data = utils.find_journal_by_name(journal_data_file, journal_name)
 
-                if journal_data and journal_data.name == journal_name and journal_data.active:
+                if journal_data and journal_data.name == journal_name:
+
                     mkdocs_wrapper.build(
                         Path(journal_data.location_folder),
                         f"{self.journals_site_folder}/{journal_data.name}",

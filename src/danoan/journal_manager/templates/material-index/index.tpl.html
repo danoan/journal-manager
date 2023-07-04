@@ -101,15 +101,105 @@
               <article class="md-content__inner md-typeset">
                 
                   
+<style>
+    .panel-container{
+        height: 100%;
+    }
+
+    .panel-header h2{
+        display:inline-block;
+    }
+    
+    .panel{
+        max-height: 180px;
+        overflow-y: auto;
+        border-bottom: 1px solid #ccc
+    }
+
+    .button {
+        cursor: pointer;
+        width: 15px;
+        height: 12px;
+        margin-left: 5px;
+    }
+
+    .arrow-image{
+        background-color: #aaa;
+        -webkit-mask-image: url("/assets/images/arrow-down.png");
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-size: contain;
+    }
+
+    .inline-block {
+        display: inline-block;
+    }
+
+    .horizontal-list li {
+        display: inline-block;
+        width: 150px;
+        margin: 10px !important;
+    }
+
+    .collapsed{
+        max-height: 0px;
+        transition: max-height 0.5s ease;
+    }
+
+    .expanded{
+        max-height: 180px;
+        transition: max-height 0.5s ease;
+    }
+
+</style>
+
+<div class="panel-container">
+    <div class="panel-header">
+        <h2>Active</h2><div onclick="toggle_panel('active-journals')" class="button inline-block arrow-image"></div>
+    </div>
+    <div class="panel expanded" id="active-journals">
+        <ul class="horizontal-list">
+            {% for journal in journals|sort(attribute='name') %}
+                {% if journal.active %}
+                <li><a href="{{journal.name}}/">{{journal.title}}</a></li>
+                {% endif %}
+            {% endfor %}
+        <ul>
+    </div>
+</div>
+<div class="panel-container">
+    <div class="panel-header">
+        <h2>Archived</h2><div onclick="toggle_panel('archived-journals')" class="button inline-block arrow-image"></div>
+    </div>
+    <div class="panel collapsed" id="archived-journals">
+        <ul class="horizontal-list">
+            {% for journal in journals|sort(attribute='name') %}
+                {% if not journal.active %}
+                <li><a href="{{journal.name}}/">{{journal.title}}</a></li>
+                {% endif %}
+            {% endfor %}
+        <ul>
+    </div>
+</div>
 
 
-<ul>
-    {% for journal in journals %}
-    <li><a href="{{journal.name}}/">{{journal.title}}</a></li>
-    {% endfor %}
-</ul>
+<script>
+    function toggle_class(html_object, class_1, class_2){
+        if(!html_object.classList.contains(class_1) && !html_object.classList.contains(class_2)) return;
 
+        if (html_object.classList.contains(class_1)){
+            html_object.classList.remove(class_1);
+            html_object.classList.add(class_2);
+        }else{
+            toggle_class(html_object, class_2, class_1);
+        }
+    }
 
+    function toggle_panel(panel_id){
+        var panel = document.getElementById(panel_id);
+        toggle_class(panel,"collapsed", "expanded");
+    }
+    
+</script>
 
 
                 
