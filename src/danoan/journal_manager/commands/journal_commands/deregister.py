@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, utils
+from danoan.journal_manager.control import config, exceptions, utils
 
 import argparse
 from typing import List
@@ -12,6 +12,9 @@ def deregister(journal_names: List[str]):
     Deregister a journal from the list of registered journals.
 
     This function does not remove any file.
+
+    Args:
+        journal_names: A list of journal names to be deregistered.
     """
     journal_data_file = config.get_journal_data_file()
 
@@ -21,13 +24,8 @@ def deregister(journal_names: List[str]):
         if entry.name not in journal_names:
             updated_list_of_journal_data.append(entry)
 
-    if len(updated_list_of_journal_data) == len(journal_data_file.list_of_journal_data):
-        print(
-            f"No registry was found for journals {', '.join(journal_names)}. Nothing was removed."
-        )
-    else:
-        journal_data_file.list_of_journal_data = updated_list_of_journal_data
-        journal_data_file.write(config.get_configuration_file().journal_data_filepath)
+    journal_data_file.list_of_journal_data = updated_list_of_journal_data
+    journal_data_file.write(config.get_configuration_file().journal_data_filepath)
 
 
 # -------------------- CLI --------------------

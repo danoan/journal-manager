@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, utils
+from danoan.journal_manager.control import config, exceptions, utils
 from danoan.journal_manager.control.wrappers import nvim_wrapper
 
 import argparse
@@ -14,6 +14,13 @@ def edit(journal_name: str):
 
     Opens the mkdocs.yml file for edition using the default editor specified
     in the file pointed by JOURNAL_MANAGER_CONFIG_FOLDER.
+
+    Args:
+        journal_name: The name of a journal in the registry.
+
+    Raises:
+        NotImplementedError if the requested editor application is not supported.
+        InvalidName if the journal name is not registered.
     """
     journal_data_list = config.get_journal_data_file().list_of_journal_data
 
@@ -23,17 +30,17 @@ def edit(journal_name: str):
     if not Path(text_editor_path).name.startswith("vim") and not Path(
         text_editor_path
     ).name.startswith("nvim"):
-        print(f"This application only knows how to start vim or nvim editors.")
-        exit(1)
+        raise NotImplementedError(
+            message="This application only knows how to start vim or nvim editors."
+        )
 
     for entry in journal_data_list:
         if entry.name == journal_name:
             mkdocs_config_path = Path(entry.location_folder).joinpath("mkdocs.yml")
             nvim_wrapper.edit_file(mkdocs_config_path.expanduser(), text_editor_path)
-
             return
 
-    print(f"Journal {journal_name} does not exist. Please enter an existent journal name.")
+    raise exceptions.InvalidName()
 
 
 # -------------------- CLI --------------------
@@ -41,7 +48,13 @@ def edit(journal_name: str):
 
 def __edit__(journal_name: str, **kwargs):
     utils.ensure_configuration_file_exists()
-    edit(journal_name)
+    try:
+        edit(journal_name)
+    except NotImplementedError as ex:
+        print(ex.message)
+        exit(1)
+    except exceptions.InvalidName:
+        print(f"Journal {journal_name} does not exist. Please enter an existent journal name.")
 
 
 def get_parser(subparser_action=None):

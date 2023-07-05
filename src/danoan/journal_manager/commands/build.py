@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.control import config, model, exceptions, utils
 from danoan.journal_manager.control.wrappers import general_proc_call, mkdocs_wrapper, node_wrapper
 
 from danoan.journal_manager.commands.journal_commands.register import register as register_journal
@@ -6,6 +6,7 @@ from danoan.journal_manager.commands.journal_commands.register import register a
 import multiprocessing
 import argparse
 from importlib_resources import files, as_file
+from io import StringIO
 from jinja2 import Environment, PackageLoader
 from pathlib import Path
 import shutil
@@ -13,55 +14,16 @@ import signal
 from typing import List, Iterator, Iterable, Any, Optional, Dict, Tuple
 
 
-# -------------------- API --------------------
-
-
-class NamesNotFoundInRegistry(Exception):
-    def __init__(self, names: Iterable[str]):
-        self.names = names
-
-
-class InvalidLocations(Exception):
-    def __init__(self, locations: Iterable[str]):
-        self.locations = locations
-
-
-class IncludeAllFolderDoesNotExist(Exception):
-    def __init__(self, path: str):
-        self.path = path
-
-
-def merge_build_instructions(
-    build_location: Path, build_instructions_path: Optional[Path] = None, **kwargs
-):
-    """
-    Helper function to merge build instructions.
-
-    The cli parser offer several options to build journals. This helper function
-    merge all these parameters in a unique object.
-    """
-    build_instructions = None
-    if build_instructions_path is None:
-        build_instructions = model.BuildInstructions(build_location)
-    else:
-        build_instructions = model.BuildInstructions.read(build_instructions_path)
-
-    if not build_instructions.build_location:
-        build_instructions.build_location = build_location
-
-    for keyword, value in kwargs.items():
-        if value is not None:
-            build_instructions.__dict__[keyword] = value
-
-    return build_instructions
-
-
-def register_journals_by_location(locations: List[str]):
+# -------------------- Helper Functions --------------------
+def __register_journals_by_location__(locations: List[str]):
     """
     Register journals by location in the registry.
 
-    If a location is invalid, no journal is registered and, instead,
-    a InvalidLocations exception is raised.
+    Args:
+        locations: A list of journal location folders.
+    Raises:
+        InvalidLocation if one or more locations are not valid or do
+        not exist.
     """
     invalid_locations: List[str] = []
     for journal_location in locations:
@@ -69,14 +31,24 @@ def register_journals_by_location(locations: List[str]):
             invalid_locations.append(journal_location)
 
     if len(invalid_locations) != 0:
-        raise InvalidLocations(invalid_locations)
+        raise exceptions.InvalidLocation(invalid_locations)
 
     for journal_location in locations:
-        print(f"Registering journal location: {journal_location}")
         register_journal(Path(journal_location))
 
 
-def collect_journal_names_from_location(list_of_locations: List[str]) -> List[str]:
+def __collect_journal_names_from_location__(list_of_locations: List[str]) -> List[str]:
+    """
+    Return a list of journals names based on their journal location.
+
+    Args:
+        list_of_locations: A list with journal location folders.
+    Returns:
+        A list of journal names.
+    Raises:
+        InvalidLocation if one or more locations are not valid or do
+        not exist.
+    """
     journal_data_file = config.get_journal_data_file()
     journals = map(
         lambda location: utils.find_journal_by_location(journal_data_file, location),
@@ -85,9 +57,16 @@ def collect_journal_names_from_location(list_of_locations: List[str]) -> List[st
     return list(map(lambda journal: journal.name if journal else "", journals))
 
 
-def validate_journal_names_in_registry(names: List[str]) -> Tuple[List[str], List[str]]:
+def __validate_journal_names_in_registry__(names: List[str]) -> Tuple[List[str], List[str]]:
     """
     Separate a list of journal names in registered and non registered.
+
+    Args:
+        names: List of journal names.
+    Returns:
+        Two lists of journal names. The first one contain journal names that
+        were found in the registry and the second one contain journal names
+        that were not found in the registry.
     """
     journal_data_file = config.get_journal_data_file()
     registered_names = list(
@@ -98,11 +77,18 @@ def validate_journal_names_in_registry(names: List[str]) -> Tuple[List[str], Lis
     return registered_names, non_registered_names
 
 
-def validate_journal_locations_in_registry(
+def __validate_journal_locations_in_registry__(
     locations: List[str],
 ) -> Tuple[List[str], List[str]]:
     """
     Separate a list of journal locations in registered and non registered.
+
+    Args:
+        list_of_locations: A list with journal location folders.
+    Returns:
+        Two lists of journal names. The first one contain journal names that
+        were found in the registry and the second one contain journal names
+        that were not found in the registry.
     """
     journal_data_file = config.get_journal_data_file()
     registered_locations = list(
@@ -113,93 +99,35 @@ def validate_journal_locations_in_registry(
     return registered_locations, non_registered_locations
 
 
-def validate_journal_from_include_all_folder(
+def __validate_journal_from_include_all_folder__(
     include_all_folder: str,
 ) -> Tuple[List[str], List[str]]:
     """
     Separate a list of journal locations in registered and non registered.
 
     All folders located in include_all_folder are considered as a journal location.
+
+    Args:
+        include_all_folder: Location where all children folders are considered
+                            as a journal location.
+    Returns:
+        Two lists of journal names. The first one contain journal names that
+        were found in the registry and the second one contain journal names
+        that were not found in the registry.
+    Raises:
+        IncludeLocation if the include_all_folder is not valid or does not
+        exist.
     """
     p = Path(include_all_folder)
     if not p.exists():
-        raise IncludeAllFolderDoesNotExist(include_all_folder)
+        raise exceptions.InvalidLocation([include_all_folder])
 
-    return validate_journal_locations_in_registry(list(map(lambda x: x.as_posix(), p.iterdir())))
-
-
-def get_journals_names_to_build(build_instructions: model.BuildInstructions):
-    """
-    Read the build instructions and collect the journal names to build.
-
-    There are four ways to build journals:
-        1. Giving a list of journal names;
-        2. Giving a list of journal locations;
-        3. Giving a directory that contains journal folders and build all of them;
-        4. Saying nothing and then all registered journals are built.
-
-    This function reads the build instructions and extracts the journals names
-    accordingly with the chosen method.
-    """
-    journal_data_file = config.get_journal_data_file()
-
-    journals_names_to_build = []
-    try:
-        if build_instructions.journals_names_to_build is not None:
-            registered_names, non_registered_names = validate_journal_names_in_registry(
-                build_instructions.journals_names_to_build
-            )
-
-            if len(non_registered_names) != 0:
-                raise NamesNotFoundInRegistry(non_registered_names)
-
-            journals_names_to_build = registered_names
-        elif build_instructions.journals_locations_to_build is not None:
-            registered_locations, non_registered_locations = validate_journal_locations_in_registry(
-                build_instructions.journals_locations_to_build
-            )
-            register_journals_by_location(non_registered_locations)
-
-            journals_names_to_build = collect_journal_names_from_location(
-                registered_locations + non_registered_locations
-            )
-
-        elif build_instructions.include_all_folder is not None:
-            (
-                registered_locations,
-                non_registered_locations,
-            ) = validate_journal_from_include_all_folder(build_instructions.include_all_folder)
-            register_journals_by_location(non_registered_locations)
-
-            journals_names_to_build = collect_journal_names_from_location(
-                registered_locations + non_registered_locations
-            )
-        else:
-            # Build all registered journals
-            journals_names_to_build.extend(
-                map(lambda x: x.name, journal_data_file.list_of_journal_data)
-            )
-    except NamesNotFoundInRegistry as ex:
-        print("The following journal names are not part of the registry:")
-        for journal_name in ex.names:
-            print(f"{journal_name}")
-        print("Build is aborted.")
-        exit(1)
-    except InvalidLocations as ex:
-        print("The following journal location folders were not found in the registry:")
-        for journal_location in ex.locations:
-            print(f"{journal_location}")
-        print("Build is aborted.")
-        exit(1)
-    except IncludeAllFolderDoesNotExist as ex:
-        print(
-            f"The path specified in the build instructions: {ex.path} does not exist. Build is aborted."
-        )
-        exit(1)
-    return journals_names_to_build
+    return __validate_journal_locations_in_registry__(
+        list(map(lambda x: x.as_posix(), p.iterdir()))
+    )
 
 
-# -------------------- Model Utilities --------------------
+# -------------------- Build Utilities --------------------
 
 
 class BuildStep:
@@ -271,7 +199,6 @@ class BuildJournals(BuildStep):
                 journal_data = utils.find_journal_by_name(journal_data_file, journal_name)
 
                 if journal_data and journal_data.name == journal_name:
-
                     mkdocs_wrapper.build(
                         Path(journal_data.location_folder),
                         f"{self.journals_site_folder}/{journal_data.name}",
@@ -280,6 +207,28 @@ class BuildJournals(BuildStep):
 
             self.journal_data = data
             return self
+        except exceptions.InvalidName as ex:
+            ss = StringIO()
+            ss.write("The following journal names are not part of the registry:")
+            for journal_name in ex.names:
+                ss.write(f"{journal_name}")
+            ss.write("Build is aborted.")
+
+            return FailedStep(self, ss.getvalue())
+        except exceptions.InvalidLocations as ex:
+            ss = StringIO()
+            ss.write("The following journal location folders were not found in the registry:")
+            for journal_location in ex.locations:
+                ss.write(f"{journal_location}")
+            ss.write("Build is aborted.")
+
+            return FailedStep(self, ss.getvalue())
+        except exceptions.IncludeAllFolderDoesNotExist as ex:
+            ss = StringIO()
+            ss.write(
+                f"The path specified in the build instructions: {ex.path} does not exist. Build is aborted."
+            )
+            return FailedStep(self, ss.getvalue())
         except BaseException as ex:
             return FailedStep(self, str(ex))
 
@@ -393,7 +342,92 @@ class BuildHttpServer(BuildStep):
             return FailedStep(self, str(ex))
 
 
-def start_http_server(http_server_folder: Path, file_monitor_script: Path):
+# -------------------- API --------------------
+
+
+def get_journals_names_to_build(build_instructions: model.BuildInstructions) -> List[str]:
+    """
+    Read the build instructions and collect the journal names to build.
+
+    There are four ways to build journals:
+        1. Giving a list of journal names;
+        2. Giving a list of journal locations;
+        3. Giving a directory that contains journal folders and build all of them;
+        4. Saying nothing and then all registered journals are built.
+
+    This function reads the build instructions and extracts the journals names
+    accordingly with the chosen method.
+
+    Args:
+        build_instructions: A BuildInstructions object.
+    Returns:
+        A list of journal names to build.
+    Raises:
+        InvalidName if invalid journal names are given.
+        InvalidLocation if invalid journal locations are given.
+        InvalidIncludeAllFolder if invalid include_all_folder location
+        is given.
+    """
+    journal_data_file = config.get_journal_data_file()
+
+    journals_names_to_build = []
+    if build_instructions.journals_names_to_build is not None:
+        registered_names, non_registered_names = __validate_journal_names_in_registry__(
+            build_instructions.journals_names_to_build
+        )
+
+        if len(non_registered_names) != 0:
+            raise exceptions.InvalidName(non_registered_names)
+
+        journals_names_to_build = registered_names
+    elif build_instructions.journals_locations_to_build is not None:
+        registered_locations, non_registered_locations = __validate_journal_locations_in_registry__(
+            build_instructions.journals_locations_to_build
+        )
+        __register_journals_by_location__(non_registered_locations)
+
+        journals_names_to_build = __collect_journal_names_from_location__(
+            registered_locations + non_registered_locations
+        )
+
+    elif build_instructions.include_all_folder is not None:
+        (
+            registered_locations,
+            non_registered_locations,
+        ) = __validate_journal_from_include_all_folder__(build_instructions.include_all_folder)
+        __register_journals_by_location__(non_registered_locations)
+
+        journals_names_to_build = __collect_journal_names_from_location__(
+            registered_locations + non_registered_locations
+        )
+    else:
+        # Build all registered journals
+        journals_names_to_build.extend(
+            map(lambda x: x.name, journal_data_file.list_of_journal_data)
+        )
+    return journals_names_to_build
+
+
+def build(build_instructions: model.BuildInstructions):
+    """
+    Build html static pages from journals.
+    """
+
+    build_location = Path(build_instructions.build_location)
+    build_location.mkdir(exist_ok=True)
+
+    return (
+        BuildJournals(build_instructions=build_instructions)
+        .build()
+        .next(BuildIndexPage)
+        .next(BuildHttpServer)
+    )
+
+
+# -------------------- CLI --------------------
+
+
+def __start_http_server__(http_server_folder: Path, file_monitor_script: Path):
     """
     Start a local http server.
 
@@ -423,23 +457,29 @@ def start_http_server(http_server_folder: Path, file_monitor_script: Path):
         t2.join(0.1)
 
 
-def build(build_instructions: model.BuildInstructions):
+def __merge_build_instructions__(
+    build_location: Path, build_instructions_path: Optional[Path] = None, **kwargs
+):
     """
-    Build html static pages from journals.
+    Helper function to merge build instructions.
+
+    The cli parser offer several options to build journals. This helper function
+    merge all these parameters in a unique object.
     """
+    build_instructions = None
+    if build_instructions_path is None:
+        build_instructions = model.BuildInstructions(build_location)
+    else:
+        build_instructions = model.BuildInstructions.read(build_instructions_path)
 
-    build_location = Path(build_instructions.build_location)
-    build_location.mkdir(exist_ok=True)
+    if not build_instructions.build_location:
+        build_instructions.build_location = build_location
 
-    return (
-        BuildJournals(build_instructions=build_instructions)
-        .build()
-        .next(BuildIndexPage)
-        .next(BuildHttpServer)
-    )
+    for keyword, value in kwargs.items():
+        if value is not None:
+            build_instructions.__dict__[keyword] = value
 
-
-# -------------------- CLI --------------------
+    return build_instructions
 
 
 def __build__(
@@ -466,7 +506,7 @@ def __build__(
 
         shutil.rmtree(build_location)
 
-    build_instructions = merge_build_instructions(
+    build_instructions = __merge_build_instructions__(
         build_location.expanduser(),
         build_instructions_path,
         build_index=build_index,
@@ -479,7 +519,7 @@ def __build__(
 
     if not isinstance(build_result, FailedStep):
         if with_http_server:
-            start_http_server(build_result.http_server_folder, build_result.file_monitor_script)
+            __start_http_server__(build_result.http_server_folder, build_result.file_monitor_script)
     else:
         print(f"Build was not successful with error: {build_result.msg}")
     pass

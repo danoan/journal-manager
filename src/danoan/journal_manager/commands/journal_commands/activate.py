@@ -12,9 +12,7 @@ def activate(journal_names: List[str]):
     Activate a journal such that it is built.
 
     Args:
-        journal_names (optional): List of journal names
-    Returns:
-        Nothing
+        journal_names: List of journal names.
     """
 
     config_file = config.get_configuration_file()

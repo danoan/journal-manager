@@ -1,13 +1,13 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.control import config, model, exceptions, utils
 
 import argparse
-from typing import List, Optional
+from typing import List, Optional, Iterable
 
 
 # -------------------- API --------------------
 
 
-def show(journal_name: str, attribute_names: List[str], **kwargs):
+def show(journal_name: str, attribute_names: List[str]) -> Iterable[str]:
     """
     Show information about a journal.
 
@@ -15,7 +15,11 @@ def show(journal_name: str, attribute_names: List[str], **kwargs):
         journal_name: The journal name
         attribute_names (optional): List of attribute names which values one wants to show
     Returns:
-        Nothing
+        The attribute value if a single attribute was requested. For two or more
+        attributes, several strings are returned. One for line requested attribute.
+        The string has the format "attribute_name: attribute_value".
+    Raises:
+        InvalidName if the journal name is invalid.
     """
     journal_data_list = config.get_journal_data_file().list_of_journal_data
 
@@ -24,9 +28,15 @@ def show(journal_name: str, attribute_names: List[str], **kwargs):
             if len(attribute_names) == 0:
                 attribute_names = list(journal.__dict__.keys())
 
-            for name in attribute_names:
-                print(f"{name}: {journal.__dict__[name]}")
-            break
+            if len(attribute_names) == 1:
+                attribute_name = attribute_names[0]
+                yield journal.__dict__[attribute_name]
+            else:
+                for name in attribute_names:
+                    yield f"{name}:{journal.__dict__[name]}"
+            return
+
+    raise exceptions.InvalidName()
 
 
 # -------------------- CLI --------------------
@@ -41,7 +51,11 @@ def __show__(journal_name: str, attribute_names: Optional[List[str]] = None, **k
     if len(attribute_names) > 0 and attribute_names[0] is None:
         attribute_names.remove(None)
 
-    show(journal_name, attribute_names)
+    try:
+        for show_entry in show(journal_name, attribute_names):
+            print(show_entry)
+    except exceptions.InvalidName:
+        print(f"The journal name: {journal_name} is not registered.")
 
 
 def get_parser(subparser_action=None):

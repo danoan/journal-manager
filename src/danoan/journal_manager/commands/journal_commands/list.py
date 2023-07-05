@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, utils
+from danoan.journal_manager.control import config, exceptions, utils
 
 import argparse
 
@@ -9,15 +9,20 @@ import argparse
 def list_journals():
     """
     List registered journals.
+
+    Returns:
+        A string for each registered journal in the format:
+        "journal_name:location_folder".
+    Raises:
+        EmptyList if the journal register is empty.
     """
     list_of_journal_data = config.get_journal_data_file().list_of_journal_data
 
     if len(list_of_journal_data) == 0:
-        print("There is no journal registered yet.")
-        return
+        raise exceptions.EmptyList()
 
     for entry in list_of_journal_data:
-        print(f"{entry.name}: {entry.location_folder}")
+        yield f"{entry.name}:{entry.location_folder}"
 
 
 # -------------------- CLI --------------------
@@ -25,7 +30,12 @@ def list_journals():
 
 def __list_journals__(**kwargs):
     utils.ensure_configuration_file_exists()
-    list_journals()
+
+    try:
+        for journal_list_entry in list_journals():
+            print(journal_list_entry)
+    except exceptions.EmptyList:
+        print("There is no journal registered yet.")
 
 
 def get_parser(subparser_action=None):

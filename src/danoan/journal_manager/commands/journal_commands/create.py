@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.control import config, model, exceptions, utils
 from danoan.journal_manager.control.wrappers import mkdocs_wrapper
 
 import argparse
@@ -9,10 +9,11 @@ from typing import Optional
 
 from jinja2 import FileSystemLoader, Environment, Template, PackageLoader
 
-# -------------------- API --------------------
+
+# -------------------- Helper Functions --------------------
 
 
-def create_mkdocs_from_template(journal_data: model.JournalData, template: Template):
+def __create_mkdocs_from_template__(journal_data: model.JournalData, template: Template):
     journal_configuration_file = Path(journal_data.location_folder).joinpath("mkdocs.yml")
     journal_docs_folder = Path(journal_data.location_folder).joinpath("docs")
     journal_index = journal_docs_folder.joinpath("index.md")
@@ -25,11 +26,11 @@ def create_mkdocs_from_template(journal_data: model.JournalData, template: Templ
         f.write(f"# {journal_data.title}")
 
 
-def create_mkdocs_from_quick_notes_template(journal_data: model.JournalData):
+def __create_mkdocs_from_quick_notes_template__(journal_data: model.JournalData):
     env = Environment(loader=PackageLoader("danoan.journal_manager", package_path="templates"))
     template = env.get_template(Path("").joinpath("quick-notes", "mkdocs.tpl.yaml").as_posix())
 
-    create_mkdocs_from_template(journal_data, template)
+    __create_mkdocs_from_template__(journal_data, template)
 
     journal_docs_folder = Path(journal_data.location_folder).joinpath("docs")
 
@@ -45,17 +46,14 @@ def create_mkdocs_from_quick_notes_template(journal_data: model.JournalData):
     journal_quick_notes.touch()
 
 
-def create_mkdocs_from_template_name(journal_data: model.JournalData, template_name: str):
+def __create_mkdocs_from_template_name__(journal_data: model.JournalData, template_name: str):
     config_file = config.get_configuration_file()
 
     journal_template_list = model.JournalTemplateList.read(config_file.template_data_filepath)
 
     template_entry = utils.find_template_by_name(journal_template_list, template_name)
     if not template_entry:
-        print(
-            f"The template {template_name} does not exist. Please enter an existent template name"
-        )
-        exit(1)
+        raise exceptions.InvalidName()
 
     env = Environment(loader=FileSystemLoader(config_file.default_template_folder))
     relative_path_to_template = Path(template_entry.filepath).relative_to(
@@ -63,7 +61,10 @@ def create_mkdocs_from_template_name(journal_data: model.JournalData, template_n
     )
     template = env.get_template(str(relative_path_to_template))
 
-    create_mkdocs_from_template(journal_data, template)
+    __create_mkdocs_from_template__(journal_data, template)
+
+
+# -------------------- API --------------------
 
 
 def create(
@@ -85,16 +86,18 @@ def create(
 
     Args:
         journal_title: Name will be displayed in the html page.
-        journal_location_folder (optional): Directory where the journal files will be created
-        mkdocs_template_name (optional): The name of a template file for mkdocs.yml
-    Returns:
-        Nothing
+        journal_location_folder: Directory where the journal files will be created.
+        mkdocs_template_name (optional): The name of a template file for mkdocs.yml.
+    Raises:
+        InvalidName if the mkdocs_template_name is not registered.
+    Important:
+        If the journal exist already it will be overwrite.
     """
     config_file = config.get_configuration_file()
 
     journal_name = utils.journal_name_from_title(journal_title)
-
     journal_data_file = model.JournalDataList.read(config_file.journal_data_filepath)
+
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
 
     journal_location = journal_location_folder.joinpath(journal_name).expanduser()
@@ -104,9 +107,9 @@ def create(
     journal_data_file.list_of_journal_data.append(journal_data)
 
     if mkdocs_template_name:
-        create_mkdocs_from_template_name(journal_data, mkdocs_template_name)
+        __create_mkdocs_from_template_name__(journal_data, mkdocs_template_name)
     else:
-        create_mkdocs_from_quick_notes_template(journal_data)
+        __create_mkdocs_from_quick_notes_template__(journal_data)
 
     journal_data_file.write(config_file.journal_data_filepath)
 
@@ -123,7 +126,14 @@ def __create__(
     utils.ensure_configuration_file_exists()
     if journal_location_folder is None:
         journal_location_folder = config.get_configuration_file().default_journal_folder
-    create(journal_title, journal_location_folder, mkdocs_template_name)
+
+    try:
+        create(journal_title, journal_location_folder, mkdocs_template_name)
+    except exceptions.InvalidName:
+        print(
+            f"The template {mkdocs_template_name} does not exist. Please enter an existent template name"
+        )
+        exit(1)
 
 
 def get_parser(subparser_action=None):

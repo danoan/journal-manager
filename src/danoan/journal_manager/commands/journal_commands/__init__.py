@@ -5,3 +5,4 @@ from . import deregister
 from . import edit
 from . import list
 from . import register
+from . import show

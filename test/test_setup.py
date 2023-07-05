@@ -17,13 +17,11 @@ def f_unset_env_variable(monkeypatch):
 class TestInit:
     def test_no_environment_variable_set(self, f_unset_env_variable, tmp_path):
         with pytest.raises(config.ConfigurationFolderDoesNotExist) as e:
-            default_journal_folder = tmp_path.joinpath("journals").expanduser()
-            default_template_folder = tmp_path.joinpath("templates").expanduser()
-            init.init_journal_manager(default_journal_folder, default_template_folder)
+            config.get_configuration_file()
 
         assert e.type == config.ConfigurationFolderDoesNotExist
 
-    def test_no_configuration_file_exist(self, f_set_env_variable, tmp_path):
+    def test_no_configuration_file_exist(self, f_set_env_variable, f_setup_init, tmp_path):
         journal_manager_config_folder = f_set_env_variable["journal_manager_config_folder"]
         default_journal_folder = tmp_path.joinpath("journals").expanduser()
         default_template_folder = tmp_path.joinpath("templates").expanduser()

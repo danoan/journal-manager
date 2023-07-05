@@ -2,21 +2,18 @@ from danoan.journal_manager.control import config, utils
 
 import argparse
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Iterable
 
 
 # -------------------- API --------------------
 
 
-def set_parameters(editor: Optional[Path], **kwargs):
+def set_parameters(editor: Optional[Path]):
     """
     Set the parameter's values passed as arguments.
 
     Args:
         editor: Path to the default text editor to use.
-        **kwargs: Any extra keyword argument is accepted, but ignored by the function.
-    Returns:
-        Nothing.
     """
     config_file = config.get_configuration_file()
 
@@ -26,7 +23,7 @@ def set_parameters(editor: Optional[Path], **kwargs):
     config_file.write(config.get_configuration_filepath())
 
 
-def list_parameters():
+def list_parameters() -> Iterable[str]:
     """
     List parameters.
 
@@ -34,14 +31,13 @@ def list_parameters():
     if no argument is given. If arguments are given, it will set the
     correspondent parameter.
 
-    Args:
-        **kwargs: Any keyword argument type is accepted, but it will be ignored if the
-        keyword is not a subcommand parameter.
     Returns:
-        Nothing.
+        One string for each attribute in the format:
+        "attribute_name: attribute_value"
     """
     config_file = config.get_configuration_file()
-    print(f"default_text_editor_path: {config_file.parameters.default_text_editor_path}")
+    for attr_name, _ in config_file.parameters.__dataclass_fields__.items():
+        yield f"{attr_name}: {getattr(config_file.parameters,attr_name)}"
 
 
 # -------------------- CLI --------------------

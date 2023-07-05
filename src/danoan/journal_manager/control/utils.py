@@ -80,7 +80,7 @@ def peek_is_empty(iterator: Iterator[Any]) -> Tuple[bool, Iterator[Any]]:
 # -------------------- "Text Processing" --------------------
 def journal_name_from_title(journal_title: str) -> str:
     """
-    Return a lower-snake-case version from a capitalized whitespace separated string.
+    Return a lower-kebab-case version from a capitalized whitespace separated string.
     """
     return re.sub(r"[\s]+", "-", journal_title.lower().strip())
 

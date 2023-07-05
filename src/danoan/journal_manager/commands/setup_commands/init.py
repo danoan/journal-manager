@@ -13,34 +13,34 @@ def init_journal_manager(default_journal_folder: Path, default_template_folder: 
     """
     Initialize journal-manager settings.
 
-    This function creates the following files:
-
-    - configuration file: Default directories and user preferences.
-    - journal data file: Journal metadata.
-    - template data file: Template metadata.
-
-    The three files are created at the location stored in the
-    environment variable JOURNAL_MANAGER_CONFIG_FOLDER.
+    This sets up configuration values of journal-manager.
 
     Args:
         default_journal_folder: Path to the default location where journals will be created.
         default_template_folder: Path to the default location where journal templates will be stored.
-        **kwargs: Any extra keyword argument is accepted, but ignored by the function.
-    Returns:
-        Nothing.
     """
+    config_file = config.get_configuration_file()
+
+    config_file.default_journal_folder = default_journal_folder.as_posix()
+    config_file.default_template_folder = default_template_folder.as_posix()
+
+    config_file.write(config.get_configuration_filepath())
+
+
+# -------------------- CLI --------------------
+
+
+def __init_journal_manager__(default_journal_folder: Path, default_template_folder: Path, **kwargs):
+    utils.ensure_configuration_folder_exists()
+
+    config_file_exists_already = True
     try:
         config_file = config.get_configuration_file()
-        config_file_exists_already = True
-
-        config_file.default_journal_folder = default_journal_folder.as_posix()
-        config_file.default_template_folder = default_template_folder.as_posix()
-
-        config_file.write(config.get_configuration_filepath())
     except config.ConfigurationFileDoesNotExist:
         config.create_configuration_file(default_journal_folder, default_template_folder)
         config_file_exists_already = False
 
+    init_journal_manager(default_journal_folder, default_template_folder)
     config_file = config.get_configuration_file()
 
     if config_file_exists_already:
@@ -56,14 +56,6 @@ def init_journal_manager(default_journal_folder: Path, default_template_folder: 
                   """
             )
         )
-
-
-# -------------------- CLI --------------------
-
-
-def __init_journal_manager__(default_journal_folder: Path, default_template_folder: Path, **kwargs):
-    utils.ensure_configuration_folder_exists()
-    init_journal_manager(default_journal_folder, default_template_folder)
 
 
 def get_parser(subparser_action=None):

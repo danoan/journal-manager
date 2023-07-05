@@ -8,29 +8,15 @@ from typing import Optional
 # -------------------- API --------------------
 
 
-def register(location_folder: Path, journal_title: Optional[str] = None):
+def register(location_folder: Path, journal_title: str):
     """
     Register an existing journal structure to the list of managed journals.
 
-    If a journal_title is not specified, a title will be derived from
-    the location_folder. A journal name is created from the journal_title
-    by taking its `kebab-notation`.
-
-    E.g.
-
-    journal_title: My Journal Title
-    journal_name: my-journal-title
-
     Args:
         location_folder: Directory where the journal files are located
-        journal_title (optional): Journal title.
-    Returns:
-        Nothing
+        journal_title: The title of the journal.
     """
     journal_data_file = config.get_journal_data_file()
-
-    if journal_title is None:
-        journal_title = Path(location_folder).expanduser().name
 
     journal_name = utils.journal_name_from_title(journal_title)
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
@@ -46,6 +32,9 @@ def register(location_folder: Path, journal_title: Optional[str] = None):
 
 def __register__(location_folder: Path, journal_title: Optional[str] = None, **kwargs):
     utils.ensure_configuration_file_exists()
+    if journal_title is None:
+        journal_title = Path(location_folder).expanduser().name
+
     register(location_folder, journal_title)
 
 

@@ -1,4 +1,7 @@
-from danoan.journal_manager.commands.build import build as build_journal, merge_build_instructions
+from danoan.journal_manager.commands.build import (
+    build as build_journal,
+    __merge_build_instructions__,
+)
 import danoan.journal_manager.commands.journal_commands as jm
 
 from danoan.journal_manager.control import config
@@ -23,7 +26,7 @@ class TestBuild:
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
 
-        build_instructions = merge_build_instructions(
+        build_instructions = __merge_build_instructions__(
             build_location.expanduser().as_posix(), build_index=build_index
         )
 
@@ -47,7 +50,7 @@ class TestBuild:
             config.get_journal_data_file(), "journal-2"
         ).location_folder
 
-        build_instructions = merge_build_instructions(
+        build_instructions = __merge_build_instructions__(
             build_location.expanduser().as_posix(),
             journals_locations_to_build=[journal_2_location_folder],
             build_index=build_index,
@@ -72,7 +75,7 @@ class TestBuild:
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
 
-        build_instructions = merge_build_instructions(
+        build_instructions = __merge_build_instructions__(
             build_location.expanduser().as_posix(),
             journals_names_to_build=journal_names_to_build,
             build_index=build_index,

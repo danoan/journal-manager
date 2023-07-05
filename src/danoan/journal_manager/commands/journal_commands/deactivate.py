@@ -9,6 +9,9 @@ from typing import List
 def deactivate(journal_names: List[str]):
     """
     Deactivate a journal to be built.
+
+    Args:
+        journal_names: List of journal names in the register to deactivate.
     """
     config_file = config.get_configuration_file()
     journal_data_list = config.get_journal_data_file().list_of_journal_data

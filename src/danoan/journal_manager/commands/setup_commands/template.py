@@ -1,8 +1,9 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.control import config, model, exceptions, utils
 
 import argparse
 from pathlib import Path
 import shutil
+from typing import Iterable
 
 
 # -------------------- API --------------------
@@ -14,9 +15,6 @@ def remove(template_name: str):
 
     Args:
         template_name: Name of a registered template.
-        **kwargs: Any extra keyword argument is accepted, but ignored by the function.
-    Returns:
-        Nothing.
     """
     config_file = config.get_configuration_file()
 
@@ -30,13 +28,12 @@ def remove(template_name: str):
             if dir_to_remove.parent.as_posix() == config_file.default_template_folder:
                 shutil.rmtree(dir_to_remove)
             else:
-                print(
+                raise RuntimeError(
                     f"I've got an unexpected path to remove: {dir_to_remove.as_posix()}. Aborting!"
                 )
-                exit(1)
 
     if len(updated_template_list) == len(template_list_file.list_of_template_data):
-        print(f"Template {template_name} was not found.")
+        raise exceptions.InvalidName()
     else:
         template_list_file.list_of_template_data = updated_template_list
         template_list_file.write(config.get_configuration_file().template_data_filepath)
@@ -62,8 +59,6 @@ def register(template_name: str, template_filepath: str):
     Args:
         template_name: Name of the template to be registered.
         template_filepath: Path to the template file taken as model.
-    Returns:
-        Nothing.
     """
     config_file = config.get_configuration_file()
 
@@ -82,22 +77,21 @@ def register(template_name: str, template_filepath: str):
     template_list_file.write(config.get_configuration_file().template_data_filepath)
 
 
-def list_templates():
+def list_templates() -> Iterable[str]:
     """
     List registered templates.
 
-    Args:
-        **kwargs: Any extra keyword argument is accepted, but ignored by the function.
     Returns:
-        Nothing.
+        A string for each registered template in the format:
+        "template_name:template_filepath"
     """
     template_list = config.get_template_list_file().list_of_template_data
 
     if len(template_list) == 0:
-        print("No template registered yet.")
+        raise exceptions.EmptyList()
 
     for entry in template_list:
-        print(f"{entry.name}={entry.filepath}")
+        yield f"{entry.name}:{entry.filepath}"
 
 
 # -------------------- CLI --------------------
@@ -105,7 +99,13 @@ def list_templates():
 
 def __remove_template__(template_name: str, **kwargs):
     utils.ensure_configuration_file_exists()
-    remove(template_name)
+    try:
+        remove(template_name)
+    except exceptions.InvalidName:
+        print(f"Template {template_name} was not found.")
+    except RuntimeError as ex:
+        print(ex.message)
+        exit(1)
 
 
 def __register_template__(template_name: str, template_filepath: str, **kwargs):
@@ -115,7 +115,11 @@ def __register_template__(template_name: str, template_filepath: str, **kwargs):
 
 def __list_templates__(**kwargs):
     utils.ensure_configuration_file_exists()
-    list_templates()
+
+    try:
+        list_templates()
+    except exceptions.EmptyList:
+        print("No template registered yet.")
 
 
 def get_parser(subparser_action=None):
