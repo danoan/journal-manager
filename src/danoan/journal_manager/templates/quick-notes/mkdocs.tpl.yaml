@@ -1,17 +1,30 @@
-nav:
-    - About: index.md
-    - Quick Notes: quick-notes.md
-
 site_name: {{journal.title}}
-theme: 
+theme:
   name: material
-  custom_dir: overrides 
+  custom_dir: overrides
+  features:
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
 
 
 markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 
 
 extra_javascript:
