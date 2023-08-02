@@ -9,10 +9,20 @@ from pathlib import Path
 import pytest
 
 
+def __create_template__(tmp_path, template_name):
+    template_location = tmp_path.joinpath(f"template-{template_name}")
+    template_location.mkdir()
+    template_yml_config_file = template_location.joinpath("mkdocs.tpl.yml")
+    template_yml_config_file.touch()
+
+    return template_location
+
+
 class TestRegister:
     def test_register_deregister_journal(self, f_setup_init, tmp_path):
         # Register
         first_location_folder = tmp_path.joinpath("first-journal").expanduser()
+        first_location_folder.mkdir()
         first_journal_title = "My First Journal Title"
         jm.register.register(first_location_folder, first_journal_title)
 
@@ -25,6 +35,7 @@ class TestRegister:
 
         # Register a second one
         second_location_folder = tmp_path.joinpath("second-journal").expanduser()
+        second_location_folder.mkdir()
         second_journal_title = "My Second Journal Title"
         jm.register.register(second_location_folder, second_journal_title)
 
@@ -32,7 +43,7 @@ class TestRegister:
         assert len(list_of_journal_data) == 2
 
         # Deregister
-        jm.deregister.deregister("my-first-journal-title")
+        jm.deregister.deregister(["my-first-journal-title"])
 
         list_of_journal_data = config.get_journal_data_file().list_of_journal_data
         assert len(list_of_journal_data) == 1
@@ -79,9 +90,10 @@ class TestCreate:
         self, f_setup_init, tmp_path, journal_location_folder_str, template_name
     ):
         journal_title = "My Journal Title"
-        template_filepath = tmp_path.joinpath("my-template.yml")
-        template_filepath.touch()
-        register_template("research", template_filepath.expanduser())
+
+        template_name = "research"
+        template_location = __create_template__(tmp_path, template_name)
+        register_template(template_name, template_location.expanduser())
 
         journal_location_folder = None
         if journal_location_folder_str:
@@ -105,11 +117,10 @@ class TestShow:
     def test_show_one_parameter(self, f_setup_init, tmp_path):
         journal_title = "My Journal Title"
         journal_location_folder = Path(config.get_configuration_file().default_journal_folder)
-        template_name = "research"
 
-        template_filepath = tmp_path.joinpath("my-template.yml")
-        template_filepath.touch()
-        register_template(template_name, template_filepath.expanduser())
+        template_name = "research"
+        template_location = __create_template__(tmp_path, template_name)
+        register_template(template_name, template_location.expanduser())
 
         jm.create.create(journal_title, journal_location_folder, template_name)
         show_entries = list(jm.show.show("my-journal-title", ["title"]))

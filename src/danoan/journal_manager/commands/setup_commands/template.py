@@ -24,7 +24,7 @@ def remove(template_name: str):
         if entry.name != template_name:
             updated_template_list.append(entry)
         else:
-            dir_to_remove = Path(entry.filepath).parent
+            dir_to_remove = Path(entry.filepath)
             if dir_to_remove.parent.as_posix() == config_file.default_template_folder:
                 shutil.rmtree(dir_to_remove)
             else:
@@ -43,7 +43,8 @@ def register(template_name: str, template_filepath: str):
     """
     Register a journal template.
 
-    A journal template is a mkdocs.yml file with placeholders. For example
+    A minimal journal template is composed of a mkdocs.yml file with
+    optional placeholders. For example
 
     site_name: {{journal.title}}
     theme: material
@@ -56,17 +57,23 @@ def register(template_name: str, template_filepath: str):
     - {{journal.location_folder}}
     - {{journal.active}}
 
+    A journal template could have as many files as necessary
+    and an arbitrary folder structure.
+
+    The template should be given as a path to the folder that
+    contains the files that define the template. These files
+    will be copied for each instance of journal that make use
+    of that template.
+
     Args:
         template_name: Name of the template to be registered.
         template_filepath: Path to the template file taken as model.
     """
     config_file = config.get_configuration_file()
 
-    target_template_filepath = Path(config_file.default_template_folder).joinpath(
-        template_name, "mkdocs.yml"
-    )
-    target_template_filepath.parent.mkdir(parents=True)
-    shutil.copyfile(template_filepath, target_template_filepath)
+    target_template_filepath = Path(config_file.default_template_folder).joinpath(template_name)
+    target_template_filepath.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(template_filepath, target_template_filepath)
 
     template_data = model.JournalTemplate(
         template_name, target_template_filepath.expanduser().as_posix()
@@ -117,7 +124,8 @@ def __list_templates__(**kwargs):
     utils.ensure_configuration_file_exists()
 
     try:
-        list_templates()
+        for entry in list_templates():
+            print(entry)
     except exceptions.EmptyList:
         print("No template registered yet.")
 

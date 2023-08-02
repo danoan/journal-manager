@@ -70,6 +70,15 @@ class TestParameters:
         assert config_file.parameters.default_text_editor_path == ""
 
 
+def __create_template__(tmp_path, template_name):
+    template_location = tmp_path.joinpath(f"template-{template_name}")
+    template_location.mkdir()
+    template_yml_config_file = template_location.joinpath("mkdocs.tpl.yml")
+    template_yml_config_file.touch()
+
+    return template_location
+
+
 class TestTemplate:
     def test_template_register(self, f_setup_init, tmp_path):
         config_file = config.get_configuration_file()
@@ -77,21 +86,20 @@ class TestTemplate:
         template_list_file = config.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 0
 
-        template_filepath = tmp_path.joinpath("mkdocs.yml")
-        template_filepath.touch()
+        template_name = "research"
+        template_location = __create_template__(tmp_path, template_name)
 
-        e_template_name = "my-new-template"
         e_template_filepath = (
             Path(config_file.default_template_folder)
-            .joinpath(e_template_name, "mkdocs.yml")
+            .joinpath(template_name)
             .expanduser()
             .as_posix()
         )
 
-        template.register(e_template_name, template_filepath)
+        template.register(template_name, template_location)
         template_list_file = config.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 1
-        assert template_list_file.list_of_template_data[0].name == e_template_name
+        assert template_list_file.list_of_template_data[0].name == template_name
         assert template_list_file.list_of_template_data[0].filepath == e_template_filepath
 
     def test_template_remove(self, f_setup_init, tmp_path):
@@ -100,6 +108,6 @@ class TestTemplate:
         template_list_file = config.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 1
 
-        template.remove("my-new-template")
+        template.remove("research")
         template_list_file = config.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 0

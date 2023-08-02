@@ -49,9 +49,12 @@ def __list_or_set__(**kwargs):
     """
     utils.ensure_configuration_file_exists()
 
-    parameter_list = ["editor"]
-    if any([p in kwargs.keys() and kwargs[p] for p in parameter_list]):
-        set_parameters(**kwargs)
+    accepted_parameter_list = ["editor"]
+    active_parameters = dict(
+        list(filter(lambda x: x[0] in accepted_parameter_list, kwargs.items()))
+    )
+    if len(active_parameters) > 0:
+        set_parameters(**active_parameters)
     else:
         list_parameters()
 
@@ -77,7 +80,8 @@ def get_parser(subparser_action=None):
         )
 
     parser.add_argument(
-        "--editor", help="Path to the default text editor to use when editing files."
+        "--editor", help="Path to the default text editor to use when editing files.",
+        type=Path
     )
 
     parser.set_defaults(subcommand_help=parser.print_help, func=__list_or_set__)

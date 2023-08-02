@@ -34,7 +34,8 @@ def __register_journals_by_location__(locations: List[str]):
         raise exceptions.InvalidLocation(invalid_locations)
 
     for journal_location in locations:
-        register_journal(Path(journal_location))
+        journal_title = Path(journal_location).expanduser().name
+        register_journal(Path(journal_location), journal_title)
 
 
 def __collect_journal_names_from_location__(list_of_locations: List[str]) -> List[str]:

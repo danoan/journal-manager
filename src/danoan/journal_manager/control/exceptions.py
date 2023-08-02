@@ -17,5 +17,10 @@ class InvalidLocation(Exception):
 
 
 class InvalidIncludeAllFolder(Exception):
-    def __init__(self, path: str):
+    def __init__(self, path: Optional[str] = None):
         self.path = path
+
+
+class InvalidTemplate(Exception):
+    def __init__(self, msg: Optional[str] = None):
+        self.msg = msg
