@@ -1,66 +1,65 @@
 from danoan.journal_manager.control import config, exceptions, utils
 
 import argparse
-from typing import List, Optional, Iterable
-
+from typing import List, Optional
 
 # -------------------- API --------------------
 
 
-def show(journal_name: str, attribute_names: List[str]) -> Iterable[str]:
+def show(template_name: str, attribute_names: List[str]):
     """
-    Get attribute data from a registered journal.
+    Get attribute data from a registered template.
 
     Args:
-        journal_name: The journal name
-        attribute_names (optional): List of attribute names which values one wants to show
+        template_name: The template name.
+        attribute_names (optional): List of attribute names which values one wants to show.
     Returns:
         The attribute value if a single attribute was requested. For two or more
         attributes, several strings are returned. One for line requested attribute.
         The string has the format "attribute_name: attribute_value".
     Raises:
-        InvalidName if the journal name is invalid.
+        InvalidName if the template name is invalid.
         InvalidAttribute if an attribute name is invalid.
     """
-    journal_data_list = config.get_journal_data_file().list_of_journal_data
+    template_list_file = config.get_template_list_file()
 
-    for journal in journal_data_list:
-        if journal.name == journal_name:
+    for template in template_list_file.list_of_template_data:
+        if template.name == template_name:
             if len(attribute_names) == 0:
-                attribute_names = list(journal.__dict__.keys())
+                attribute_names = list(template.__dict__.keys())
 
             if len(attribute_names) == 1:
                 attribute_name = attribute_names[0]
-                if attribute_name not in journal.__dict__.keys():
+                if attribute_name not in template.__dict__.keys():
                     raise exceptions.InvalidAttribute(attribute_name)
-                yield journal.__dict__[attribute_name]
+                yield template.__dict__[attribute_name]
             else:
                 for name in attribute_names:
-                    yield f"{name}:{journal.__dict__[name]}"
+                    yield f"{name}:{template.__dict__[name]}"
+
             return
 
-    raise exceptions.InvalidName()
+    raise exceptions.InvalidName(template_name)
 
 
 # -------------------- CLI --------------------
 
 
-def __show__(journal_name: str, attribute_names: Optional[List[str]] = None, **kwargs):
-    utils.ensure_configuration_file_exists()
-    if not attribute_names:
+def __show_template__(template_name: str, attribute_names: Optional[List[str]] = None, **kwargs):
+    if attribute_names is None:
         attribute_names = []
 
-    # The action 'append' adds a None object if nothing is passed (assuming nargs='?')
     if len(attribute_names) > 0 and attribute_names[0] is None:
         attribute_names.remove(None)
 
+    utils.ensure_configuration_file_exists()
     try:
-        for show_entry in show(journal_name, attribute_names):
-            print(show_entry)
+        for value in show(template_name, attribute_names):
+            print(value)
     except exceptions.InvalidName:
-        print(f"The journal name: {journal_name} is not registered.")
+        print(f"The template name: {template_name} does not exist.")
     except exceptions.InvalidAttribute as ex:
-        print(f"The attribute: {ex.msg} is not registered.")
+        print(f"The attribute name: {ex.msg} does not exist.")
 
 
 def get_parser(subparser_action=None):
@@ -72,25 +71,24 @@ def get_parser(subparser_action=None):
     if subparser_action:
         parser = subparser_action.add_parser(
             command_name,
-            aliases=["s"],
             description=command_description,
             help=command_help,
-            formatter_class=argparse.RawDescriptionHelpFormatter,
+            formatter_class=argparse.RawTextHelpFormatter,
         )
     else:
         parser = argparse.ArgumentParser(
             command_name,
             description=command_description,
-            formatter_class=argparse.RawDescriptionHelpFormatter,
+            formatter_class=argparse.RawTextHelpFormatter,
         )
 
-    parser.add_argument("journal_name", help="A registered journal name")
+    parser.add_argument("template_name", help="Template name")
     parser.add_argument(
         "attribute_names",
-        nargs="?",
         action="append",
+        nargs="?",
         help="Attribute name which value one wants to show.",
     )
-    parser.set_defaults(subcommand_help=parser.print_help, func=__show__)
+    parser.set_defaults(func=__show_template__)
 
     return parser

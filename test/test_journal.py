@@ -1,7 +1,7 @@
 from danoan.journal_manager.commands import journal_commands as jm
 from danoan.journal_manager.control import config, model
 
-from danoan.journal_manager.commands.setup_commands.template import register as register_template
+from danoan.journal_manager.commands.template_commands.register import register as register_template
 
 import argparse
 from conftest import *
@@ -132,20 +132,3 @@ class TestShow:
 
         assert len(show_entries) == len(model.JournalData.__dataclass_fields__)
         assert show_entries[0] == "name:my-journal-title"
-
-
-# class TestList:
-#     def test_list_journals_when_registry_is_empty(self, f_setup_init, capfd):
-#         jm.list.list()
-#         captured = capfd.readouterr()
-#         assert captured.out == "There is no journal registered yet.\n"
-
-#     def test_list_journals(self, f_setup_init, capfd):
-#         journal_title = "My Journal Title"
-
-#         jm.create.create(journal_title)
-#         journal_data = config.get_journal_data_file().list_of_journal_data[0]
-
-#         jm.list.list()
-#         captured = capfd.readouterr()
-#         assert captured.out == f"{journal_data.name}: {journal_data.location_folder}\n"

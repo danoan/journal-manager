@@ -76,6 +76,8 @@ def create(
         mkdocs_template_name (optional): The name of a template file for mkdocs.yml.
     Raises:
         InvalidName if the mkdocs_template_name is not registered.
+        InvalidTemplate if the registered template does not have a mkdocs.tpl.yml file.
+        InvalidLocation if the journal_location_folder is an existent directory.
     Important:
         If the journal exist already it will be overwrite.
     """

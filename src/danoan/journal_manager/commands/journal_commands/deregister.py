@@ -11,15 +11,33 @@ def deregister(journal_names: List[str]):
     """
     Deregister a journal from the list of registered journals.
 
+    This action will unlist the journal from the list of
+    registered journals. Journals manager will not follow
+    this journal anymore after this operation.
+
     This function does not remove any file.
 
     Args:
         journal_names: A list of journal names to be deregistered.
+    Raises:
+        InvalidName if one or more journal names are not present in the list of registered journals.
     """
     journal_data_file = config.get_journal_data_file()
 
-    updated_list_of_journal_data = []
+    not_found_journal_names = []
+    for journal_name in journal_names:
+        found = False
+        for journal in journal_data_file.list_of_journal_data:
+            if journal_name == journal.name:
+                found = True
+                break
+        if not found:
+            not_found_journal_names.append(journal_name)
 
+    if len(not_found_journal_names) > 0:
+        raise exceptions.InvalidName(not_found_journal_names)
+
+    updated_list_of_journal_data = []
     for entry in journal_data_file.list_of_journal_data:
         if entry.name not in journal_names:
             updated_list_of_journal_data.append(entry)
@@ -33,7 +51,12 @@ def deregister(journal_names: List[str]):
 
 def __deregister__(journal_names: List[str], **kwargs):
     utils.ensure_configuration_file_exists()
-    deregister(journal_names)
+    try:
+        deregister(journal_names)
+    except exceptions.InvalidName as ex:
+        print(
+            f"The journal names: {ex.names} are not present in the list of registered journals. Any deregister was done."
+        )
 
 
 def get_parser(subparser_action=None):

@@ -6,7 +6,7 @@ from typing import List, Optional, TypeVar, Type, Dict, Any
 
 @dataclass
 class Parameters(TomlDataClassIO):
-    default_text_editor_path: str = ""
+    default_text_editor_path: Optional[str] = None
 
 
 @dataclass

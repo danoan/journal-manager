@@ -499,7 +499,7 @@ def __build__(
     if build_location.exists():
         if not ignore_safety_questions:
             ok_continue = input(
-                f"The directory {build_location} exists already. If you continue the operation the files there will be overwritten. Are you sure you want to continue"
+                f"The directory {build_location} exists already. If you continue the operation the files there will be overwritten. Are you sure you want to continue?\n"
             )
 
             if ok_continue.lower() not in ["y", "yes"]:

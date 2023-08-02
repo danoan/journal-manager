@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.control import config, exceptions, model, utils
 
 import argparse
 from typing import List
@@ -9,22 +9,37 @@ from typing import List
 
 def activate(journal_names: List[str]):
     """
-    Activate a journal such that it is built.
+    Activate a journal.
+
+    An active journal is a journal that is under frequent
+    edition and update. It distinguishes from an inactive or
+    archived journal.
 
     Args:
         journal_names: List of journal names.
+    Raises:
+        InvalidName if one or more journal names are not present in the list of registered journals.
     """
 
     config_file = config.get_configuration_file()
     journal_data_list = config.get_journal_data_file().list_of_journal_data
 
     updated_journal_data_list = []
-    for journal in journal_data_list:
-        for journal_name in journal_names:
+    not_found_journal_names = []
+    for journal_name in journal_names:
+        found = False
+        for journal in journal_data_list:
             if journal.name == journal_name:
+                found = True
                 journal.active = True
                 break
+
+        if not found:
+            not_found_journal_names.append(journal_name)
         updated_journal_data_list.append(journal)
+
+    if len(not_found_journal_names) > 0:
+        raise exceptions.InvalidName(not_found_journal_names)
 
     journal_data_list = model.JournalDataList(updated_journal_data_list)
     journal_data_list.write(config_file.journal_data_filepath)
@@ -35,7 +50,10 @@ def activate(journal_names: List[str]):
 
 def __activate__(journal_names: List[str], **kwargs):
     utils.ensure_configuration_file_exists()
-    activate(journal_names)
+    try:
+        activate(journal_names)
+    except exceptions.InvalidName as ex:
+        print(f"The journal names: {ex.names} are not registered. Any activation was done.")
 
 
 def get_parser(subparser_action=None):

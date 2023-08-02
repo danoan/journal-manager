@@ -3,6 +3,7 @@ from danoan.journal_manager.control.wrappers import nvim_wrapper
 
 import argparse
 from pathlib import Path
+from textwrap import dedent
 
 
 # -------------------- API --------------------
@@ -21,18 +22,21 @@ def edit(journal_name: str):
     Raises:
         NotImplementedError if the requested editor application is not supported.
         InvalidName if the journal name is not registered.
+        InvalidAttribute if no text editor has been set.
     """
     journal_data_list = config.get_journal_data_file().list_of_journal_data
 
     config_file = config.get_configuration_file()
+
+    if not config_file.parameters.default_text_editor_path:
+        raise exceptions.InvalidAttribute("No text editor was defined yet.")
+
     text_editor_path = Path(config_file.parameters.default_text_editor_path)
 
     if not Path(text_editor_path).name.startswith("vim") and not Path(
         text_editor_path
     ).name.startswith("nvim"):
-        raise NotImplementedError(
-            message="This application only knows how to start vim or nvim editors."
-        )
+        raise NotImplementedError("This application only knows how to start vim or nvim editors.")
 
     for entry in journal_data_list:
         if entry.name == journal_name:
@@ -51,10 +55,22 @@ def __edit__(journal_name: str, **kwargs):
     try:
         edit(journal_name)
     except NotImplementedError as ex:
-        print(ex.message)
-        exit(1)
+        print(ex)
     except exceptions.InvalidName:
         print(f"Journal {journal_name} does not exist. Please enter an existent journal name.")
+    except exceptions.InvalidAttribute:
+        print(
+            dedent(
+                """\
+                No text editor was set yet. To set one, edit the journal configuration file.
+                $ journal-manager setup
+
+                # config.toml
+                [parameters]
+                default_text_editor_path = "<my_text_editor_path>"
+                """
+            )
+        )
 
 
 def get_parser(subparser_action=None):

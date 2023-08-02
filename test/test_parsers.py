@@ -1,9 +1,13 @@
-from danoan.journal_manager.commands import journal_commands as jm
-from danoan.journal_manager.commands.journal import get_parser as journal_parser
-from danoan.journal_manager.commands import build
-from danoan.journal_manager.commands import setup_commands as setup
-from danoan.journal_manager.commands.setup import get_parser as setup_parser
 from danoan.journal_manager.control import config
+
+from danoan.journal_manager.commands import build
+from danoan.journal_manager.commands import journal_commands as jm
+from danoan.journal_manager.commands import setup_commands as setup
+from danoan.journal_manager.commands import template_commands as template
+
+from danoan.journal_manager.commands.journal import get_parser as journal_parser
+from danoan.journal_manager.commands.setup import get_parser as setup_parser
+from danoan.journal_manager.commands.template import get_parser as template_parser
 
 import argparse
 from conftest import *
@@ -44,11 +48,11 @@ class TestJournalParsers(TestParser):
     def test_edit_parser(self):
         self.parser_tester(jm.edit.get_parser)
 
-    def test_list_parser(self):
-        self.parser_tester(jm.list.get_parser)
-
     def test_register_parser(self):
         self.parser_tester(jm.register.get_parser)
+
+    def test_show_parser(self):
+        self.parser_tester(jm.show.get_parser)
 
 
 # class TestJournalParsersWithoutInitialization(TestParser):
@@ -79,8 +83,16 @@ class TestSetupParser(TestParser):
     def test_init_parser(self):
         self.parser_tester(setup.init.get_parser)
 
-    def test_parameters_parser(self):
-        self.parser_tester(setup.parameters.get_parser)
 
+class TestTemplateParser(TestParser):
     def test_template_parser(self):
-        self.parser_tester(setup.template.get_parser)
+        self.parser_tester(template_parser)
+
+    def test_register_parser(self):
+        self.parser_tester(template.register.get_parser)
+
+    def test_remove_parser(self):
+        self.parser_tester(template.remove.get_parser)
+
+    def test_show_parser(self):
+        self.parser_tester(template.show.get_parser)

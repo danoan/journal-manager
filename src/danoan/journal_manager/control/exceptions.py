@@ -24,3 +24,8 @@ class InvalidIncludeAllFolder(Exception):
 class InvalidTemplate(Exception):
     def __init__(self, msg: Optional[str] = None):
         self.msg = msg
+
+
+class InvalidAttribute(Exception):
+    def __init__(self, msg: Optional[str] = None):
+        self.msg = msg

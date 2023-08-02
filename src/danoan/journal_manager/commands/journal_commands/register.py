@@ -1,4 +1,4 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.control import config, exceptions, model, utils
 
 import argparse
 from pathlib import Path
@@ -15,11 +15,16 @@ def register(location_folder: Path, journal_title: str):
     Args:
         location_folder: Directory where the journal files are located
         journal_title: The title of the journal.
+    Raises:
+        InvalidLocation if the given location folder does not exist.
     """
     journal_data_file = config.get_journal_data_file()
 
     journal_name = utils.journal_name_from_title(journal_title)
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
+
+    if not location_folder.exists():
+        raise exceptions.InvalidLocation(location_folder)
 
     journal_data = model.JournalData(journal_name, location_folder.as_posix(), True, journal_title)
     journal_data_file.list_of_journal_data.append(journal_data)
@@ -30,12 +35,17 @@ def register(location_folder: Path, journal_title: str):
 # -------------------- CLI --------------------
 
 
-def __register__(location_folder: Path, journal_title: Optional[str] = None, **kwargs):
+def __register__(location_folder: str, journal_title: Optional[str] = None, **kwargs):
     utils.ensure_configuration_file_exists()
     if journal_title is None:
         journal_title = Path(location_folder).expanduser().name
 
-    register(location_folder, journal_title)
+    try:
+        register(Path(location_folder), journal_title)
+    except exceptions.InvalidLocation as ex:
+        print(
+            f"The given directory: {ex.locations} does not exist. Please specify an existing directory."
+        )
 
 
 def get_parser(subparser_action=None):
