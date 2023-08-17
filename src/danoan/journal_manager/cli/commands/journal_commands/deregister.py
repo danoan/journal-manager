@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, exceptions, utils
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
 
 import argparse
 from typing import List
@@ -22,28 +23,21 @@ def deregister(journal_names: List[str]):
     Raises:
         InvalidName if one or more journal names are not present in the list of registered journals.
     """
-    journal_data_file = config.get_journal_data_file()
+    journal_data_file = api.get_journal_data_file()
 
     not_found_journal_names = []
     for journal_name in journal_names:
-        found = False
-        for journal in journal_data_file.list_of_journal_data:
-            if journal_name == journal.name:
-                found = True
-                break
-        if not found:
+        journal = api.find_journal_by_name(journal_data_file, journal_name)
+
+        if journal:
+            journal_data_file.list_of_journal_data.remove(journal)
+        else:
             not_found_journal_names.append(journal_name)
 
     if len(not_found_journal_names) > 0:
         raise exceptions.InvalidName(not_found_journal_names)
 
-    updated_list_of_journal_data = []
-    for entry in journal_data_file.list_of_journal_data:
-        if entry.name not in journal_names:
-            updated_list_of_journal_data.append(entry)
-
-    journal_data_file.list_of_journal_data = updated_list_of_journal_data
-    journal_data_file.write(config.get_configuration_file().journal_data_filepath)
+    journal_data_file.write(api.get_configuration_file().journal_data_filepath)
 
 
 # -------------------- CLI --------------------

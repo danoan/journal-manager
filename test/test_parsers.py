@@ -1,13 +1,13 @@
-from danoan.journal_manager.control import config
+from danoan.journal_manager.core import api
 
-from danoan.journal_manager.commands import build
-from danoan.journal_manager.commands import journal_commands as jm
-from danoan.journal_manager.commands import setup_commands as setup
-from danoan.journal_manager.commands import template_commands as template
+from danoan.journal_manager.cli.commands import build
+from danoan.journal_manager.cli.commands import journal_commands as jm
+from danoan.journal_manager.cli.commands import setup_commands as setup
+from danoan.journal_manager.cli.commands import template_commands as template
 
-from danoan.journal_manager.commands.journal import get_parser as journal_parser
-from danoan.journal_manager.commands.setup import get_parser as setup_parser
-from danoan.journal_manager.commands.template import get_parser as template_parser
+from danoan.journal_manager.cli.commands.journal import get_parser as journal_parser
+from danoan.journal_manager.cli.commands.setup import get_parser as setup_parser
+from danoan.journal_manager.cli.commands.template import get_parser as template_parser
 
 import argparse
 from conftest import *
@@ -16,7 +16,7 @@ import pytest
 
 @pytest.fixture(scope="function")
 def f_unset_env_variable(monkeypatch):
-    monkeypatch.delenv(config.ENV_JOURNAL_MANAGER_CONFIG_FOLDER, raising=False)
+    monkeypatch.delenv(api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER, raising=False)
 
 
 @pytest.mark.usefixtures("f_set_env_variable")

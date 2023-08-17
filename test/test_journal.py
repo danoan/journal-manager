@@ -1,7 +1,9 @@
-from danoan.journal_manager.commands import journal_commands as jm
-from danoan.journal_manager.control import config, model
+from danoan.journal_manager.cli.commands import journal_commands as jm
+from danoan.journal_manager.core import api, model
 
-from danoan.journal_manager.commands.template_commands.register import register as register_template
+from danoan.journal_manager.cli.commands.template_commands.register import (
+    register as register_template,
+)
 
 import argparse
 from conftest import *
@@ -26,7 +28,7 @@ class TestRegister:
         first_journal_title = "My First Journal Title"
         jm.register.register(first_location_folder, first_journal_title)
 
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.get_journal_data_file().list_of_journal_data[0]
 
         assert journal_data.name == "my-first-journal-title"
         assert journal_data.title == first_journal_title
@@ -39,16 +41,16 @@ class TestRegister:
         second_journal_title = "My Second Journal Title"
         jm.register.register(second_location_folder, second_journal_title)
 
-        list_of_journal_data = config.get_journal_data_file().list_of_journal_data
+        list_of_journal_data = api.get_journal_data_file().list_of_journal_data
         assert len(list_of_journal_data) == 2
 
         # Deregister
         jm.deregister.deregister(["my-first-journal-title"])
 
-        list_of_journal_data = config.get_journal_data_file().list_of_journal_data
+        list_of_journal_data = api.get_journal_data_file().list_of_journal_data
         assert len(list_of_journal_data) == 1
 
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.get_journal_data_file().list_of_journal_data[0]
 
         assert journal_data.name == "my-second-journal-title"
         assert journal_data.title == second_journal_title
@@ -61,13 +63,13 @@ class TestActivate:
         journal_title = "My Journal Title"
         jm.register.register(tmp_path, journal_title)
 
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.get_journal_data_file().list_of_journal_data[0]
         assert journal_data.title == journal_title
         assert journal_data.active == True
 
         # Deactivate
         jm.deactivate.deactivate([journal_data.name])
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.get_journal_data_file().list_of_journal_data[0]
 
         assert journal_data.title == journal_title
         assert journal_data.active == False
@@ -75,7 +77,7 @@ class TestActivate:
         # Activate
 
         jm.activate.activate([journal_data.name])
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.get_journal_data_file().list_of_journal_data[0]
 
         assert journal_data.title == journal_title
         assert journal_data.active == True
@@ -100,11 +102,11 @@ class TestCreate:
             journal_location_folder = tmp_path.joinpath(journal_location_folder_str).expanduser()
 
         if not journal_location_folder:
-            journal_location_folder = Path(config.get_configuration_file().default_journal_folder)
+            journal_location_folder = Path(api.get_configuration_file().default_journal_folder)
 
         jm.create.create(journal_title, journal_location_folder, template_name)
 
-        journal_data = config.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.get_journal_data_file().list_of_journal_data[0]
         assert journal_data.title == journal_title
         assert (
             journal_data.location_folder
@@ -116,7 +118,7 @@ class TestCreate:
 class TestShow:
     def test_show_one_parameter(self, f_setup_init, tmp_path):
         journal_title = "My Journal Title"
-        journal_location_folder = Path(config.get_configuration_file().default_journal_folder)
+        journal_location_folder = Path(api.get_configuration_file().default_journal_folder)
 
         template_name = "research"
         template_location = __create_template__(tmp_path, template_name)

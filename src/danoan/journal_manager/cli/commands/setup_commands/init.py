@@ -1,5 +1,5 @@
-from danoan.journal_manager.control import config
-from danoan.journal_manager.control import utils
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
 
 import argparse
 from pathlib import Path
@@ -19,12 +19,12 @@ def init_journal_manager(default_journal_folder: Path, default_template_folder: 
         default_journal_folder: Path to the default location where journals will be created.
         default_template_folder: Path to the default location where journal templates will be stored.
     """
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
     config_file.default_journal_folder = default_journal_folder.as_posix()
     config_file.default_template_folder = default_template_folder.as_posix()
 
-    config_file.write(config.get_configuration_filepath())
+    config_file.write(api.get_configuration_filepath())
 
 
 # -------------------- CLI --------------------
@@ -35,20 +35,20 @@ def __init_journal_manager__(default_journal_folder: Path, default_template_fold
 
     config_file_exists_already = True
     try:
-        config_file = config.get_configuration_file()
-    except config.ConfigurationFileDoesNotExist:
-        config.create_configuration_file(default_journal_folder, default_template_folder)
+        config_file = api.get_configuration_file()
+    except exceptions.ConfigurationFileDoesNotExist:
+        api.create_configuration_file(default_journal_folder, default_template_folder)
         config_file_exists_already = False
 
     init_journal_manager(default_journal_folder, default_template_folder)
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
     if config_file_exists_already:
         print(
             dedent(
                 f"""
                   The configuration file exists already. 
-                  It is located at: {config.get_configuration_filepath()} and here it is its content after the update:
+                  It is located at: {api.get_configuration_filepath()} and here it is its content after the update:
                   default_journal_folder={config_file.default_journal_folder}
                   default_template_folder={config_file.default_template_folder}
                   journal_data_filepath={config_file.journal_data_filepath}
@@ -82,13 +82,13 @@ def get_parser(subparser_action=None):
         "--default-journal-folder",
         type=Path,
         help="Directory where journals will be created by default",
-        default=config.get_configuration_folder().joinpath("journals"),
+        default=api.get_configuration_folder().joinpath("journals"),
     )
     parser.add_argument(
         "--default-template-folder",
         type=Path,
         help="Directory where journals will be created by default",
-        default=config.get_configuration_folder().joinpath("templates"),
+        default=api.get_configuration_folder().joinpath("templates"),
     )
     parser.set_defaults(subcommand_help=parser.print_help, func=__init_journal_manager__)
 

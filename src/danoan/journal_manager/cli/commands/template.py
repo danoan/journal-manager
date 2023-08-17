@@ -1,5 +1,6 @@
-from danoan.journal_manager.control import config, exceptions, utils
-from danoan.journal_manager.commands.template_commands import register, remove, show
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
+from danoan.journal_manager.cli.commands.template_commands import register, remove, show
 
 import argparse
 from typing import Iterable
@@ -16,7 +17,7 @@ def list_templates() -> Iterable[str]:
         A string for each registered template in the format:
         "template_name:template_filepath"
     """
-    template_list = config.get_template_list_file().list_of_template_data
+    template_list = api.get_template_list_file().list_of_template_data
 
     if len(template_list) == 0:
         raise exceptions.EmptyList()

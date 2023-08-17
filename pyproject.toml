@@ -30,15 +30,11 @@ Issues = "https://github.com/danoan/journal-manager/issues"
 Source = "https://github.com/danoan/journal-manager"
 
 [project.scripts]
-journal-manager = "danoan.journal_manager.cli:main"
-
+journal-manager = "danoan.journal_manager.cli.cli:main"
 
 # -------------------- build backend --------------------
 [tools.setuptools]
 include-package-data = true
-
-[tools.setuptools.package-data]
-"danoan.journal_manager.templates"=["*.txt"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -84,7 +80,7 @@ source = [
 show_missing = true
 skip_covered = true
 omit = [
-  "src/danoan/journal_manager/cli.py"
+  "src/danoan/journal_manager/cli/cli.py"
 ]
 
 

@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from danoan.journal_manager.commands import build, journal, setup, template
+from danoan.journal_manager.cli.commands import build, journal, setup, template
 
 
 def get_parser() -> argparse.ArgumentParser:

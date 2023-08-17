@@ -1,11 +1,10 @@
-from danoan.journal_manager.control import model
-from danoan.journal_manager.control import config
+from danoan.journal_manager.core import api, exceptions, model
 
 import itertools
 from pathlib import Path
 import re
 from textwrap import dedent
-from typing import Iterator, Any, Optional, Tuple
+from typing import Iterator, Any, Tuple
 
 
 # -------------------- "Termination Criteria" --------------------
@@ -14,13 +13,13 @@ def ensure_configuration_folder_exists():
     Exit application if configuration folder does not exist.
     """
     try:
-        config.get_configuration_folder()
-    except config.ConfigurationFileDoesNotExist:
+        api.get_configuration_folder()
+    except exceptions.ConfigurationFileDoesNotExist:
         print(
             dedent(
                 f"""
                     There is no environment variable set for journal-manager.
-                    Create the environment variable {config.ENV_JOURNAL_MANAGER_CONFIG_FOLDER} and try again
+                    Create the environment variable {api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER} and try again
 
                     Example:
                     export JOURNAL_MANAGER_CONFIG_FOLDER={Path.home().joinpath(".config","journal-manager")}
@@ -29,7 +28,7 @@ def ensure_configuration_folder_exists():
         )
         exit(1)
     except Exception:
-        print(f"Unexpected error while retrieving {config.ENV_JOURNAL_MANAGER_CONFIG_FOLDER}.")
+        print(f"Unexpected error while retrieving {api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER}.")
         exit(1)
 
 
@@ -38,8 +37,8 @@ def ensure_configuration_file_exists():
     Exit application if configuration file does not exist.
     """
     try:
-        config.get_configuration_file()
-    except config.ConfigurationFileDoesNotExist:
+        api.get_configuration_file()
+    except exceptions.ConfigurationFileDoesNotExist:
         print(
             dedent(
                 """
@@ -90,47 +89,3 @@ def journal_title_from_name(journal_name: str) -> str:
     Return a capitalized whitespace separted from a lower-snake-case version of a string.
     """
     return re.sub(r"-", " ", journal_name).capitalize()
-
-
-# -------------------- "Data Model Query" --------------------
-def find_template_by_name(
-    template_file: model.JournalTemplateList, template_name: str
-) -> Optional[model.JournalTemplate]:
-    """
-    Search a registered template by name and return it.
-
-    If the template is not found, a None object is returned.
-    """
-    for entry in template_file.list_of_template_data:
-        if entry.name == template_name:
-            return entry
-    return None
-
-
-def find_journal_by_name(
-    journal_data_file: model.JournalDataList, journal_name: str
-) -> Optional[model.JournalData]:
-    """
-    Search a registered journal by name and return it.
-
-    If the journal is not found, a None object is returned.
-    """
-    for journal_data in journal_data_file.list_of_journal_data:
-        if journal_data.name == journal_name:
-            return journal_data
-
-    return None
-
-
-def find_journal_by_location(
-    journal_data_file: model.JournalDataList, journal_location: str
-) -> Optional[model.JournalData]:
-    """
-    Search a registered journal by location and return it.
-
-    If the journal is not found, a None object is returned.
-    """
-    for journal_data in journal_data_file.list_of_journal_data:
-        if journal_data.location_folder == journal_location:
-            return journal_data
-    return None

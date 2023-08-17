@@ -1,6 +1,6 @@
-from danoan.journal_manager.control import config, exceptions
-from danoan.journal_manager.control.wrappers import nvim_wrapper
-from danoan.journal_manager.commands.setup_commands import init
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli.wrappers import nvim_wrapper
+from danoan.journal_manager.cli.commands.setup_commands import init
 
 import argparse
 from pathlib import Path
@@ -10,7 +10,7 @@ from typing import Optional
 
 
 def edit_file(text_filepath: str):
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
     text_editor_path = Path(config_file.parameters.default_text_editor_path)
 
     if not text_editor_path:
@@ -27,16 +27,16 @@ def edit_file(text_filepath: str):
 
 
 def edit_config_file():
-    edit_file(config.get_configuration_filepath().expanduser())
+    edit_file(api.get_configuration_filepath().expanduser())
 
 
 def edit_journal_data_file():
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
     edit_file(Path(config_file.journal_data_filepath))
 
 
 def edit_template_data_file():
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
     edit_file(Path(config_file.template_data_filepath))
 
 

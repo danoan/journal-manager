@@ -1,7 +1,11 @@
-from danoan.journal_manager.control import config, model, exceptions, utils
-from danoan.journal_manager.control.wrappers import general_proc_call, mkdocs_wrapper, node_wrapper
+from danoan.journal_manager.core import api, model, exceptions
 
-from danoan.journal_manager.commands.journal_commands.register import register as register_journal
+from danoan.journal_manager.cli import utils
+from danoan.journal_manager.cli.wrappers import general_proc_call, mkdocs_wrapper, node_wrapper
+
+from danoan.journal_manager.cli.commands.journal_commands.register import (
+    register as register_journal,
+)
 
 import multiprocessing
 import argparse
@@ -50,9 +54,9 @@ def __collect_journal_names_from_location__(list_of_locations: List[str]) -> Lis
         InvalidLocation if one or more locations are not valid or do
         not exist.
     """
-    journal_data_file = config.get_journal_data_file()
+    journal_data_file = api.get_journal_data_file()
     journals = map(
-        lambda location: utils.find_journal_by_location(journal_data_file, location),
+        lambda location: api.find_journal_by_location(journal_data_file, location),
         list_of_locations,
     )
     return list(map(lambda journal: journal.name if journal else "", journals))
@@ -69,10 +73,8 @@ def __validate_journal_names_in_registry__(names: List[str]) -> Tuple[List[str],
         were found in the registry and the second one contain journal names
         that were not found in the registry.
     """
-    journal_data_file = config.get_journal_data_file()
-    registered_names = list(
-        filter(lambda x: utils.find_journal_by_name(journal_data_file, x), names)
-    )
+    journal_data_file = api.get_journal_data_file()
+    registered_names = list(filter(lambda x: api.find_journal_by_name(journal_data_file, x), names))
     non_registered_names = list(filter(lambda x: x not in registered_names, names))
 
     return registered_names, non_registered_names
@@ -91,9 +93,9 @@ def __validate_journal_locations_in_registry__(
         were found in the registry and the second one contain journal names
         that were not found in the registry.
     """
-    journal_data_file = config.get_journal_data_file()
+    journal_data_file = api.get_journal_data_file()
     registered_locations = list(
-        filter(lambda x: utils.find_journal_by_location(journal_data_file, x), locations)
+        filter(lambda x: api.find_journal_by_location(journal_data_file, x), locations)
     )
     non_registered_locations = list(filter(lambda x: x not in registered_locations, locations))
 
@@ -196,8 +198,8 @@ class BuildJournals(BuildStep):
         try:
             data: Dict[str, Any] = {"journals": []}
             for journal_name in get_journals_names_to_build(self.build_instructions):
-                journal_data_file = config.get_journal_data_file()
-                journal_data = utils.find_journal_by_name(journal_data_file, journal_name)
+                journal_data_file = api.get_journal_data_file()
+                journal_data = api.find_journal_by_name(journal_data_file, journal_name)
 
                 if journal_data and journal_data.name == journal_name:
                     mkdocs_wrapper.build(
@@ -239,7 +241,7 @@ class BuildIndexPage(BuildStep):
     Build the index page with links to all rendered journals.
     """
 
-    assets = files("danoan.journal_manager.templates").joinpath("material-index", "assets")
+    assets = files("danoan.journal_manager.assets.templates").joinpath("material-index", "assets")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -251,24 +253,22 @@ class BuildIndexPage(BuildStep):
         self.build_instructions: model.BuildInstructions = self.__dict__["build_instructions"]
 
     def build(self):
-        try:
-            if not self.build_instructions.build_index:
-                return self
-
-            env = Environment(
-                loader=PackageLoader("danoan.journal_manager", package_path="templates")
-            )
-
-            with as_file(BuildIndexPage.assets) as assets_path:
-                shutil.copytree(assets_path, self.journals_site_folder.joinpath("assets"))
-
-            with open(self.journals_site_folder.joinpath("index.html"), "w") as f:
-                template = env.get_template("material-index/index.tpl.html")
-                f.write(template.render(self["journal_data"]))
-
+        if not self.build_instructions.build_index:
             return self
-        except BaseException as ex:
-            return FailedStep(self, str(ex))
+
+        env = Environment(
+            loader=PackageLoader("danoan.journal_manager.assets", package_path="templates")
+        )
+
+        print("HEYHEY")
+        with as_file(BuildIndexPage.assets) as assets_path:
+            shutil.copytree(assets_path, self.journals_site_folder.joinpath("assets"))
+
+        with open(self.journals_site_folder.joinpath("index.html"), "w") as f:
+            template = env.get_template("material-index/index.tpl.html")
+            f.write(template.render(self["journal_data"]))
+
+        return self
 
 
 class BuildHttpServer(BuildStep):
@@ -304,10 +304,10 @@ class BuildHttpServer(BuildStep):
                 return self
 
             env = Environment(
-                loader=PackageLoader("danoan.journal_manager", package_path="templates")
+                loader=PackageLoader("danoan.journal_manager.assets", package_path="templates")
             )
 
-            http_server = files("danoan.journal_manager.templates").joinpath("http-server")
+            http_server = files("danoan.journal_manager.assets.templates").joinpath("http-server")
             shutil.copytree(http_server, self.http_server_folder)
 
             node_wrapper.install_dependencies(self.http_server_folder)
@@ -327,7 +327,7 @@ class BuildHttpServer(BuildStep):
 
             data = {
                 "journals_site_folder": self.journals_site_folder,
-                "journals_files_folder": config.get_configuration_file().default_journal_folder,
+                "journals_files_folder": api.get_configuration_file().default_journal_folder,
             }
 
             with open(self.file_monitor_script, "w") as f:
@@ -369,7 +369,7 @@ def get_journals_names_to_build(build_instructions: model.BuildInstructions) -> 
         InvalidIncludeAllFolder if invalid include_all_folder location
         is given.
     """
-    journal_data_file = config.get_journal_data_file()
+    journal_data_file = api.get_journal_data_file()
 
     journals_names_to_build = []
     if build_instructions.journals_names_to_build is not None:

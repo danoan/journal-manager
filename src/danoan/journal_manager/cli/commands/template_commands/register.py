@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, model, utils
+from danoan.journal_manager.core import api, model
+from danoan.journal_manager.cli import utils
 
 import argparse
 from pathlib import Path
@@ -38,7 +39,7 @@ def register(template_name: str, template_filepath: str):
         template_name: Name of the template to be registered.
         template_path: Path to a directory containing the template files.
     """
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
     target_template_filepath = Path(config_file.default_template_folder).joinpath(template_name)
     target_template_filepath.parent.mkdir(parents=True, exist_ok=True)
@@ -47,10 +48,10 @@ def register(template_name: str, template_filepath: str):
     template_data = model.JournalTemplate(
         template_name, target_template_filepath.expanduser().as_posix()
     )
-    template_list_file = config.get_template_list_file()
+    template_list_file = api.get_template_list_file()
     template_list_file.list_of_template_data.append(template_data)
 
-    template_list_file.write(config.get_configuration_file().template_data_filepath)
+    template_list_file.write(api.get_configuration_file().template_data_filepath)
 
 
 # -------------------- CLI --------------------

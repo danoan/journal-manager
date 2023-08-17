@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, exceptions, utils
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
 
 import argparse
 from typing import List, Optional
@@ -21,25 +22,23 @@ def show(template_name: str, attribute_names: List[str]):
         InvalidName if the template name is invalid.
         InvalidAttribute if an attribute name is invalid.
     """
-    template_list_file = config.get_template_list_file()
+    template_list_file = api.get_template_list_file()
 
-    for template in template_list_file.list_of_template_data:
-        if template.name == template_name:
-            if len(attribute_names) == 0:
-                attribute_names = list(template.__dict__.keys())
+    template = api.find_template_by_name(template_list_file, template_name)
+    if template:
+        if len(attribute_names) == 0:
+            attribute_names = list(template.__dict__.keys())
 
-            if len(attribute_names) == 1:
-                attribute_name = attribute_names[0]
-                if attribute_name not in template.__dict__.keys():
-                    raise exceptions.InvalidAttribute(attribute_name)
-                yield template.__dict__[attribute_name]
-            else:
-                for name in attribute_names:
-                    yield f"{name}:{template.__dict__[name]}"
-
-            return
-
-    raise exceptions.InvalidName(template_name)
+        if len(attribute_names) == 1:
+            attribute_name = attribute_names[0]
+            if attribute_name not in template.__dict__.keys():
+                raise exceptions.InvalidAttribute(attribute_name)
+            yield template.__dict__[attribute_name]
+        else:
+            for name in attribute_names:
+                yield f"{name}:{template.__dict__[name]}"
+    else:
+        raise exceptions.InvalidName(template_name)
 
 
 # -------------------- CLI --------------------

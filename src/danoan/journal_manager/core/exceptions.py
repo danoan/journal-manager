@@ -2,7 +2,15 @@ from pathlib import Path
 from typing import Optional, Iterable
 
 
-class EmptyList(Exception):
+class ConfigurationFileDoesNotExist(BaseException):
+    pass
+
+
+class ConfigurationFolderDoesNotExist(BaseException):
+    pass
+
+
+class EmptyList(BaseException):
     pass
 
 

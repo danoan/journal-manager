@@ -1,5 +1,6 @@
-from danoan.journal_manager.control import config, exceptions, utils
-from danoan.journal_manager.control.wrappers import nvim_wrapper
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
+from danoan.journal_manager.cli.wrappers import nvim_wrapper
 
 import argparse
 from pathlib import Path
@@ -24,9 +25,9 @@ def edit(journal_name: str):
         InvalidName if the journal name is not registered.
         InvalidAttribute if no text editor has been set.
     """
-    journal_data_list = config.get_journal_data_file().list_of_journal_data
+    journal_data_list = api.get_journal_data_file().list_of_journal_data
 
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
     if not config_file.parameters.default_text_editor_path:
         raise exceptions.InvalidAttribute("No text editor was defined yet.")
@@ -38,13 +39,12 @@ def edit(journal_name: str):
     ).name.startswith("nvim"):
         raise NotImplementedError("This application only knows how to start vim or nvim editors.")
 
-    for entry in journal_data_list:
-        if entry.name == journal_name:
-            mkdocs_config_path = Path(entry.location_folder).joinpath("mkdocs.yml")
-            nvim_wrapper.edit_file(mkdocs_config_path.expanduser(), text_editor_path)
-            return
-
-    raise exceptions.InvalidName()
+    journal = api.find_journal_by_name(journal_data_list, journal_name)
+    if journal:
+        mkdocs_config_path = Path(journal.location_folder).joinpath("mkdocs.yml")
+        nvim_wrapper.edit_file(mkdocs_config_path.expanduser(), text_editor_path)
+    else:
+        raise exceptions.InvalidName()
 
 
 # -------------------- CLI --------------------
@@ -65,7 +65,7 @@ def __edit__(journal_name: str, **kwargs):
                 No text editor was set yet. To set one, edit the journal configuration file.
                 $ journal-manager setup
 
-                # config.toml
+                # api.toml
                 [parameters]
                 default_text_editor_path = "<my_text_editor_path>"
                 """

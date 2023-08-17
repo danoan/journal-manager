@@ -1,12 +1,12 @@
-from danoan.journal_manager.commands.build import (
+from danoan.journal_manager.cli.commands.build import (
     build as build_journal,
     __merge_build_instructions__,
 )
-import danoan.journal_manager.commands.journal_commands as jm
+import danoan.journal_manager.cli.commands.journal_commands as jm
 
-from danoan.journal_manager.control import config
-from danoan.journal_manager.control import model
-from danoan.journal_manager.control import utils
+from danoan.journal_manager.core import api
+from danoan.journal_manager.core import model
+from danoan.journal_manager.cli import utils
 
 from conftest import *
 
@@ -46,8 +46,8 @@ class TestBuild:
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
 
-        journal_2_location_folder = utils.find_journal_by_name(
-            config.get_journal_data_file(), "journal-2"
+        journal_2_location_folder = api.find_journal_by_name(
+            api.get_journal_data_file(), "journal-2"
         ).location_folder
 
         build_instructions = __merge_build_instructions__(

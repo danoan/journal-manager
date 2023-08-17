@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, exceptions, utils
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
 
 import argparse
 from typing import List, Optional, Iterable
@@ -22,24 +23,22 @@ def show(journal_name: str, attribute_names: List[str]) -> Iterable[str]:
         InvalidName if the journal name is invalid.
         InvalidAttribute if an attribute name is invalid.
     """
-    journal_data_list = config.get_journal_data_file().list_of_journal_data
+    journal_data_file = api.get_journal_data_file()
+    journal = api.find_journal_by_name(journal_data_file, journal_name)
+    if journal:
+        if len(attribute_names) == 0:
+            attribute_names = list(journal.__dict__.keys())
 
-    for journal in journal_data_list:
-        if journal.name == journal_name:
-            if len(attribute_names) == 0:
-                attribute_names = list(journal.__dict__.keys())
-
-            if len(attribute_names) == 1:
-                attribute_name = attribute_names[0]
-                if attribute_name not in journal.__dict__.keys():
-                    raise exceptions.InvalidAttribute(attribute_name)
-                yield journal.__dict__[attribute_name]
-            else:
-                for name in attribute_names:
-                    yield f"{name}:{journal.__dict__[name]}"
-            return
-
-    raise exceptions.InvalidName()
+        if len(attribute_names) == 1:
+            attribute_name = attribute_names[0]
+            if attribute_name not in journal.__dict__.keys():
+                raise exceptions.InvalidAttribute(attribute_name)
+            yield journal.__dict__[attribute_name]
+        else:
+            for name in attribute_names:
+                yield f"{name}:{journal.__dict__[name]}"
+    else:
+        raise exceptions.InvalidName()
 
 
 # -------------------- CLI --------------------

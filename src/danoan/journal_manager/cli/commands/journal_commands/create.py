@@ -1,5 +1,6 @@
-from danoan.journal_manager.control import config, model, exceptions, utils
-from danoan.journal_manager.control.wrappers import mkdocs_wrapper
+from danoan.journal_manager.core import api, model, exceptions
+from danoan.journal_manager.cli import utils
+from danoan.journal_manager.cli.wrappers import mkdocs_wrapper
 
 import argparse
 import os
@@ -27,11 +28,11 @@ def __create_mkdocs_from_template__(journal_data: model.JournalData, template: T
 
 
 def __create_mkdocs_from_template_name__(journal_data: model.JournalData, template_name: str):
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
     journal_template_list = model.JournalTemplateList.read(config_file.template_data_filepath)
 
-    template_entry = utils.find_template_by_name(journal_template_list, template_name)
+    template_entry = api.find_template_by_name(journal_template_list, template_name)
     if not template_entry:
         raise exceptions.InvalidName()
 
@@ -81,7 +82,7 @@ def create(
     Important:
         If the journal exist already it will be overwrite.
     """
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
     journal_name = utils.journal_name_from_title(journal_title)
     journal_data_file = model.JournalDataList.read(config_file.journal_data_filepath)
@@ -115,7 +116,7 @@ def __create__(
 ):
     utils.ensure_configuration_file_exists()
     if journal_location_folder is None:
-        journal_location_folder = Path(config.get_configuration_file().default_journal_folder)
+        journal_location_folder = Path(api.get_configuration_file().default_journal_folder)
 
     try:
         create(journal_title, journal_location_folder, mkdocs_template_name)

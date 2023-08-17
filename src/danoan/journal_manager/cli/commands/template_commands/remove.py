@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, exceptions, utils
+from danoan.journal_manager.core import api, exceptions
+from danoan.journal_manager.cli import utils
 
 import argparse
 from pathlib import Path
@@ -15,27 +16,23 @@ def remove(template_name: str):
     Args:
         template_name: Name of a registered template.
     """
-    config_file = config.get_configuration_file()
+    config_file = api.get_configuration_file()
 
-    template_list_file = config.get_template_list_file()
-    updated_template_list = []
-    for entry in template_list_file.list_of_template_data:
-        if entry.name != template_name:
-            updated_template_list.append(entry)
+    template_list_file = api.get_template_list_file()
+
+    template = api.find_template_by_name(template_list_file, template_name)
+    if template:
+        dir_to_remove = Path(template.filepath)
+        if dir_to_remove.parent.as_posix() == config_file.default_template_folder:
+            shutil.rmtree(dir_to_remove)
         else:
-            dir_to_remove = Path(entry.filepath)
-            if dir_to_remove.parent.as_posix() == config_file.default_template_folder:
-                shutil.rmtree(dir_to_remove)
-            else:
-                raise RuntimeError(
-                    f"I've got an unexpected path to remove: {dir_to_remove.as_posix()}. Aborting!"
-                )
-
-    if len(updated_template_list) == len(template_list_file.list_of_template_data):
-        raise exceptions.InvalidName()
+            raise RuntimeError(
+                f"I've got an unexpected path to remove: {dir_to_remove.as_posix()}. Aborting!"
+            )
+        template_list_file.list_of_template_data.remove(template)
+        template_list_file.write(api.get_configuration_file().template_data_filepath)
     else:
-        template_list_file.list_of_template_data = updated_template_list
-        template_list_file.write(config.get_configuration_file().template_data_filepath)
+        raise exceptions.InvalidName()
 
 
 # -------------------- CLI --------------------

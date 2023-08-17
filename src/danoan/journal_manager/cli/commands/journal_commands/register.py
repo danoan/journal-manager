@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, exceptions, model, utils
+from danoan.journal_manager.core import api, exceptions, model
+from danoan.journal_manager.cli import utils
 
 import argparse
 from pathlib import Path
@@ -18,7 +19,7 @@ def register(location_folder: Path, journal_title: str):
     Raises:
         InvalidLocation if the given location folder does not exist.
     """
-    journal_data_file = config.get_journal_data_file()
+    journal_data_file = api.get_journal_data_file()
 
     journal_name = utils.journal_name_from_title(journal_title)
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
@@ -29,7 +30,7 @@ def register(location_folder: Path, journal_title: str):
     journal_data = model.JournalData(journal_name, location_folder.as_posix(), True, journal_title)
     journal_data_file.list_of_journal_data.append(journal_data)
 
-    journal_data_file.write(config.get_configuration_file().journal_data_filepath)
+    journal_data_file.write(api.get_configuration_file().journal_data_filepath)
 
 
 # -------------------- CLI --------------------

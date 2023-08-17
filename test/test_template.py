@@ -1,6 +1,8 @@
-from danoan.journal_manager.commands.template_commands.register import register as register_template
-from danoan.journal_manager.commands.template_commands.remove import remove as remove_template
-from danoan.journal_manager.control import config
+from danoan.journal_manager.cli.commands.template_commands.register import (
+    register as register_template,
+)
+from danoan.journal_manager.cli.commands.template_commands.remove import remove as remove_template
+from danoan.journal_manager.core import api
 
 from pathlib import Path
 
@@ -16,9 +18,9 @@ def __create_template__(tmp_path, template_name):
 
 class TestTemplate:
     def test_template_register(self, f_setup_init, tmp_path):
-        config_file = config.get_configuration_file()
+        config_file = api.get_configuration_file()
 
-        template_list_file = config.get_template_list_file()
+        template_list_file = api.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 0
 
         template_name = "research"
@@ -32,7 +34,7 @@ class TestTemplate:
         )
 
         register_template(template_name, template_location)
-        template_list_file = config.get_template_list_file()
+        template_list_file = api.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 1
         assert template_list_file.list_of_template_data[0].name == template_name
         assert template_list_file.list_of_template_data[0].filepath == e_template_filepath
@@ -40,9 +42,9 @@ class TestTemplate:
     def test_template_remove(self, f_setup_init, tmp_path):
         self.test_template_register(f_setup_init, tmp_path)
 
-        template_list_file = config.get_template_list_file()
+        template_list_file = api.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 1
 
         remove_template("research")
-        template_list_file = config.get_template_list_file()
+        template_list_file = api.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 0

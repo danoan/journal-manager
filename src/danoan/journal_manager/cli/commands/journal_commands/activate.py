@@ -1,4 +1,5 @@
-from danoan.journal_manager.control import config, exceptions, model, utils
+from danoan.journal_manager.core import api, exceptions, model
+from danoan.journal_manager.cli import utils
 
 import argparse
 from typing import List
@@ -21,20 +22,16 @@ def activate(journal_names: List[str]):
         InvalidName if one or more journal names are not present in the list of registered journals.
     """
 
-    config_file = config.get_configuration_file()
-    journal_data_list = config.get_journal_data_file().list_of_journal_data
+    config_file = api.get_configuration_file()
+    journal_data_file = api.get_journal_data_file()
 
     updated_journal_data_list = []
     not_found_journal_names = []
     for journal_name in journal_names:
-        found = False
-        for journal in journal_data_list:
-            if journal.name == journal_name:
-                found = True
-                journal.active = True
-                break
-
-        if not found:
+        journal = api.find_journal_by_name(journal_data_file, journal_name)
+        if journal:
+            journal.active = True
+        else:
             not_found_journal_names.append(journal_name)
         updated_journal_data_list.append(journal)
 

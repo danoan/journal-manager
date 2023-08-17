@@ -1,5 +1,7 @@
-from danoan.journal_manager.control import config, exceptions, utils
-from danoan.journal_manager.commands.journal_commands import (
+from danoan.journal_manager.core import api, exceptions
+
+from danoan.journal_manager.cli import utils
+from danoan.journal_manager.cli.commands.journal_commands import (
     activate,
     create,
     deactivate,
@@ -24,7 +26,7 @@ def list_journals():
     Raises:
         EmptyList if the journal register is empty.
     """
-    list_of_journal_data = config.get_journal_data_file().list_of_journal_data
+    list_of_journal_data = api.get_journal_data_file().list_of_journal_data
 
     if len(list_of_journal_data) == 0:
         raise exceptions.EmptyList()
