@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from danoan.journal_manager.cli import utils
 from danoan.journal_manager.cli.commands import build, journal, setup, template
 
 
@@ -19,6 +20,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def main():
+    utils.ensure_configuration_folder_exists()
     parser = get_parser()
     args = parser.parse_args()
 

@@ -14,7 +14,7 @@ def ensure_configuration_folder_exists():
     """
     try:
         api.get_configuration_folder()
-    except exceptions.ConfigurationFileDoesNotExist:
+    except exceptions.ConfigurationFolderDoesNotExist:
         print(
             dedent(
                 f"""
@@ -43,7 +43,7 @@ def ensure_configuration_file_exists():
             dedent(
                 """
                 The configuration file for journal-manager does not exist. 
-                You can create one with the command: journal-manager init
+                You can create one with the command: journal-manager setup init
                 """
             )
         )
