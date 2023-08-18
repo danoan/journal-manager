@@ -41,7 +41,7 @@ def __create_mkdocs_from_template_name__(journal_data: model.JournalData, templa
     template_path = Path(template_entry.filepath)
     shutil.copytree(template_path, journal_location_path)
 
-    if api.is_valid_template_path(journal_location_path):
+    if not api.is_valid_template_path(journal_location_path):
         raise exceptions.InvalidTemplate(msg="The journal template does not have a mkdocs.tpl.yml.")
     else:
         mkdocs_template_path = Path(journal_location_path).joinpath("mkdocs.tpl.yml")
