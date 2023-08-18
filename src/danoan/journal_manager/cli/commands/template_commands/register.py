@@ -82,6 +82,8 @@ def get_parser(subparser_action=None):
             formatter_class=argparse.RawTextHelpFormatter,
         )
 
+    parser.add_argument("template_name")
+    parser.add_argument("template_filepath")
     parser.set_defaults(func=__register_template__)
 
     return parser
