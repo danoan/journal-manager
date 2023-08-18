@@ -9,7 +9,7 @@ import shutil
 # -------------------- API --------------------
 
 
-def register(template_name: str, template_filepath: str):
+def register(template_name: str, template_path: Path):
     """
     Register a journal template.
 
@@ -41,12 +41,20 @@ def register(template_name: str, template_filepath: str):
     """
     config_file = api.get_configuration_file()
 
-    target_template_filepath = Path(config_file.default_template_folder).joinpath(template_name)
-    target_template_filepath.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(template_filepath, target_template_filepath)
+    if not template_path.exists():
+        print(f"The path: {template_path} does not exist.")
+        exit(1)
+
+    if not api.is_valid_template_path(template_path):
+        print(f"The template path: {template_path} does not contain a mkdocs.tpl.yml file.")
+        exit(1)
+
+    target_template_path = Path(config_file.default_template_folder).joinpath(template_name)
+    target_template_path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(template_path, target_template_path)
 
     template_data = model.JournalTemplate(
-        template_name, target_template_filepath.expanduser().as_posix()
+        template_name, target_template_path.expanduser().as_posix()
     )
     template_list_file = api.get_template_list_file()
     template_list_file.list_of_template_data.append(template_data)
@@ -57,9 +65,9 @@ def register(template_name: str, template_filepath: str):
 # -------------------- CLI --------------------
 
 
-def __register_template__(template_name: str, template_filepath: str, **kwargs):
+def __register_template__(template_name: str, template_path: str, **kwargs):
     utils.ensure_configuration_file_exists()
-    register(template_name, template_filepath)
+    register(template_name, Path(template_path))
 
 
 def get_parser(subparser_action=None):
@@ -82,8 +90,8 @@ def get_parser(subparser_action=None):
             formatter_class=argparse.RawTextHelpFormatter,
         )
 
-    parser.add_argument("template_name")
-    parser.add_argument("template_filepath")
+    parser.add_argument("template_name", help="The name of the template.")
+    parser.add_argument("template_path", help="Path to a directory containing the template structure.")
     parser.set_defaults(func=__register_template__)
 
     return parser

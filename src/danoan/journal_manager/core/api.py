@@ -94,6 +94,11 @@ def create_configuration_file(journal_folder_default: Path, templates_folder_def
     model.JournalTemplateList([]).write(journal_template_data_filepath)
 
 
+def is_valid_template_path(template_path: Path):
+    mkdocs_template_path = Path(template_path).joinpath("mkdocs.tpl.yml")
+    return mkdocs_template_path.exists()
+
+
 # -------------------- Data Model Query API --------------------
 def find_template_by_name(
     template_file: model.JournalTemplateList, template_name: str
