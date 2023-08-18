@@ -11,10 +11,12 @@ from typing import Optional
 
 def edit_file(text_filepath: str):
     config_file = api.get_configuration_file()
-    text_editor_path = Path(config_file.parameters.default_text_editor_path)
+    text_editor_path = config_file.parameters.default_text_editor_path
 
     if not text_editor_path:
         raise exceptions.InvalidAttribute("No text editor was defined yet.")
+
+    text_editor_path = Path(text_editor_path)
 
     if not Path(text_editor_path).name.startswith("vim") and not Path(
         text_editor_path

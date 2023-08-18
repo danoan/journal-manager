@@ -260,7 +260,6 @@ class BuildIndexPage(BuildStep):
             loader=PackageLoader("danoan.journal_manager.assets", package_path="templates")
         )
 
-        print("HEYHEY")
         with as_file(BuildIndexPage.assets) as assets_path:
             shutil.copytree(assets_path, self.journals_site_folder.joinpath("assets"))
 
@@ -522,7 +521,7 @@ def __build__(
         if with_http_server:
             __start_http_server__(build_result.http_server_folder, build_result.file_monitor_script)
     else:
-        print(f"Build was not successful with error: {build_result.msg}")
+        print(f"Build was not successful with error: {build_result.msg}.")
     pass
 
 
