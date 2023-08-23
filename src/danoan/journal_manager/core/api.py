@@ -24,7 +24,7 @@ def get_configuration_folder() -> Path:
 
 
 def get_configuration_filepath():
-    return get_configuration_folder().joinpath("api.toml")
+    return get_configuration_folder().joinpath("config.toml")
 
 
 def get_configuration_file() -> model.ConfigurationFile:
