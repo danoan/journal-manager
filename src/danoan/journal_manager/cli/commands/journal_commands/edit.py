@@ -25,7 +25,7 @@ def edit(journal_name: str):
         InvalidName if the journal name is not registered.
         InvalidAttribute if no text editor has been set.
     """
-    journal_data_list = api.get_journal_data_file().list_of_journal_data
+    journal_data_file = api.get_journal_data_file()
 
     config_file = api.get_configuration_file()
 
@@ -39,7 +39,7 @@ def edit(journal_name: str):
     ).name.startswith("nvim"):
         raise NotImplementedError("This application only knows how to start vim or nvim editors.")
 
-    journal = api.find_journal_by_name(journal_data_list, journal_name)
+    journal = api.find_journal_by_name(journal_data_file, journal_name)
     if journal:
         mkdocs_config_path = Path(journal.location_folder).joinpath("mkdocs.yml")
         nvim_wrapper.edit_file(mkdocs_config_path.expanduser(), text_editor_path)
