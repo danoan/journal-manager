@@ -5,9 +5,13 @@ from danoan.journal_manager.cli.commands import journal_commands as jm
 from danoan.journal_manager.cli.commands import setup_commands as setup
 from danoan.journal_manager.cli.commands import template_commands as template
 
-from danoan.journal_manager.cli.commands.journal import get_parser as journal_parser
+from danoan.journal_manager.cli.commands.journal import (
+    get_parser as journal_parser,
+)
 from danoan.journal_manager.cli.commands.setup import get_parser as setup_parser
-from danoan.journal_manager.cli.commands.template import get_parser as template_parser
+from danoan.journal_manager.cli.commands.template import (
+    get_parser as template_parser,
+)
 
 import argparse
 from conftest import *
@@ -24,8 +28,12 @@ class TestParser:
     def parser_tester(self, get_parser_function):
         assert not get_parser_function().prog.startswith("test-command")
 
-        subparser_action = argparse.ArgumentParser("test-command").add_subparsers()
-        assert get_parser_function(subparser_action).prog.startswith("test-command")
+        subparser_action = argparse.ArgumentParser(
+            "test-command"
+        ).add_subparsers()
+        assert get_parser_function(subparser_action).prog.startswith(
+            "test-command"
+        )
 
 
 @pytest.mark.usefixtures("f_setup_init")

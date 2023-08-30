@@ -1,6 +1,10 @@
 from danoan.journal_manager.core import api, exceptions
 from danoan.journal_manager.cli import utils
-from danoan.journal_manager.cli.commands.template_commands import register, remove, show
+from danoan.journal_manager.cli.commands.template_commands import (
+    register,
+    remove,
+    show,
+)
 
 import argparse
 from typing import Iterable
@@ -70,6 +74,8 @@ def get_parser(subparser_action=None):
     for command in list_of_commands:
         command.get_parser(subparser_action)
 
-    parser.set_defaults(subcommand_help=parser.print_help, func=__list_templates__)
+    parser.set_defaults(
+        subcommand_help=parser.print_help, func=__list_templates__
+    )
 
     return parser

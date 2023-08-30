@@ -8,11 +8,15 @@ from danoan.journal_manager.cli.commands import build, journal, setup, template
 
 
 def get_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Create, edit and manage your mkdocs journals.")
+    parser = argparse.ArgumentParser(
+        description="Create, edit and manage your mkdocs journals."
+    )
 
     list_of_commands = [build, journal, setup, template]
 
-    subparser_action = parser.add_subparsers(title="journal-manager subcommands")
+    subparser_action = parser.add_subparsers(
+        title="journal-manager subcommands"
+    )
     for command in list_of_commands:
         command.get_parser(subparser_action)
 

@@ -44,7 +44,9 @@ def show(journal_name: str, attribute_names: List[str]) -> Iterable[str]:
 # -------------------- CLI --------------------
 
 
-def __show__(journal_name: str, attribute_names: Optional[List[str]] = None, **kwargs):
+def __show__(
+    journal_name: str, attribute_names: Optional[List[str]] = None, **kwargs
+):
     utils.ensure_configuration_file_exists()
     if not attribute_names:
         attribute_names = []

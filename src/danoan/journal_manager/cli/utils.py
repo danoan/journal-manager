@@ -28,7 +28,9 @@ def ensure_configuration_folder_exists():
         )
         exit(1)
     except Exception:
-        print(f"Unexpected error while retrieving {api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER}.")
+        print(
+            f"Unexpected error while retrieving {api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER}."
+        )
         exit(1)
 
 
@@ -53,7 +55,9 @@ def ensure_configuration_file_exists():
         exit(1)
 
 
-def ensure_journal_name_is_unique(journal_data_file: model.JournalDataList, journal_name: str):
+def ensure_journal_name_is_unique(
+    journal_data_file: model.JournalDataList, journal_name: str
+):
     """
     Exit application if journal name exist already.
     """

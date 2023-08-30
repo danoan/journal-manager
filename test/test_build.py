@@ -37,8 +37,12 @@ class TestBuild:
         else:
             assert not build_location.joinpath("site", "index.html").exists()
 
-        assert build_location.joinpath("site", "journal-1", "index.html").exists()
-        assert build_location.joinpath("site", "journal-2", "index.html").exists()
+        assert build_location.joinpath(
+            "site", "journal-1", "index.html"
+        ).exists()
+        assert build_location.joinpath(
+            "site", "journal-2", "index.html"
+        ).exists()
 
     @pytest.mark.parametrize("build_index", [True, False])
     def test_build_by_location(self, f_setup_init, tmp_path, build_index):
@@ -63,14 +67,24 @@ class TestBuild:
         else:
             assert not build_location.joinpath("site", "index.html").exists()
 
-        assert not build_location.joinpath("site", "journal-1", "index.html").exists()
-        assert build_location.joinpath("site", "journal-2", "index.html").exists()
+        assert not build_location.joinpath(
+            "site", "journal-1", "index.html"
+        ).exists()
+        assert build_location.joinpath(
+            "site", "journal-2", "index.html"
+        ).exists()
 
     @pytest.mark.parametrize(
         "build_index, journal_names_to_build",
-        [(True, ["journal-1"]), (True, ["journal-1", "journal-2"]), (False, ["journal-1"])],
+        [
+            (True, ["journal-1"]),
+            (True, ["journal-1", "journal-2"]),
+            (False, ["journal-1"]),
+        ],
     )
-    def test_build_by_name(self, f_setup_init, tmp_path, build_index, journal_names_to_build):
+    def test_build_by_name(
+        self, f_setup_init, tmp_path, build_index, journal_names_to_build
+    ):
         self.create_mock_journals(tmp_path)
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
@@ -89,11 +103,17 @@ class TestBuild:
             assert not build_location.joinpath("site", "index.html").exists()
 
         if "journal-2" in journal_names_to_build:
-            assert build_location.joinpath("site", "journal-2", "index.html").exists()
+            assert build_location.joinpath(
+                "site", "journal-2", "index.html"
+            ).exists()
         else:
-            assert not build_location.joinpath("site", "journal-2", "index.html").exists()
+            assert not build_location.joinpath(
+                "site", "journal-2", "index.html"
+            ).exists()
 
-        assert build_location.joinpath("site", "journal-1", "index.html").exists()
+        assert build_location.joinpath(
+            "site", "journal-1", "index.html"
+        ).exists()
 
     @pytest.mark.parametrize(
         "build_location, build_index, journals_names_to_build, journals_locations_to_build, include_all_folder",
@@ -121,15 +141,20 @@ class TestBuild:
         default_build_location.mkdir()
 
         if build_location:
-            build_location = tmp_path.joinpath(build_location).expanduser().as_posix()
+            build_location = (
+                tmp_path.joinpath(build_location).expanduser().as_posix()
+            )
 
         if journals_locations_to_build:
             journals_locations_to_build = [
-                tmp_path.joinpath(x).expanduser().as_posix() for x in journals_locations_to_build
+                tmp_path.joinpath(x).expanduser().as_posix()
+                for x in journals_locations_to_build
             ]
 
         if include_all_folder:
-            include_all_folder = tmp_path.joinpath(include_all_folder).expanduser().as_posix()
+            include_all_folder = (
+                tmp_path.joinpath(include_all_folder).expanduser().as_posix()
+            )
 
         build_instructions = model.BuildInstructions(
             build_location=build_location,
@@ -144,13 +169,23 @@ class TestBuild:
         build_journal(build_instructions)
 
         if build_index:
-            assert default_build_location.joinpath("site", "index.html").exists()
+            assert default_build_location.joinpath(
+                "site", "index.html"
+            ).exists()
         else:
-            assert not default_build_location.joinpath("site", "index.html").exists()
+            assert not default_build_location.joinpath(
+                "site", "index.html"
+            ).exists()
 
-        assert default_build_location.joinpath("site", "journal-1", "index.html").exists()
+        assert default_build_location.joinpath(
+            "site", "journal-1", "index.html"
+        ).exists()
 
         if journals_names_to_build or include_all_folder:
-            assert default_build_location.joinpath("site", "journal-2", "index.html").exists()
+            assert default_build_location.joinpath(
+                "site", "journal-2", "index.html"
+            ).exists()
         else:
-            assert not default_build_location.joinpath("site", "journal-2", "index.html").exists()
+            assert not default_build_location.joinpath(
+                "site", "journal-2", "index.html"
+            ).exists()

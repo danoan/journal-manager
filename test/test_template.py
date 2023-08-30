@@ -1,7 +1,9 @@
 from danoan.journal_manager.cli.commands.template_commands.register import (
     register as register_template,
 )
-from danoan.journal_manager.cli.commands.template_commands.remove import remove as remove_template
+from danoan.journal_manager.cli.commands.template_commands.remove import (
+    remove as remove_template,
+)
 from danoan.journal_manager.core import api
 
 from pathlib import Path
@@ -37,7 +39,10 @@ class TestTemplate:
         template_list_file = api.get_template_list_file()
         assert len(template_list_file.list_of_template_data) == 1
         assert template_list_file.list_of_template_data[0].name == template_name
-        assert template_list_file.list_of_template_data[0].filepath == e_template_filepath
+        assert (
+            template_list_file.list_of_template_data[0].filepath
+            == e_template_filepath
+        )
 
     def test_template_remove(self, f_setup_init, tmp_path):
         self.test_template_register(f_setup_init, tmp_path)

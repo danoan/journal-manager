@@ -36,7 +36,9 @@ class TestRegister:
         assert journal_data.active == True
 
         # Register a second one
-        second_location_folder = tmp_path.joinpath("second-journal").expanduser()
+        second_location_folder = tmp_path.joinpath(
+            "second-journal"
+        ).expanduser()
         second_location_folder.mkdir()
         second_journal_title = "My Second Journal Title"
         jm.register.register(second_location_folder, second_journal_title)
@@ -99,10 +101,14 @@ class TestCreate:
 
         journal_location_folder = None
         if journal_location_folder_str:
-            journal_location_folder = tmp_path.joinpath(journal_location_folder_str).expanduser()
+            journal_location_folder = tmp_path.joinpath(
+                journal_location_folder_str
+            ).expanduser()
 
         if not journal_location_folder:
-            journal_location_folder = Path(api.get_configuration_file().default_journal_folder)
+            journal_location_folder = Path(
+                api.get_configuration_file().default_journal_folder
+            )
 
         jm.create.create(journal_title, journal_location_folder, template_name)
 
@@ -110,7 +116,9 @@ class TestCreate:
         assert journal_data.title == journal_title
         assert (
             journal_data.location_folder
-            == journal_location_folder.joinpath("my-journal-title").expanduser().as_posix()
+            == journal_location_folder.joinpath("my-journal-title")
+            .expanduser()
+            .as_posix()
         )
         assert journal_data.active == True
 
@@ -118,7 +126,9 @@ class TestCreate:
 class TestShow:
     def test_show_one_parameter(self, f_setup_init, tmp_path):
         journal_title = "My Journal Title"
-        journal_location_folder = Path(api.get_configuration_file().default_journal_folder)
+        journal_location_folder = Path(
+            api.get_configuration_file().default_journal_folder
+        )
 
         template_name = "research"
         template_location = __create_template__(tmp_path, template_name)

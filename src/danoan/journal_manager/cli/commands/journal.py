@@ -60,17 +60,32 @@ def get_parser(subparser_action=None):
     parser = None
     if subparser_action:
         parser = subparser_action.add_parser(
-            command_name, description=command_description, help=command_help, aliases=["j"]
+            command_name,
+            description=command_description,
+            help=command_help,
+            aliases=["j"],
         )
     else:
-        parser = argparse.ArgumentParser(command_name, description=command_description)
+        parser = argparse.ArgumentParser(
+            command_name, description=command_description
+        )
 
-    list_of_commands = [activate, create, deactivate, deregister, edit, show, register]
+    list_of_commands = [
+        activate,
+        create,
+        deactivate,
+        deregister,
+        edit,
+        show,
+        register,
+    ]
 
     subparser_action = parser.add_subparsers(title="Journal subcommands")
     for command in list_of_commands:
         command.get_parser(subparser_action)
 
-    parser.set_defaults(subcommand_help=parser.print_help, func=__list_journals__)
+    parser.set_defaults(
+        subcommand_help=parser.print_help, func=__list_journals__
+    )
 
     return parser

@@ -3,7 +3,11 @@ import subprocess
 from typing import Optional
 
 
-def edit_file(filepath: Path, nvim_path: Path = Path("nvim"), working_dir: Optional[Path] = None):
+def edit_file(
+    filepath: Path,
+    nvim_path: Path = Path("nvim"),
+    working_dir: Optional[Path] = None,
+):
     """
     Interface to open a file in nvim.
     """

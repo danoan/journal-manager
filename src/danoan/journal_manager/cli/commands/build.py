@@ -1,7 +1,11 @@
 from danoan.journal_manager.core import api, model, exceptions
 
 from danoan.journal_manager.cli import utils
-from danoan.journal_manager.cli.wrappers import general_proc_call, mkdocs_wrapper, node_wrapper
+from danoan.journal_manager.cli.wrappers import (
+    general_proc_call,
+    mkdocs_wrapper,
+    node_wrapper,
+)
 
 from danoan.journal_manager.cli.commands.journal_commands.register import (
     register as register_journal,
@@ -42,7 +46,9 @@ def __register_journals_by_location__(locations: List[str]):
         register_journal(Path(journal_location), journal_title)
 
 
-def __collect_journal_names_from_location__(list_of_locations: List[str]) -> List[str]:
+def __collect_journal_names_from_location__(
+    list_of_locations: List[str],
+) -> List[str]:
     """
     Return a list of journals names based on their journal location.
 
@@ -56,13 +62,17 @@ def __collect_journal_names_from_location__(list_of_locations: List[str]) -> Lis
     """
     journal_data_file = api.get_journal_data_file()
     journals = map(
-        lambda location: api.find_journal_by_location(journal_data_file, location),
+        lambda location: api.find_journal_by_location(
+            journal_data_file, location
+        ),
         list_of_locations,
     )
     return list(map(lambda journal: journal.name if journal else "", journals))
 
 
-def __validate_journal_names_in_registry__(names: List[str]) -> Tuple[List[str], List[str]]:
+def __validate_journal_names_in_registry__(
+    names: List[str],
+) -> Tuple[List[str], List[str]]:
     """
     Separate a list of journal names in registered and non registered.
 
@@ -74,8 +84,12 @@ def __validate_journal_names_in_registry__(names: List[str]) -> Tuple[List[str],
         that were not found in the registry.
     """
     journal_data_file = api.get_journal_data_file()
-    registered_names = list(filter(lambda x: api.find_journal_by_name(journal_data_file, x), names))
-    non_registered_names = list(filter(lambda x: x not in registered_names, names))
+    registered_names = list(
+        filter(lambda x: api.find_journal_by_name(journal_data_file, x), names)
+    )
+    non_registered_names = list(
+        filter(lambda x: x not in registered_names, names)
+    )
 
     return registered_names, non_registered_names
 
@@ -95,9 +109,14 @@ def __validate_journal_locations_in_registry__(
     """
     journal_data_file = api.get_journal_data_file()
     registered_locations = list(
-        filter(lambda x: api.find_journal_by_location(journal_data_file, x), locations)
+        filter(
+            lambda x: api.find_journal_by_location(journal_data_file, x),
+            locations,
+        )
     )
-    non_registered_locations = list(filter(lambda x: x not in registered_locations, locations))
+    non_registered_locations = list(
+        filter(lambda x: x not in registered_locations, locations)
+    )
 
     return registered_locations, non_registered_locations
 
@@ -190,16 +209,24 @@ class BuildJournals(BuildStep):
         self.build_instructions = build_instructions
 
         if not self.build_instructions.build_location:
-            raise RuntimeError("Journal could not be built because a location was not specified.")
+            raise RuntimeError(
+                "Journal could not be built because a location was not specified."
+            )
 
-        self.journals_site_folder = Path(self.build_instructions.build_location).joinpath("site")
+        self.journals_site_folder = Path(
+            self.build_instructions.build_location
+        ).joinpath("site")
 
     def build(self):
         try:
             data: Dict[str, Any] = {"journals": []}
-            for journal_name in get_journals_names_to_build(self.build_instructions):
+            for journal_name in get_journals_names_to_build(
+                self.build_instructions
+            ):
                 journal_data_file = api.get_journal_data_file()
-                journal_data = api.find_journal_by_name(journal_data_file, journal_name)
+                journal_data = api.find_journal_by_name(
+                    journal_data_file, journal_name
+                )
 
                 if journal_data and journal_data.name == journal_name:
                     mkdocs_wrapper.build(
@@ -212,7 +239,9 @@ class BuildJournals(BuildStep):
             return self
         except exceptions.InvalidName as ex:
             ss = StringIO()
-            ss.write("The following journal names are not part of the registry:")
+            ss.write(
+                "The following journal names are not part of the registry:"
+            )
             for journal_name in ex.names:
                 ss.write(f"{journal_name}")
             ss.write("Build is aborted.")
@@ -220,7 +249,9 @@ class BuildJournals(BuildStep):
             return FailedStep(self, ss.getvalue())
         except exceptions.InvalidLocations as ex:
             ss = StringIO()
-            ss.write("The following journal location folders were not found in the registry:")
+            ss.write(
+                "The following journal location folders were not found in the registry:"
+            )
             for journal_location in ex.locations:
                 ss.write(f"{journal_location}")
             ss.write("Build is aborted.")
@@ -241,7 +272,9 @@ class BuildIndexPage(BuildStep):
     Build the index page with links to all rendered journals.
     """
 
-    assets = files("danoan.journal_manager.assets.templates").joinpath("material-index", "assets")
+    assets = files("danoan.journal_manager.assets.templates").joinpath(
+        "material-index", "assets"
+    )
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -250,18 +283,24 @@ class BuildIndexPage(BuildStep):
         # by other build steps and that are necessary to be defined at this point. It
         # is also useful as a sanity check during static type checking
         self.journals_site_folder = self.__dict__["journals_site_folder"]
-        self.build_instructions: model.BuildInstructions = self.__dict__["build_instructions"]
+        self.build_instructions: model.BuildInstructions = self.__dict__[
+            "build_instructions"
+        ]
 
     def build(self):
         if not self.build_instructions.build_index:
             return self
 
         env = Environment(
-            loader=PackageLoader("danoan.journal_manager.assets", package_path="templates")
+            loader=PackageLoader(
+                "danoan.journal_manager.assets", package_path="templates"
+            )
         )
 
         with as_file(BuildIndexPage.assets) as assets_path:
-            shutil.copytree(assets_path, self.journals_site_folder.joinpath("assets"))
+            shutil.copytree(
+                assets_path, self.journals_site_folder.joinpath("assets")
+            )
 
         with open(self.journals_site_folder.joinpath("index.html"), "w") as f:
             template = env.get_template("material-index/index.tpl.html")
@@ -287,15 +326,17 @@ class BuildHttpServer(BuildStep):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.http_server_folder = Path(self.build_instructions.build_location).joinpath(
-            "http-server"
-        )
+        self.http_server_folder = Path(
+            self.build_instructions.build_location
+        ).joinpath("http-server")
 
         # Not really necessay, but this make explicit the variables that are inherit
         # by other build steps and that are necessary to be defined at this point. It
         # is also useful as a sanity check during static type checking
         self.journals_site_folder = self.__dict__["journals_site_folder"]
-        self.build_instructions: model.BuildInstructions = self.__dict__["build_instructions"]
+        self.build_instructions: model.BuildInstructions = self.__dict__[
+            "build_instructions"
+        ]
 
     def build(self):
         try:
@@ -303,10 +344,14 @@ class BuildHttpServer(BuildStep):
                 return self
 
             env = Environment(
-                loader=PackageLoader("danoan.journal_manager.assets", package_path="templates")
+                loader=PackageLoader(
+                    "danoan.journal_manager.assets", package_path="templates"
+                )
             )
 
-            http_server = files("danoan.journal_manager.assets.templates").joinpath("http-server")
+            http_server = files(
+                "danoan.journal_manager.assets.templates"
+            ).joinpath("http-server")
             shutil.copytree(http_server, self.http_server_folder)
 
             node_wrapper.install_dependencies(self.http_server_folder)
@@ -314,15 +359,21 @@ class BuildHttpServer(BuildStep):
             file_monitor_action_template = env.get_template(
                 "file-monitor/file-monitor-action.tpl.sh"
             )
-            file_monitor_template = env.get_template("file-monitor/file-monitor.tpl.sh")
-
-            file_monitor_folder = Path(self.build_instructions.build_location).joinpath(
-                "file-monitor"
+            file_monitor_template = env.get_template(
+                "file-monitor/file-monitor.tpl.sh"
             )
+
+            file_monitor_folder = Path(
+                self.build_instructions.build_location
+            ).joinpath("file-monitor")
             file_monitor_folder.mkdir(exist_ok=True)
 
-            self.file_monitor_script = file_monitor_folder.joinpath("file-monitor.sh")
-            file_monitor_action_script = file_monitor_folder.joinpath("file-monitor-action.sh")
+            self.file_monitor_script = file_monitor_folder.joinpath(
+                "file-monitor.sh"
+            )
+            file_monitor_action_script = file_monitor_folder.joinpath(
+                "file-monitor-action.sh"
+            )
 
             data = {
                 "journals_site_folder": self.journals_site_folder,
@@ -345,7 +396,9 @@ class BuildHttpServer(BuildStep):
 # -------------------- API --------------------
 
 
-def get_journals_names_to_build(build_instructions: model.BuildInstructions) -> List[str]:
+def get_journals_names_to_build(
+    build_instructions: model.BuildInstructions,
+) -> List[str]:
     """
     Read the build instructions and collect the journal names to build.
 
@@ -372,7 +425,10 @@ def get_journals_names_to_build(build_instructions: model.BuildInstructions) -> 
 
     journals_names_to_build = []
     if build_instructions.journals_names_to_build is not None:
-        registered_names, non_registered_names = __validate_journal_names_in_registry__(
+        (
+            registered_names,
+            non_registered_names,
+        ) = __validate_journal_names_in_registry__(
             build_instructions.journals_names_to_build
         )
 
@@ -381,7 +437,10 @@ def get_journals_names_to_build(build_instructions: model.BuildInstructions) -> 
 
         journals_names_to_build = registered_names
     elif build_instructions.journals_locations_to_build is not None:
-        registered_locations, non_registered_locations = __validate_journal_locations_in_registry__(
+        (
+            registered_locations,
+            non_registered_locations,
+        ) = __validate_journal_locations_in_registry__(
             build_instructions.journals_locations_to_build
         )
         __register_journals_by_location__(non_registered_locations)
@@ -394,7 +453,9 @@ def get_journals_names_to_build(build_instructions: model.BuildInstructions) -> 
         (
             registered_locations,
             non_registered_locations,
-        ) = __validate_journal_from_include_all_folder__(build_instructions.include_all_folder)
+        ) = __validate_journal_from_include_all_folder__(
+            build_instructions.include_all_folder
+        )
         __register_journals_by_location__(non_registered_locations)
 
         journals_names_to_build = __collect_journal_names_from_location__(
@@ -436,9 +497,12 @@ def __start_http_server__(http_server_folder: Path, file_monitor_script: Path):
     by the BuildHttpServer build step.
     """
     t1 = multiprocessing.Process(
-        target=node_wrapper.start_server, args=[http_server_folder.joinpath("init.js")]
+        target=node_wrapper.start_server,
+        args=[http_server_folder.joinpath("init.js")],
     )
-    t2 = multiprocessing.Process(target=general_proc_call.start, args=[file_monitor_script])
+    t2 = multiprocessing.Process(
+        target=general_proc_call.start, args=[file_monitor_script]
+    )
 
     t1.start()
     t2.start()
@@ -458,7 +522,9 @@ def __start_http_server__(http_server_folder: Path, file_monitor_script: Path):
 
 
 def __merge_build_instructions__(
-    build_location: Path, build_instructions_path: Optional[Path] = None, **kwargs
+    build_location: Path,
+    build_instructions_path: Optional[Path] = None,
+    **kwargs,
 ):
     """
     Helper function to merge build instructions.
@@ -470,7 +536,9 @@ def __merge_build_instructions__(
     if build_instructions_path is None:
         build_instructions = model.BuildInstructions(build_location)
     else:
-        build_instructions = model.BuildInstructions.read(build_instructions_path)
+        build_instructions = model.BuildInstructions.read(
+            build_instructions_path
+        )
 
     if not build_instructions.build_location:
         build_instructions.build_location = build_location
@@ -519,7 +587,10 @@ def __build__(
 
     if not isinstance(build_result, FailedStep):
         if with_http_server:
-            __start_http_server__(build_result.http_server_folder, build_result.file_monitor_script)
+            __start_http_server__(
+                build_result.http_server_folder,
+                build_result.file_monitor_script,
+            )
     else:
         print(f"Build was not successful with error: {build_result.msg}.")
     pass
@@ -533,7 +604,10 @@ def get_parser(subparser_action=None):
     parser = None
     if subparser_action:
         parser = subparser_action.add_parser(
-            command_name, description=command_description, help=command_help, aliases=["b"]
+            command_name,
+            description=command_description,
+            help=command_help,
+            aliases=["b"],
         )
     else:
         parser = argparse.ArgumentParser(

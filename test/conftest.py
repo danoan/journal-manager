@@ -12,7 +12,8 @@ def jm_config_folder_path(tmp_path):
 @pytest.fixture(scope="function")
 def f_set_env_variable(jm_config_folder_path, monkeypatch):
     monkeypatch.setenv(
-        api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER, jm_config_folder_path.expanduser().as_posix()
+        api.ENV_JOURNAL_MANAGER_CONFIG_FOLDER,
+        jm_config_folder_path.expanduser().as_posix(),
     )
     return {"journal_manager_config_folder": jm_config_folder_path}
 
@@ -24,5 +25,7 @@ def f_setup_init(f_set_env_variable, tmp_path):
     try:
         config_file = api.get_configuration_file()
     except exceptions.ConfigurationFileDoesNotExist:
-        api.create_configuration_file(default_journal_folder, default_template_folder)
+        api.create_configuration_file(
+            default_journal_folder, default_template_folder
+        )
     init.init_journal_manager(default_journal_folder, default_template_folder)

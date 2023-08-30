@@ -45,7 +45,9 @@ def edit_template_data_file():
 # -------------------- CLI --------------------
 
 
-def __open_config_file__(journal: Optional[bool], template: Optional[bool], **kwargs):
+def __open_config_file__(
+    journal: Optional[bool], template: Optional[bool], **kwargs
+):
     if journal:
         edit_journal_data_file()
     elif template:
@@ -66,10 +68,15 @@ def get_parser(subparser_action=None):
     parser = None
     if subparser_action:
         parser = subparser_action.add_parser(
-            command_name, description=command_description, help=command_help, aliases=["s"]
+            command_name,
+            description=command_description,
+            help=command_help,
+            aliases=["s"],
         )
     else:
-        parser = argparse.ArgumentParser(command_name, description=command_description)
+        parser = argparse.ArgumentParser(
+            command_name, description=command_description
+        )
 
     list_of_commands = [init]
     subparser_action = parser.add_subparsers(title="Setup subcommands")
@@ -78,9 +85,15 @@ def get_parser(subparser_action=None):
 
     group = parser.add_mutually_exclusive_group()
 
-    group.add_argument("--journal", action="store_true", help="Open journal data file.")
-    group.add_argument("--template", action="store_true", help="Open template data file.")
+    group.add_argument(
+        "--journal", action="store_true", help="Open journal data file."
+    )
+    group.add_argument(
+        "--template", action="store_true", help="Open template data file."
+    )
 
-    parser.set_defaults(subcommand_help=parser.print_help, func=__open_config_file__)
+    parser.set_defaults(
+        subcommand_help=parser.print_help, func=__open_config_file__
+    )
 
     return parser

@@ -55,7 +55,9 @@ def get_journal_data_file() -> model.JournalDataList:
     return model.JournalDataList.read(config_file.journal_data_filepath)
 
 
-def create_configuration_file(journal_folder_default: Path, templates_folder_default: Path):
+def create_configuration_file(
+    journal_folder_default: Path, templates_folder_default: Path
+):
     """
     Create journal-manager application configuration file.
 
@@ -76,10 +78,14 @@ def create_configuration_file(journal_folder_default: Path, templates_folder_def
     templates_folder_default.mkdir(parents=True)
 
     journal_data_filepath = (
-        Path.expanduser(get_configuration_folder()).joinpath("journal_data.toml").as_posix()
+        Path.expanduser(get_configuration_folder())
+        .joinpath("journal_data.toml")
+        .as_posix()
     )
     journal_template_data_filepath = (
-        Path.expanduser(get_configuration_folder()).joinpath("template_data.toml").as_posix()
+        Path.expanduser(get_configuration_folder())
+        .joinpath("template_data.toml")
+        .as_posix()
     )
 
     parameters = model.Parameters()

@@ -37,12 +37,18 @@ def edit(journal_name: str):
     if not Path(text_editor_path).name.startswith("vim") and not Path(
         text_editor_path
     ).name.startswith("nvim"):
-        raise NotImplementedError("This application only knows how to start vim or nvim editors.")
+        raise NotImplementedError(
+            "This application only knows how to start vim or nvim editors."
+        )
 
     journal = api.find_journal_by_name(journal_data_file, journal_name)
     if journal:
-        mkdocs_config_path = Path(journal.location_folder).joinpath("mkdocs.yml")
-        nvim_wrapper.edit_file(mkdocs_config_path.expanduser(), text_editor_path)
+        mkdocs_config_path = Path(journal.location_folder).joinpath(
+            "mkdocs.yml"
+        )
+        nvim_wrapper.edit_file(
+            mkdocs_config_path.expanduser(), text_editor_path
+        )
     else:
         raise exceptions.InvalidName()
 
@@ -57,7 +63,9 @@ def __edit__(journal_name: str, **kwargs):
     except NotImplementedError as ex:
         print(ex)
     except exceptions.InvalidName:
-        print(f"Journal {journal_name} does not exist. Please enter an existent journal name.")
+        print(
+            f"Journal {journal_name} does not exist. Please enter an existent journal name."
+        )
     except exceptions.InvalidAttribute:
         print(
             dedent(

@@ -46,10 +46,14 @@ def register(template_name: str, template_path: Path):
         exit(1)
 
     if not api.is_valid_template_path(template_path):
-        print(f"The template path: {template_path} does not contain a mkdocs.tpl.yml file.")
+        print(
+            f"The template path: {template_path} does not contain a mkdocs.tpl.yml file."
+        )
         exit(1)
 
-    target_template_path = Path(config_file.default_template_folder).joinpath(template_name)
+    target_template_path = Path(config_file.default_template_folder).joinpath(
+        template_name
+    )
     target_template_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(template_path, target_template_path)
 
@@ -59,7 +63,9 @@ def register(template_name: str, template_path: Path):
     template_list_file = api.get_template_list_file()
     template_list_file.list_of_template_data.append(template_data)
 
-    template_list_file.write(api.get_configuration_file().template_data_filepath)
+    template_list_file.write(
+        api.get_configuration_file().template_data_filepath
+    )
 
 
 # -------------------- CLI --------------------
@@ -91,7 +97,10 @@ def get_parser(subparser_action=None):
         )
 
     parser.add_argument("template_name", help="The name of the template.")
-    parser.add_argument("template_path", help="Path to a directory containing the template structure.")
+    parser.add_argument(
+        "template_path",
+        help="Path to a directory containing the template structure.",
+    )
     parser.set_defaults(func=__register_template__)
 
     return parser

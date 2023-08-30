@@ -23,14 +23,19 @@ def remove(template_name: str):
     template = api.find_template_by_name(template_list_file, template_name)
     if template:
         dir_to_remove = Path(template.filepath)
-        if dir_to_remove.parent.as_posix() == config_file.default_template_folder:
+        if (
+            dir_to_remove.parent.as_posix()
+            == config_file.default_template_folder
+        ):
             shutil.rmtree(dir_to_remove)
         else:
             raise RuntimeError(
                 f"I've got an unexpected path to remove: {dir_to_remove.as_posix()}. Aborting!"
             )
         template_list_file.list_of_template_data.remove(template)
-        template_list_file.write(api.get_configuration_file().template_data_filepath)
+        template_list_file.write(
+            api.get_configuration_file().template_data_filepath
+        )
     else:
         raise exceptions.InvalidName()
 

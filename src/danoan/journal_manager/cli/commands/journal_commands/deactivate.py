@@ -44,7 +44,9 @@ def __deactivate__(journal_names: List[str], **kwargs):
     try:
         deactivate(journal_names)
     except exceptions.InvalidName as ex:
-        print(f"The journals names: {ex.names} are not registered. Any deactivation was done.")
+        print(
+            f"The journals names: {ex.names} are not registered. Any deactivation was done."
+        )
 
 
 def get_parser(subparser_action=None):
@@ -69,7 +71,10 @@ def get_parser(subparser_action=None):
         )
 
     parser.add_argument(
-        "journal_names", nargs="*", action="store", help="Names of journals to deactivate"
+        "journal_names",
+        nargs="*",
+        action="store",
+        help="Names of journals to deactivate",
     )
     parser.set_defaults(subcommand_help=parser.print_help, func=__deactivate__)
 

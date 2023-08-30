@@ -44,7 +44,9 @@ def show(template_name: str, attribute_names: List[str]):
 # -------------------- CLI --------------------
 
 
-def __show_template__(template_name: str, attribute_names: Optional[List[str]] = None, **kwargs):
+def __show_template__(
+    template_name: str, attribute_names: Optional[List[str]] = None, **kwargs
+):
     if attribute_names is None:
         attribute_names = []
 

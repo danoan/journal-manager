@@ -50,7 +50,9 @@ def __activate__(journal_names: List[str], **kwargs):
     try:
         activate(journal_names)
     except exceptions.InvalidName as ex:
-        print(f"The journal names: {ex.names} are not registered. Any activation was done.")
+        print(
+            f"The journal names: {ex.names} are not registered. Any activation was done."
+        )
 
 
 def get_parser(subparser_action=None):
@@ -75,7 +77,10 @@ def get_parser(subparser_action=None):
         )
 
     parser.add_argument(
-        "journal_names", nargs="+", action="store", help="Names of journals to activate"
+        "journal_names",
+        nargs="+",
+        action="store",
+        help="Names of journals to activate",
     )
     parser.set_defaults(subcommand_help=parser.print_help, func=__activate__)
 

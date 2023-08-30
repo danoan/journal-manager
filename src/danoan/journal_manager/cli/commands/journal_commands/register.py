@@ -27,7 +27,9 @@ def register(location_folder: Path, journal_title: str):
     if not location_folder.exists():
         raise exceptions.InvalidLocation(location_folder)
 
-    journal_data = model.JournalData(journal_name, location_folder.as_posix(), True, journal_title)
+    journal_data = model.JournalData(
+        journal_name, location_folder.as_posix(), True, journal_title
+    )
     journal_data_file.list_of_journal_data.append(journal_data)
 
     journal_data_file.write(api.get_configuration_file().journal_data_filepath)
@@ -36,7 +38,9 @@ def register(location_folder: Path, journal_title: str):
 # -------------------- CLI --------------------
 
 
-def __register__(location_folder: str, journal_title: Optional[str] = None, **kwargs):
+def __register__(
+    location_folder: str, journal_title: Optional[str] = None, **kwargs
+):
     utils.ensure_configuration_file_exists()
     if journal_title is None:
         journal_title = Path(location_folder).expanduser().name

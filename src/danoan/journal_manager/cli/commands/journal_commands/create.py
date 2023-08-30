@@ -14,11 +14,15 @@ from jinja2 import Environment, FileSystemLoader, Template
 # -------------------- Helper Functions --------------------
 
 
-def __create_mkdocs_from_template__(journal_data: model.JournalData, template: Template):
+def __create_mkdocs_from_template__(
+    journal_data: model.JournalData, template: Template
+):
     journal_docs_folder = Path(journal_data.location_folder).joinpath("docs")
     journal_docs_folder.mkdir()
 
-    journal_configuration_file = Path(journal_data.location_folder).joinpath("mkdocs.yml")
+    journal_configuration_file = Path(journal_data.location_folder).joinpath(
+        "mkdocs.yml"
+    )
     with open(journal_configuration_file, "w") as f:
         f.write(template.render({"journal": journal_data}))
 
@@ -27,12 +31,18 @@ def __create_mkdocs_from_template__(journal_data: model.JournalData, template: T
         f.write(f"# {journal_data.title}")
 
 
-def __create_mkdocs_from_template_name__(journal_data: model.JournalData, template_name: str):
+def __create_mkdocs_from_template_name__(
+    journal_data: model.JournalData, template_name: str
+):
     config_file = api.get_configuration_file()
 
-    journal_template_list = model.JournalTemplateList.read(config_file.template_data_filepath)
+    journal_template_list = model.JournalTemplateList.read(
+        config_file.template_data_filepath
+    )
 
-    template_entry = api.find_template_by_name(journal_template_list, template_name)
+    template_entry = api.find_template_by_name(
+        journal_template_list, template_name
+    )
     if not template_entry:
         raise exceptions.InvalidName()
 
@@ -42,9 +52,13 @@ def __create_mkdocs_from_template_name__(journal_data: model.JournalData, templa
     shutil.copytree(template_path, journal_location_path)
 
     if not api.is_valid_template_path(journal_location_path):
-        raise exceptions.InvalidTemplate(msg="The journal template does not have a mkdocs.tpl.yml.")
+        raise exceptions.InvalidTemplate(
+            msg="The journal template does not have a mkdocs.tpl.yml."
+        )
     else:
-        mkdocs_template_path = Path(journal_location_path).joinpath("mkdocs.tpl.yml")
+        mkdocs_template_path = Path(journal_location_path).joinpath(
+            "mkdocs.tpl.yml"
+        )
         env = Environment(loader=FileSystemLoader(journal_location_path))
         template = env.get_template("mkdocs.tpl.yml")
         __create_mkdocs_from_template__(journal_data, template)
@@ -85,15 +99,21 @@ def create(
     config_file = api.get_configuration_file()
 
     journal_name = utils.journal_name_from_title(journal_title)
-    journal_data_file = model.JournalDataList.read(config_file.journal_data_filepath)
+    journal_data_file = model.JournalDataList.read(
+        config_file.journal_data_filepath
+    )
 
     utils.ensure_journal_name_is_unique(journal_data_file, journal_name)
 
-    journal_location = journal_location_folder.joinpath(journal_name).expanduser()
+    journal_location = journal_location_folder.joinpath(
+        journal_name
+    ).expanduser()
     if journal_location.exists():
         raise exceptions.InvalidLocation()
 
-    journal_data = model.JournalData(journal_name, journal_location.as_posix(), True, journal_title)
+    journal_data = model.JournalData(
+        journal_name, journal_location.as_posix(), True, journal_title
+    )
     journal_data_file.list_of_journal_data.append(journal_data)
 
     if mkdocs_template_name:
@@ -116,7 +136,9 @@ def __create__(
 ):
     utils.ensure_configuration_file_exists()
     if journal_location_folder is None:
-        journal_location_folder = Path(api.get_configuration_file().default_journal_folder)
+        journal_location_folder = Path(
+            api.get_configuration_file().default_journal_folder
+        )
 
     try:
         create(journal_title, journal_location_folder, mkdocs_template_name)
@@ -126,7 +148,9 @@ def __create__(
         )
         exit(1)
     except exceptions.InvalidLocation:
-        print(f"The journal location {journal_location_folder} exists already. Exiting.")
+        print(
+            f"The journal location {journal_location_folder} exists already. Exiting."
+        )
         exit(1)
     except exceptions.InvalidTemplate as ex:
         print(f"{ex.msg}. Exiting.")
