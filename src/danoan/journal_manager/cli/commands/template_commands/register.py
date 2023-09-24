@@ -63,9 +63,8 @@ def register(template_name: str, template_path: Path):
     template_list_file = api.get_template_list_file()
     template_list_file.list_of_template_data.append(template_data)
 
-    template_list_file.write(
-        api.get_configuration_file().template_data_filepath
-    )
+    with open(api.get_configuration_file().template_data_filepath, "w") as f:
+        template_list_file.write(f)
 
 
 # -------------------- CLI --------------------

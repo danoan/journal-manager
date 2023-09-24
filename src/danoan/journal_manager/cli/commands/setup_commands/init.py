@@ -26,7 +26,8 @@ def init_journal_manager(
     config_file.default_journal_folder = default_journal_folder.as_posix()
     config_file.default_template_folder = default_template_folder.as_posix()
 
-    config_file.write(api.get_configuration_filepath())
+    with open(api.get_configuration_filepath(), "w") as f:
+        config_file.write(f)
 
 
 # -------------------- CLI --------------------

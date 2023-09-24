@@ -164,7 +164,9 @@ class TestBuild:
             include_all_folder=include_all_folder,
         )
         build_instructions_path = tmp_path.joinpath("build-instructions.toml")
-        build_instructions.write(build_instructions_path)
+
+        with open(build_instructions_path, "w") as f:
+            build_instructions.write(f)
 
         build_journal(build_instructions)
 

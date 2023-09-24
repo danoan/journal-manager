@@ -33,9 +33,9 @@ def remove(template_name: str):
                 f"I've got an unexpected path to remove: {dir_to_remove.as_posix()}. Aborting!"
             )
         template_list_file.list_of_template_data.remove(template)
-        template_list_file.write(
-            api.get_configuration_file().template_data_filepath
-        )
+
+        with open(api.get_configuration_file().template_data_filepath, "w") as f:
+            template_list_file.write(f)
     else:
         raise exceptions.InvalidName()
 

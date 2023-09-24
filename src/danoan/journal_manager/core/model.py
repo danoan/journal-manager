@@ -1,4 +1,4 @@
-from danoan.utils.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
+from danoan.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
 
 from dataclasses import dataclass
 from typing import List, Optional, TypeVar, Type, Dict, Any

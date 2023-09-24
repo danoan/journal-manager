@@ -89,15 +89,20 @@ def create_configuration_file(
     )
 
     parameters = model.Parameters()
-    model.ConfigurationFile(
-        journal_folder_default.as_posix(),
-        templates_folder_default.as_posix(),
-        journal_data_filepath,
-        journal_template_data_filepath,
-        parameters,
-    ).write(get_configuration_filepath().as_posix())
-    model.JournalDataList([]).write(journal_data_filepath)
-    model.JournalTemplateList([]).write(journal_template_data_filepath)
+    with open(get_configuration_filepath().as_posix(), "w") as f:
+        model.ConfigurationFile(
+            journal_folder_default.as_posix(),
+            templates_folder_default.as_posix(),
+            journal_data_filepath,
+            journal_template_data_filepath,
+            parameters,
+        ).write(f)
+
+    with open(journal_data_filepath, "w") as f:
+        model.JournalDataList([]).write(f)
+
+    with open(journal_template_data_filepath, "w") as f:
+        model.JournalTemplateList([]).write(f)
 
 
 def is_valid_template_path(template_path: Path):

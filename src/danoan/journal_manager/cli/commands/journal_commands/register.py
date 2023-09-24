@@ -32,7 +32,8 @@ def register(location_folder: Path, journal_title: str):
     )
     journal_data_file.list_of_journal_data.append(journal_data)
 
-    journal_data_file.write(api.get_configuration_file().journal_data_filepath)
+    with open(api.get_configuration_file().journal_data_filepath, "w") as f:
+        journal_data_file.write(f)
 
 
 # -------------------- CLI --------------------
