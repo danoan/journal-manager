@@ -117,8 +117,7 @@ def create(
     journal_data_file.list_of_journal_data.append(journal_data)
 
     if mkdocs_template_name:
-        __create_mkdocs_from_template_name__(
-            journal_data, mkdocs_template_name)
+        __create_mkdocs_from_template_name__(journal_data, mkdocs_template_name)
     else:
         journal_location.mkdir(parents=True)
         mkdocs_wrapper.create(journal_location)

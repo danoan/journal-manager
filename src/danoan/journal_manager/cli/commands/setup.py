@@ -9,20 +9,20 @@ from typing import Optional
 # -------------------- API --------------------
 
 
-def edit_file(text_filepath: str):
+def edit_file(text_filepath: Path):
     config_file = api.get_configuration_file()
-    text_editor_path = config_file.parameters.default_text_editor_path
+    _text_editor_path = config_file.parameters.default_text_editor_path
 
-    if not text_editor_path:
+    if not _text_editor_path:
         raise exceptions.InvalidAttribute("No text editor was defined yet.")
 
-    text_editor_path = Path(text_editor_path)
+    text_editor_path = Path(_text_editor_path)
 
     if not Path(text_editor_path).name.startswith("vim") and not Path(
         text_editor_path
     ).name.startswith("nvim"):
         raise NotImplementedError(
-            message="This application only knows how to start vim or nvim editors."
+            "This application only knows how to start vim or nvim editors."
         )
 
     nvim_wrapper.edit_file(text_filepath, text_editor_path)

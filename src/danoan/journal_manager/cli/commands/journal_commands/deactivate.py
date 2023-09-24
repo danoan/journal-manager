@@ -26,7 +26,7 @@ def deactivate(journal_names: List[str]):
         if journal:
             journal.active = False
         else:
-            not_found_journal_names.append(journal_names)
+            not_found_journal_names.extend(journal_names)
         updated_journal_data_list.append(journal)
 
     if len(not_found_journal_names) > 0:

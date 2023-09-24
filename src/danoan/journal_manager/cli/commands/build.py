@@ -23,7 +23,7 @@ from typing import List, Iterator, Iterable, Any, Optional, Dict, Tuple
 
 
 # -------------------- Helper Functions --------------------
-def __register_journals_by_location__(locations: List[str]):
+def __register_journals_by_location__(locations: List[Path]):
     """
     Register journals by location in the registry.
 
@@ -33,9 +33,9 @@ def __register_journals_by_location__(locations: List[str]):
         InvalidLocation if one or more locations are not valid or do
         not exist.
     """
-    invalid_locations: List[str] = []
+    invalid_locations: List[Path] = []
     for journal_location in locations:
-        if not Path(journal_location).exists():
+        if not journal_location.exists():
             invalid_locations.append(journal_location)
 
     if len(invalid_locations) != 0:
@@ -122,7 +122,7 @@ def __validate_journal_locations_in_registry__(
 
 
 def __validate_journal_from_include_all_folder__(
-    include_all_folder: str,
+    include_all_folder: Path,
 ) -> Tuple[List[str], List[str]]:
     """
     Separate a list of journal locations in registered and non registered.
@@ -140,12 +140,11 @@ def __validate_journal_from_include_all_folder__(
         IncludeLocation if the include_all_folder is not valid or does not
         exist.
     """
-    p = Path(include_all_folder)
-    if not p.exists():
-        raise exceptions.InvalidLocation([include_all_folder])
+    if not include_all_folder.exists():
+        raise exceptions.InvalidLocation(include_all_folder)
 
     return __validate_journal_locations_in_registry__(
-        list(map(lambda x: x.as_posix(), p.iterdir()))
+        list(map(lambda x: x.as_posix(), include_all_folder.iterdir()))
     )
 
 
@@ -231,7 +230,9 @@ class BuildJournals(BuildStep):
                 if journal_data and journal_data.name == journal_name:
                     mkdocs_wrapper.build(
                         Path(journal_data.location_folder),
-                        f"{self.journals_site_folder}/{journal_data.name}",
+                        Path(
+                            f"{self.journals_site_folder}/{journal_data.name}"
+                        ),
                     )
                     data["journals"].append(journal_data)
 
@@ -247,17 +248,17 @@ class BuildJournals(BuildStep):
             ss.write("Build is aborted.")
 
             return FailedStep(self, ss.getvalue())
-        except exceptions.InvalidLocations as ex:
+        except exceptions.InvalidLocation as ex:
             ss = StringIO()
             ss.write(
                 "The following journal location folders were not found in the registry:"
             )
-            for journal_location in ex.locations:
+            for journal_location in ex:
                 ss.write(f"{journal_location}")
             ss.write("Build is aborted.")
 
             return FailedStep(self, ss.getvalue())
-        except exceptions.IncludeAllFolderDoesNotExist as ex:
+        except exceptions.InvalidIncludeAllFolder as ex:
             ss = StringIO()
             ss.write(
                 f"The path specified in the build instructions: {ex.path} does not exist. Build is aborted."
@@ -326,6 +327,9 @@ class BuildHttpServer(BuildStep):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        if not self.build_instructions.build_location:
+            raise exceptions.InvalidAttribute("No build location was given")
+
         self.http_server_folder = Path(
             self.build_instructions.build_location
         ).joinpath("http-server")
@@ -362,6 +366,9 @@ class BuildHttpServer(BuildStep):
             file_monitor_template = env.get_template(
                 "file-monitor/file-monitor.tpl.sh"
             )
+
+            if not self.build_instructions.build_location:
+                raise RuntimeError("No build location was given.")
 
             file_monitor_folder = Path(
                 self.build_instructions.build_location
@@ -443,7 +450,9 @@ def get_journals_names_to_build(
         ) = __validate_journal_locations_in_registry__(
             build_instructions.journals_locations_to_build
         )
-        __register_journals_by_location__(non_registered_locations)
+        __register_journals_by_location__(
+            [Path(p) for p in non_registered_locations]
+        )
 
         journals_names_to_build = __collect_journal_names_from_location__(
             registered_locations + non_registered_locations
@@ -454,9 +463,11 @@ def get_journals_names_to_build(
             registered_locations,
             non_registered_locations,
         ) = __validate_journal_from_include_all_folder__(
-            build_instructions.include_all_folder
+            Path(build_instructions.include_all_folder)
         )
-        __register_journals_by_location__(non_registered_locations)
+        __register_journals_by_location__(
+            [Path(p) for p in non_registered_locations]
+        )
 
         journals_names_to_build = __collect_journal_names_from_location__(
             registered_locations + non_registered_locations
@@ -473,6 +484,8 @@ def build(build_instructions: model.BuildInstructions):
     """
     Build html static pages from journals.
     """
+    if not build_instructions.build_location:
+        raise RuntimeError("No build location was given.")
 
     build_location = Path(build_instructions.build_location)
     build_location.mkdir(exist_ok=True)
@@ -540,8 +553,8 @@ def __merge_build_instructions__(
             build_instructions_path
         )
 
-    if not build_instructions.build_location:
-        build_instructions.build_location = build_location
+    if build_instructions and not build_instructions.build_location:
+        build_instructions.build_location = str(build_location)
 
     for keyword, value in kwargs.items():
         if value is not None:

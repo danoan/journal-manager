@@ -34,7 +34,9 @@ def remove(template_name: str):
             )
         template_list_file.list_of_template_data.remove(template)
 
-        with open(api.get_configuration_file().template_data_filepath, "w") as f:
+        with open(
+            api.get_configuration_file().template_data_filepath, "w"
+        ) as f:
             template_list_file.write(f)
     else:
         raise exceptions.InvalidName()
@@ -50,7 +52,7 @@ def __remove_template__(template_name: str, **kwargs):
     except exceptions.InvalidName:
         print(f"Template {template_name} was not found.")
     except RuntimeError as ex:
-        print(ex.message)
+        print(ex)
         exit(1)
 
 

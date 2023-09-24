@@ -50,9 +50,14 @@ class TestBuild:
         build_location = tmp_path.joinpath("build")
         build_location.mkdir()
 
-        journal_2_location_folder = api.find_journal_by_name(
+        journal_2 = api.find_journal_by_name(
             api.get_journal_data_file(), "journal-2"
-        ).location_folder
+        )
+
+        if not journal_2:
+            raise RuntimeError("Journal not found.")
+
+        journal_2_location_folder = journal_2.location_folder
 
         build_instructions = __merge_build_instructions__(
             build_location.expanduser().as_posix(),
