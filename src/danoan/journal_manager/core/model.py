@@ -1,3 +1,7 @@
+"""
+Data model for journal-manager api.
+"""
+
 from danoan.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
 
 from dataclasses import dataclass

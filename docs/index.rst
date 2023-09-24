@@ -6,11 +6,37 @@
 Welcome to Journal Manager's documentation!
 ===========================================
 
+Start here
+==========
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
 
-   reference/modules
+   getting-started.md
+
+How-to guides
+=============
+.. toctree::
+   :maxdepth: 1
+
+   how-to/setup-journal-manager
+   how-to/create-journals
+   how-to/build-journals
+   how-to/setup-quick-notes-template
+   how-to/setup-a-personal-journals-server
+
+Reference guides
+================
+.. toctree::
+   :maxdepth: 1
+
+   api
+
+Design and Archictecture
+========================
+.. toctree::
+   :maxdepth: 1
+
+   design-and-architecture
 
 
 Indices and tables

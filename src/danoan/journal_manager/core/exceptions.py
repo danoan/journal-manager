@@ -1,3 +1,7 @@
+"""
+Exceptions raised by journal-manager api.
+"""
+
 from pathlib import Path
 from typing import Optional, Iterable, Union
 
