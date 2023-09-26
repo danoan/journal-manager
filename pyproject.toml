@@ -30,7 +30,7 @@ Issues = "https://github.com/danoan/journal-manager/issues"
 Source = "https://github.com/danoan/journal-manager"
 
 [project.scripts]
-journal-manager = "danoan.journal_manager.cli.cli:main"
+jm = "danoan.journal_manager.cli.cli:main"
 
 # -------------------- build backend --------------------
 [tools.setuptools]
