@@ -34,11 +34,9 @@ def edit(journal_name: str):
 
     text_editor_path = Path(config_file.parameters.default_text_editor_path)
 
-    if not Path(text_editor_path).name.startswith("vim") and not Path(
-        text_editor_path
-    ).name.startswith("nvim"):
+    if not text_editor_path:
         raise NotImplementedError(
-            "This application only knows how to start vim or nvim editors."
+            "Text editor path not found. Please set it with: jm setup init."
         )
 
     journal = api.find_journal_by_name(journal_data_file, journal_name)
