@@ -3,6 +3,7 @@ from danoan.journal_manager.cli.commands.setup_commands import init
 from danoan.journal_manager.core import api, exceptions
 
 from conftest import *
+from pathlib import Path
 import pytest
 
 
@@ -28,8 +29,9 @@ class TestInit:
         ]
         default_journal_folder = tmp_path.joinpath("journals").expanduser()
         default_template_folder = tmp_path.joinpath("templates").expanduser()
+        default_editor_path = Path("nvim")
         init.init_journal_manager(
-            default_journal_folder, default_template_folder
+            default_journal_folder, default_template_folder, default_editor_path
         )
 
         config_file = api.get_configuration_file()
@@ -55,7 +57,7 @@ class TestInit:
             config_file.template_data_filepath
             == expected_template_data_filepath.as_posix()
         )
-        assert config_file.parameters.default_text_editor_path is None
+        assert config_file.parameters.default_text_editor_path == "nvim"
 
     def test_configuration_file_exist(self, f_set_env_variable, tmp_path):
         first_default_journal_folder = tmp_path.joinpath(
@@ -80,8 +82,12 @@ class TestInit:
         second_default_template_folder = tmp_path.joinpath(
             "templates_another_path"
         ).expanduser()
+        second_default_editor_path = Path("nvim")
+
         init.init_journal_manager(
-            second_default_journal_folder, second_default_template_folder
+            second_default_journal_folder,
+            second_default_template_folder,
+            second_default_editor_path,
         )
         config_file = api.get_configuration_file()
 

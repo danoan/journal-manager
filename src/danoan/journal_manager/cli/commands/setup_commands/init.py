@@ -10,7 +10,9 @@ from textwrap import dedent
 
 
 def init_journal_manager(
-    default_journal_folder: Path, default_template_folder: Path, default_text_editor_path: Path
+    default_journal_folder: Path,
+    default_template_folder: Path,
+    default_text_editor_path: Path,
 ):
     """
     Initialize journal-manager settings.
@@ -26,7 +28,9 @@ def init_journal_manager(
 
     config_file.default_journal_folder = default_journal_folder.as_posix()
     config_file.default_template_folder = default_template_folder.as_posix()
-    config_file.parameters.default_text_editor_path = default_text_editor_path.as_posix()
+    config_file.parameters.default_text_editor_path = (
+        default_text_editor_path.as_posix()
+    )
 
     with open(api.get_configuration_filepath(), "w") as f:
         config_file.write(f)
@@ -51,22 +55,27 @@ def __init_journal_manager__(
 
     current_editor_str_path = None
     if config_file_exists_already:
-        current_editor_str_path = config_file.parameters.default_text_editor_path
+        current_editor_str_path = (
+            config_file.parameters.default_text_editor_path
+        )
 
     new_editor_path = None
     if not current_editor_str_path or current_editor_str_path == "":
-        new_editor_path = Path(input(
-            "Enter the path of your default editor (e.g. nvim): "))
+        new_editor_path = Path(
+            input("Enter the path of your default editor (e.g. nvim): ")
+        )
     else:
         entered_editor_path = input(
-            f"Enter the path of your default editor (type enter to keep the current one: {current_editor_str_path}): ")
+            f"Enter the path of your default editor (type enter to keep the current one: {current_editor_str_path}): "
+        )
         if entered_editor_path != "":
             new_editor_path = Path(entered_editor_path)
         else:
             new_editor_path = Path(current_editor_str_path)
 
-    init_journal_manager(default_journal_folder,
-                         default_template_folder, new_editor_path)
+    init_journal_manager(
+        default_journal_folder, default_template_folder, new_editor_path
+    )
     config_file = api.get_configuration_file()
 
     if config_file_exists_already:

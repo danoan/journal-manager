@@ -38,6 +38,7 @@ class JournalData(TomlDataClassIO):
     location_folder: str
     active: bool
     title: str
+    last_edit_date: str
 
 
 @dataclass

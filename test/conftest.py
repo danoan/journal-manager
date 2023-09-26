@@ -1,6 +1,7 @@
 from danoan.journal_manager.core import api, exceptions
 from danoan.journal_manager.cli.commands.setup_commands import init
 
+from pathlib import Path
 import pytest
 
 
@@ -22,10 +23,13 @@ def f_set_env_variable(jm_config_folder_path, monkeypatch):
 def f_setup_init(f_set_env_variable, tmp_path):
     default_journal_folder = tmp_path.joinpath("journals").expanduser()
     default_template_folder = tmp_path.joinpath("templates").expanduser()
+    default_editor_path = Path("nvim")
     try:
         config_file = api.get_configuration_file()
     except exceptions.ConfigurationFileDoesNotExist:
         api.create_configuration_file(
             default_journal_folder, default_template_folder
         )
-    init.init_journal_manager(default_journal_folder, default_template_folder)
+    init.init_journal_manager(
+        default_journal_folder, default_template_folder, default_editor_path
+    )

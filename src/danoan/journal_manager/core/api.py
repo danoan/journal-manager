@@ -152,3 +152,19 @@ def find_journal_by_location(
         if journal_data.location_folder == journal_location:
             return journal_data
     return None
+
+
+def update_journal(
+    journal_data_file: model.JournalDataList, journal_data: model.JournalData
+):
+    """
+    Update journal entry in the journal data file.
+    """
+
+    for i, entry in enumerate(journal_data_file.list_of_journal_data):
+        if entry.name == journal_data.name:
+            journal_data_file.list_of_journal_data[i] = journal_data
+            break
+
+    with open(get_configuration_file().journal_data_filepath, "w") as f:
+        journal_data_file.write(f)
