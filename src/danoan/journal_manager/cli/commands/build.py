@@ -517,8 +517,21 @@ def __start_http_server__(http_server_folder: Path, file_monitor_script: Path):
         target=general_proc_call.start, args=[file_monitor_script]
     )
 
-    t1.start()
-    t2.start()
+    try:
+        t1.start()
+    except Exception as ex:
+        print(ex)
+        print(
+            "HTTP server could not be started. Make sure you have `nodejs` installed."
+        )
+
+    try:
+        t2.start()
+    except Exception as ex:
+        print(ex)
+        print(
+            "File monitor could not be started. Make sure you have `entr` installed."
+        )
 
     def terminate_processes(sig, frame):
         print("Terminating http server")
