@@ -1,0 +1,15 @@
+journal\_manager.cli.commands.setup\_commands package
+=====================================================
+
+.. automodule:: journal_manager.cli.commands.setup_commands
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   journal_manager.cli.commands.setup_commands.init

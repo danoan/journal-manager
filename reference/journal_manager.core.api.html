@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>journal_manager.core.api module &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../how-to/setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to/create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to/build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to/setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to/setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">journal_manager.core.api module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/reference/journal_manager.core.api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-journal_manager.core.api">
+<span id="journal-manager-core-api-module"></span><h1>journal_manager.core.api module<a class="headerlink" href="#module-journal_manager.core.api" title="Permalink to this heading"></a></h1>
+<p>Core methods that form the journal-manager api.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.create_configuration_file">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">create_configuration_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal_folder_default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_folder_default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/api.html#create_configuration_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.create_configuration_file" title="Permalink to this definition"></a></dt>
+<dd><p>Create journal-manager application configuration file.</p>
+<dl class="simple">
+<dt>Additionally, it creates two more configuration files:</dt><dd><ul class="simple">
+<li><p>journal_data.toml</p></li>
+<li><p>template_data.toml</p></li>
+</ul>
+</dd>
+</dl>
+<p>and a folder to store journal templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>journal_folder_default</strong> (<em>Path</em>) – Default location to store journals.</p></li>
+<li><p><strong>templates_folder_default</strong> (<em>Path</em>) – Default location to store journal templates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.find_journal_by_location">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">find_journal_by_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal_data_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JournalDataList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal_location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">JournalData</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#find_journal_by_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.find_journal_by_location" title="Permalink to this definition"></a></dt>
+<dd><p>Search a registered journal by location.</p>
+<p>If the journal is not found, a None object is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>journal_data_file</strong> (<em>JournalDataList</em>) – Dataclass representation of the journal register file.</p></li>
+<li><p><strong>journal_location</strong> (<em>str</em>) – Path to the journal folder.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>JournalData</em> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.find_journal_by_name">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">find_journal_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal_data_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JournalDataList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">JournalData</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#find_journal_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.find_journal_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Search a registered journal by name.</p>
+<p>If the journal is not found, a None object is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>journal_data_file</strong> (<em>JournalDataList</em>) – Dataclass representation of the journal register file.</p></li>
+<li><p><strong>journal_name</strong> (<em>str</em>) – Journla name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>JournalData</em> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.find_template_by_name">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">find_template_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JournalTemplateList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">JournalTemplate</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#find_template_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.find_template_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Search a registered template by name.</p>
+<p>If the template is not found, a None object is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template_file</strong> (<em>JournalTemplateList</em>) – Dataclass representation of the journal template register file.</p></li>
+<li><p><strong>template_name</strong> (<em>str</em>) – Template name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>JournalTemplate</em> | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.get_configuration_file">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">get_configuration_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfigurationFile</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#get_configuration_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.get_configuration_file" title="Permalink to this definition"></a></dt>
+<dd><p>Return ConfigurationFile dataclass instantiated from the configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="journal_manager.core.exceptions.html#journal_manager.core.exceptions.ConfigurationFileDoesNotExist" title="journal_manager.core.exceptions.ConfigurationFileDoesNotExist"><strong>ConfigurationFileDoesNotExist</strong></a> – if configuration file does not exist.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ConfigurationFile</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.get_configuration_filepath">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">get_configuration_filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/api.html#get_configuration_filepath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.get_configuration_filepath" title="Permalink to this definition"></a></dt>
+<dd><p>Return the path to the journal-manager configuration file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.get_configuration_folder">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">get_configuration_folder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#get_configuration_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.get_configuration_folder" title="Permalink to this definition"></a></dt>
+<dd><p>Return the value stored by environment variable JOURNAL_MANAGER_CONFIG_FOLDER</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="journal_manager.core.exceptions.html#journal_manager.core.exceptions.ConfigurationFolderDoesNotExist" title="journal_manager.core.exceptions.ConfigurationFolderDoesNotExist"><strong>ConfigurationFolderDoesNotExist</strong></a> – if JOURNAL_MANAGER_CONFIG_FOLDER is not set.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.get_journal_data_file">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">get_journal_data_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">JournalDataList</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#get_journal_data_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.get_journal_data_file" title="Permalink to this definition"></a></dt>
+<dd><p>Return JournalDataList dataclass instantiated from the journals register file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>JournalDataList</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.get_template_list_file">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">get_template_list_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">JournalTemplateList</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/api.html#get_template_list_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.get_template_list_file" title="Permalink to this definition"></a></dt>
+<dd><p>Return JournalTemplateList dataclass instantiated from the templates register file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>JournalTemplateList</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.is_valid_template_path">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">is_valid_template_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/api.html#is_valid_template_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.is_valid_template_path" title="Permalink to this definition"></a></dt>
+<dd><p>Validates a journal templates folder.</p>
+<p>The journal template folder must contain the file mkdocs.tpl.yml.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>template_path</strong> (<em>Path</em>) – The journal template folder to check.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="journal_manager.core.api.update_journal">
+<span class="sig-prename descclassname"><span class="pre">journal_manager.core.api.</span></span><span class="sig-name descname"><span class="pre">update_journal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journal_data_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JournalDataList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">JournalData</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/api.html#update_journal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.api.update_journal" title="Permalink to this definition"></a></dt>
+<dd><p>Update journal entry in the journal data file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>journal_data_file</strong> (<em>JournalDataList</em>) – Dataclass representation of the journal register file.</p></li>
+<li><p><strong>journal_data</strong> (<em>JournalData</em>) – Updated journal.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

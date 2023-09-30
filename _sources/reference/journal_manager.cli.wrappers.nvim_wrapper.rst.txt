@@ -1,0 +1,7 @@
+journal\_manager.cli.wrappers.nvim\_wrapper module
+==================================================
+
+.. automodule:: journal_manager.cli.wrappers.nvim_wrapper
+   :members:
+   :undoc-members:
+   :show-inheritance:

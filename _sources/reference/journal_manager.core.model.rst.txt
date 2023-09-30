@@ -1,0 +1,7 @@
+journal\_manager.core.model module
+==================================
+
+.. automodule:: journal_manager.core.model
+   :members:
+   :undoc-members:
+   :show-inheritance:

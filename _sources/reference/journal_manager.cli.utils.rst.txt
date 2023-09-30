@@ -1,0 +1,7 @@
+journal\_manager.cli.utils module
+=================================
+
+.. automodule:: journal_manager.cli.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

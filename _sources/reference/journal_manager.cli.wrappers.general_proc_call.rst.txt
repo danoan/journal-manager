@@ -1,0 +1,7 @@
+journal\_manager.cli.wrappers.general\_proc\_call module
+========================================================
+
+.. automodule:: journal_manager.cli.wrappers.general_proc_call
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create journals &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Build journals" href="build-journals.html" />
+    <link rel="prev" title="Setup journal-manager" href="setup-journal-manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Create journals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-new-journal">Create a new journal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-journal-from-a-journal-manager-template">Create a journal from a journal-manager template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#register-an-existing-journal">Register an existing journal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Create journals</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/how-to/create-journals.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="create-journals">
+<h1>Create journals<a class="headerlink" href="#create-journals" title="Permalink to this heading"></a></h1>
+<p>You can create journals from scratch, using a journal-manager template or register an
+existing journal.</p>
+<section id="create-a-new-journal">
+<h2>Create a new journal<a class="headerlink" href="#create-a-new-journal" title="Permalink to this heading"></a></h2>
+<p>Use the command <code class="docutils literal notranslate"><span class="pre">journal</span> <span class="pre">create</span></code> to create a new journal.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>journal<span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;nlp&quot;</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can also type <code class="docutils literal notranslate"><span class="pre">jm</span> <span class="pre">j</span> <span class="pre">c</span> <span class="pre">&quot;nlp&quot;</span></code> to create a new journal.</p>
+</div>
+<p>This command it is just a wrap around <code class="docutils literal notranslate"><span class="pre">mkdocs</span> <span class="pre">new</span></code>. The new journal is created
+in the directory given by <code class="docutils literal notranslate"><span class="pre">default_journal_folder</span></code> in the configuration
+file. You can also indicate a new location by passing the parameter <code class="docutils literal notranslate"><span class="pre">--journal-folder</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>journal<span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;nlp&quot;</span><span class="w"> </span>--journal-folder<span class="w"> </span><span class="s2">&quot;~/my-journals&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="create-a-journal-from-a-journal-manager-template">
+<h2>Create a journal from a journal-manager template<a class="headerlink" href="#create-a-journal-from-a-journal-manager-template" title="Permalink to this heading"></a></h2>
+<p>A journal-manager template is a directory containing at least one file:
+<code class="docutils literal notranslate"><span class="pre">mkdocs.tpl.yml</span></code>. This file has the same structure of the <code class="docutils literal notranslate"><span class="pre">mkdocs.yml</span></code> but with
+jinja2 placeholders. Here it is an example:</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span>site_name: {{journal.title}}
+theme:
+  name: material
+  custom_dir: overrides
+  features:
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
+
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+</pre></div>
+</div>
+<p>You can set up your template to use a specific MkDocs theme and select the list
+of active plugins. The template can render metadata of the journal such as the
+<code class="docutils literal notranslate"><span class="pre">title</span></code> or its <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<p>After creating a journal-manager template, you should register it using the <code class="docutils literal notranslate"><span class="pre">template</span> <span class="pre">register</span></code> command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>template<span class="w"> </span>register<span class="w"> </span><span class="s2">&quot;~/my-template&quot;</span>
+</pre></div>
+</div>
+<p>Notice that we pass a directory to the <code class="docutils literal notranslate"><span class="pre">template</span> <span class="pre">register</span></code> command. That’s
+because the full content of this directory will be copied when generating a
+journal according with this template.</p>
+<p>This can be useful if one has custom assets such as images and scripts or if
+one wants to override or extend a MkDocs theme by creating the <code class="docutils literal notranslate"><span class="pre">overrides</span></code>
+folder. More information about MkDocs theme customization can be found
+<a class="reference external" href="https://squidfunk.github.io/mkdocs-material/customization/">here</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>A popular journal-manager template is the <a class="reference internal" href="#"><span class="xref myst">quick-notes-template</span></a>. This template adds a
+dynamic functionality to the static MkDocs’ pages. One can update the journal
+by pushing content online. More information can be found in our tutorial:
+<a class="reference internal" href="#"><span class="xref myst">Setting up a personal journal server</span></a></p>
+</div>
+</section>
+<section id="register-an-existing-journal">
+<h2>Register an existing journal<a class="headerlink" href="#register-an-existing-journal" title="Permalink to this heading"></a></h2>
+<p>You may have a MkDocs journal already. To start managing it from
+journal-manager you just need to register it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>journal<span class="w"> </span>register<span class="w"> </span><span class="s2">&quot;~/my-journal-location&quot;</span>
+</pre></div>
+</div>
+<p>If no title is given, the journal will have the title of the folder it contains
+it.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can give a title for your journal by passing the parameter –title.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup-journal-manager.html" class="btn btn-neutral float-left" title="Setup journal-manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="build-journals.html" class="btn btn-neutral float-right" title="Build journals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

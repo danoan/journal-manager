@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup a personal journals server &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API" href="../api.html" />
+    <link rel="prev" title="Setup the quick-notes template" href="setup-quick-notes-template.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup a personal journals server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-docker-services">Setting up docker services</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Setup a personal journals server</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/how-to/setup-a-personal-journals-server.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setup-a-personal-journals-server">
+<h1>Setup a personal journals server<a class="headerlink" href="#setup-a-personal-journals-server" title="Permalink to this heading"></a></h1>
+<p>In this tutorial we are going to setup a server to host markdown
+journals created with journal-manager + quick-notes template.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p><img alt="System Overview" src="../_images/system-architecture-v1.0.svg" /></p>
+<p>The <strong>user</strong> will <em>update</em> <strong>markdown</strong> files directly or through the
+addition of <strong>quick-notes</strong>. A <strong>file-monitor</strong> service will <em>monitor</em>
+the journal markdown files and it will activate a <em>build</em> if
+any file is updated. The <em>build</em> is done via the <strong>journal-manager</strong>
+application that internally also calls the <em>build</em> command of
+<strong>mkdocs</strong>. The result of this build is a set of <strong>static-pages</strong>
+that is <em>served</em> by a nodejs <strong>http-server</strong> implementing
+the <strong>quick-notes</strong> API as defined in our tutorial
+Setup quick-notes template.</p>
+</section>
+<section id="setting-up-docker-services">
+<h2>Setting up docker services<a class="headerlink" href="#setting-up-docker-services" title="Permalink to this heading"></a></h2>
+<p>We are going to create two docker services (<code class="docutils literal notranslate"><span class="pre">journals-http-server</span></code> and
+<code class="docutils literal notranslate"><span class="pre">journals-file-monitor-service</span></code>) instantiated from the same docker image
+(<code class="docutils literal notranslate"><span class="pre">journal-manager-image</span></code>).</p>
+<p><img alt="Docker Services" src="../_images/docker-architecture-v1.0.svg" /></p>
+<p>Below we define the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> for the <code class="docutils literal notranslate"><span class="pre">journal-manager-image</span></code>. It is based
+on the lightweight <code class="docutils literal notranslate"><span class="pre">alpine</span></code> unix distribution.</p>
+<div class="highlight-Dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">alpine:3.14</span>
+
+<span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>--update<span class="w"> </span>--no-cache<span class="w"> </span><span class="se">\</span>
+bash<span class="w"> </span><span class="se">\</span>
+python3<span class="w"> </span><span class="se">\</span>
+py3-pip<span class="w"> </span><span class="se">\</span>
+nodejs<span class="w"> </span><span class="se">\</span>
+npm<span class="w"> </span><span class="se">\</span>
+entr<span class="w"> </span><span class="se">\</span>
+gcc<span class="w"> </span><span class="se">\</span>
+python3-dev<span class="w"> </span><span class="se">\</span>
+musl-dev
+
+<span class="k">WORKDIR</span><span class="w"> </span><span class="s">/journals</span>
+
+<span class="k">COPY</span><span class="w"> </span>scripts/init-stage/install-journal-manager<span class="w"> </span>/journals/scripts/init-stage/install-journal-manager
+
+<span class="k">COPY</span><span class="w"> </span>templates<span class="w"> </span>/journals/templates-temp/
+<span class="k">ENV</span><span class="w"> </span><span class="nv">JOURNAL_MANAGER_CONFIG_FOLDER</span><span class="o">=</span><span class="s2">&quot;/journals/.config/journal-manager&quot;</span>
+<span class="k">RUN</span><span class="w"> </span>/journals/scripts/init-stage/install-journal-manager/install-journal-manager.sh
+
+
+<span class="k">COPY</span><span class="w"> </span>http-server/<span class="w"> </span>/journals/http-server/
+<span class="k">RUN</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>http-server<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>npm<span class="w"> </span>install
+
+<span class="k">COPY</span><span class="w"> </span>scripts/execution-stage<span class="w"> </span>/journals/scripts/execution-stage
+
+
+<span class="c"># Fix file watcher on Mac (see: https://github.com/eradman/entr/issues/3)</span>
+<span class="k">ENV</span><span class="w"> </span>ENTR_INOTIFY_WORKAROUND<span class="w"> </span><span class="m">1</span><span class="w"> </span>
+
+<span class="c"># ENTRYPOINT [&quot;scripts/execution-stage/monitor-files/monitor-files.sh&quot;]</span>
+<span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;scripts/execution-stage/start-script/start-script.sh&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Notice that we have one active and one commented <strong>entrypoint</strong>. Each <strong>entrypoint</strong> will
+define a service that we will setup in a <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>. Before that, let us
+define some of the helper scripts.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+<span class="c1">#file: install-journal-manager.sh</span>
+
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="p">%install-journal-manager*</span><span class="si">}</span><span class="s2">install-journal-manager&quot;</span>
+
+<span class="nv">INPUT_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="si">}</span><span class="s2">/input&quot;</span>
+<span class="nv">OUTPUT_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="si">}</span><span class="s2">/output&quot;</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT_FOLDER</span><span class="si">}</span><span class="s2">&quot;</span>
+
+journal-manager<span class="w"> </span>setup<span class="w"> </span>init<span class="w"> </span>--default-journal-folder<span class="w"> </span><span class="s2">&quot;/journals/journals-files&quot;</span><span class="w"> </span>--default-template-folder<span class="w"> </span><span class="s2">&quot;/journals/templates&quot;</span>
+journal-manager<span class="w"> </span>template<span class="w"> </span>register<span class="w"> </span>quick-notes<span class="w"> </span><span class="s2">&quot;/journals/templates-temp/quick-notes&quot;</span>
+rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;/journals/templates-temp&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+<span class="c1">#file: start-script.sh</span>
+
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="p">%journals/*</span><span class="si">}</span><span class="s2">journals&quot;</span>
+
+<span class="nb">pushd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_DIR</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+node<span class="w"> </span><span class="s2">&quot;http-server/init.js&quot;</span>
+<span class="nb">popd</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+<span class="c1">#file: monitor-files.sh</span>
+
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="p">%/journals/*</span><span class="si">}</span><span class="s2">/journals&quot;</span>
+
+<span class="nv">INPUT_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="si">}</span><span class="s2">/input&quot;</span>
+<span class="nv">OUTPUT_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="si">}</span><span class="s2">/output&quot;</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT_FOLDER</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="k">while</span><span class="w"> </span><span class="nb">true</span>
+<span class="k">do</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Directory has changed. Building index page.&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_PATH</span><span class="si">}</span><span class="s2">/scripts/execution-stage/build-index-page/build-index-page.sh&quot;</span>
+<span class="w">    </span>find<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_PATH</span><span class="si">}</span><span class="s2">/journals-files&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="p">|</span><span class="w"> </span>entr<span class="w"> </span>-n<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_PATH</span><span class="si">}</span><span class="s2">/scripts/execution-stage/rebuild-modified-journals/rebuild-modified-journals.sh&quot;</span><span class="w"> </span>/_
+<span class="k">done</span>
+</pre></div>
+</div>
+<p>We are not going to show all the files defined in the project, but you can clone its dedicated git repository:
+<a class="reference external" href="https://github.com/danoan/journal-manager-server">journal-manager-server</a> and modify them at your convenience.
+There you are going to find a nodejs <code class="docutils literal notranslate"><span class="pre">http-server</span></code> that implements the quick-notes API and the remaining helper
+scripts.</p>
+<p>The last essential file is the <code class="docutils literal notranslate"><span class="pre">docker-composer.yml</span></code>.</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span>version: &quot;3.9&quot;
+services:
+  journals-file-monitor:
+    build: 
+      context: journal-manager-service/image
+    container_name: journals-file-monitor 
+    volumes:
+      - type: bind
+        source: my-journals-files
+        target: /journals/journals-files/
+      - type: bind
+        source: my-journals-site
+        target: /journals/site/
+      - type: volume
+        source: journals-config
+        target: /journals/.config
+    entrypoint:
+      - &quot;scripts/execution-stage/monitor-files/monitor-files.sh&quot;
+    depends_on:
+      - &quot;journals&quot;
+  journals:
+    build: 
+      context: journal-manager-service/image
+    container_name: journals 
+    ports:
+      - &quot;1234:80&quot;
+    volumes:
+      - type: bind
+        source: my-journals-files
+        target: /journals/journals-files/
+      - type: bind
+        source: my-journals-site
+        target: /journals/site/
+      - type: volume
+        source: journals-config
+        target: /journals/.config
+    labels:
+      - &quot;traefik.enable=true&quot;
+      - &quot;traefik.http.routers.journals.rule=Host(`my-domain.com`)&quot;
+      - &quot;traefik.http.routers.journals.entrypoints=web&quot;
+      - &quot;traefik.http.services.journals.loadbalancer.server.port=80&quot;
+    depends_on:
+      - &quot;traefik&quot;
+  traefik:
+    image: traefik:v2.6
+    container_name: traefik
+    command:
+      - &quot;--api.insecure=true&quot;
+      - &quot;--providers.docker=true&quot;
+      - &quot;--providers.docker.exposedbydefault=false&quot;
+      - &quot;--entrypoints.web.address=:80&quot;
+    restart: unless-stopped
+    ports:
+      - &quot;80:80&quot;
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  journals-config:
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="setup-quick-notes-template.html" class="btn btn-neutral float-left" title="Setup the quick-notes template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

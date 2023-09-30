@@ -1,0 +1,7 @@
+journal\_manager.cli.commands.setup\_commands.init module
+=========================================================
+
+.. automodule:: journal_manager.cli.commands.setup_commands.init
+   :members:
+   :undoc-members:
+   :show-inheritance:

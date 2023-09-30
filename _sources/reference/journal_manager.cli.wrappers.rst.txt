@@ -1,0 +1,18 @@
+journal\_manager.cli.wrappers package
+=====================================
+
+.. automodule:: journal_manager.cli.wrappers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   journal_manager.cli.wrappers.general_proc_call
+   journal_manager.cli.wrappers.mkdocs_wrapper
+   journal_manager.cli.wrappers.node_wrapper
+   journal_manager.cli.wrappers.nvim_wrapper

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup the quick-notes template &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Setup a personal journals server" href="setup-a-personal-journals-server.html" />
+    <link rel="prev" title="Build journals" href="build-journals.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build-journals.html">Build journals</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup the quick-notes template</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quick-notes-a-journal-manager-template">quick-notes: A journal-manager template</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-journal-using-with-http-server">Build the journal using <code class="docutils literal notranslate"><span class="pre">--with-http-server</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementing-the-quick-notes-http-api">Implementing the quick-notes HTTP API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Setup the quick-notes template</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/how-to/setup-quick-notes-template.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setup-the-quick-notes-template">
+<h1>Setup the quick-notes template<a class="headerlink" href="#setup-the-quick-notes-template" title="Permalink to this heading"></a></h1>
+<p>The journal-manager project comes with the <em>quick-notes</em> template. This
+journal-manager template adds a dynamic functionality to the static
+web page built by journal-manager.</p>
+<p>The first step is to register the quick-notes template. If you have
+cloned the journal-manager repository, you can run the command below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>template<span class="w"> </span>register<span class="w"> </span>quick-notes<span class="w"> </span>&lt;JOURNAL_MANAGER_PATH&gt;/templates/quick-notes
+</pre></div>
+</div>
+<p>Otherwise, download the quick-notes template direct from the repository and
+use its path instead.</p>
+<section id="quick-notes-a-journal-manager-template">
+<h2>quick-notes: A journal-manager template<a class="headerlink" href="#quick-notes-a-journal-manager-template" title="Permalink to this heading"></a></h2>
+<p>This template is based on the MkDocs material theme. It
+sets a collection of plugins and adds two buttons to the top menu.</p>
+<ul class="simple">
+<li><p>Index button: Go to the index page generated by journal-manager.</p></li>
+<li><p>Quick-note button: Opens an input text field to write markdown test to
+be included in the Quick Notes page.</p></li>
+</ul>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h3>
+<p>This template adds a dynamic action to the static web page generated by
+MkDocs. In order to activate the quick-note button, you need to setup a
+an API with the following interface:</p>
+<ul class="simple">
+<li><p><strong>GET</strong> <em>&lt;API_BASE_URL&gt;/journal_name/quick-note/add</em>: Returns an html page which
+contains a text input field to write down a markdown text.</p></li>
+<li><p><strong>POST</strong> <em>&lt;API_BASE_URL&gt;/journal_name/quick-note/add</em>: Register the markdown
+text in the quick-note page.</p></li>
+</ul>
+<p>In this tutorial we are going to setup the quick-notes template in a test
+environment.</p>
+</section>
+<section id="build-the-journal-using-with-http-server">
+<h3>Build the journal using <code class="docutils literal notranslate"><span class="pre">--with-http-server</span></code><a class="headerlink" href="#build-the-journal-using-with-http-server" title="Permalink to this heading"></a></h3>
+<p>The fist step consists in creating a journal using the quick-notes template and
+then build it with the <code class="docutils literal notranslate"><span class="pre">--with-http-server</span></code> flag.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>journal<span class="w"> </span>create<span class="w"> </span><span class="s2">&quot;nlp&quot;</span><span class="w"> </span>--template-name<span class="w"> </span><span class="s2">&quot;quick-notes&quot;</span>
+$<span class="w"> </span>jm<span class="w"> </span>build<span class="w"> </span>--build-location<span class="w"> </span>~/my-built-journals<span class="w"> </span>--jn<span class="w"> </span><span class="s2">&quot;nlp&quot;</span><span class="w"> </span>--with-http-server
+</pre></div>
+</div>
+<p>This creates the following folders in <code class="docutils literal notranslate"><span class="pre">~/my-build-journals</span></code>:</p>
+<ul class="simple">
+<li><p>file-monitor: script to monitor file updates.</p></li>
+<li><p>http-server: basic nodejs http-server.</p></li>
+<li><p>site: static web pages.</p></li>
+</ul>
+<p>Open your browser and navigate to <code class="docutils literal notranslate"><span class="pre">localhost:4960</span></code>. You should see the index page
+created by journal-manager. The index will contain the journal <code class="docutils literal notranslate"><span class="pre">nlp</span></code> only. Click
+on it.</p>
+<p>Notice that two new buttons appear in the top menu of the material theme:</p>
+<ul class="simple">
+<li><p>Index button: Go to the index page.</p></li>
+<li><p>Quick-note button: Go to the add quick-note page.</p></li>
+</ul>
+<p>The quick-note button does nothing yet. We need to implement the HTTP API in our
+HTTP server.</p>
+</section>
+<section id="implementing-the-quick-notes-http-api">
+<h3>Implementing the quick-notes HTTP API<a class="headerlink" href="#implementing-the-quick-notes-http-api" title="Permalink to this heading"></a></h3>
+<p>Stop the http-server and then add the following lines in <code class="docutils literal notranslate"><span class="pre">http-server/init.js</span></code>:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="c1">//Handle default form post requests</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">urlencoded</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">extended</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">limit</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2Mb&quot;</span>
+<span class="p">}));</span><span class="w"> </span><span class="c1">//To populate req.body with submitted form data.</span>
+
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/:journal_name/quick-note/add&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">res</span><span class="p">.</span><span class="nx">sendFile</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">HTTP_SERVER_ROOT</span><span class="si">}</span><span class="sb">/add-quick-note.html`</span><span class="p">)</span>
+<span class="p">});</span>
+
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/:journal_name/quick-note/add&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">journal_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">[</span><span class="s2">&quot;journal_name&quot;</span><span class="p">];</span>
+<span class="w">    </span><span class="c1">// .replaceAll is only available for node.js 15.0 and after.</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\r/g</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">add_quick_note</span><span class="p">(</span><span class="nx">journal_name</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">)</span>
+<span class="w">      </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nx">res</span><span class="p">.</span><span class="nx">redirect</span><span class="p">(</span><span class="sb">`/</span><span class="si">${</span><span class="nx">journal_name</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="w">      </span><span class="p">})</span>
+<span class="w">      </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s2">&quot;Oups! An error occurred!&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">});</span>
+<span class="p">});</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">add_quick_note</span><span class="p">(</span><span class="nx">journal_name</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">BIN_DIR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span><span class="s2">&quot;./bin&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">addQuickNotes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`</span><span class="si">${</span><span class="nx">BIN_DIR</span><span class="si">}</span><span class="sb">/add-quick-note/add-quick-note.sh`</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="nx">wd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">p_execFile</span><span class="p">(</span><span class="nx">addQuickNotes</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="nx">journal_name</span><span class="p">,</span><span class="w"> </span><span class="nx">text</span><span class="p">]);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">wd</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">result</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Promise</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">resolve</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">&quot;[add-quick-note][stdout]:&quot;</span><span class="p">,</span><span class="nx">result</span><span class="p">.</span><span class="nx">stdout</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;[add-quick-note][stderr]:&quot;</span><span class="p">,</span><span class="nx">result</span><span class="p">.</span><span class="nx">stderr</span><span class="p">);</span>
+
+<span class="w">        </span><span class="nx">resolve</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">stdout</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}))</span>
+<span class="w">    </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="w"> </span><span class="nx">error</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="nx">error</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The code above creates the <code class="docutils literal notranslate"><span class="pre">GET</span></code> and <code class="docutils literal notranslate"><span class="pre">POST</span></code> methods required by the quick-notes template.
+Next we need to create the file <code class="docutils literal notranslate"><span class="pre">add-quick-note.html</span></code> containing the text input field.
+This file should be stored in <code class="docutils literal notranslate"><span class="pre">http-server</span></code>.</p>
+<div class="highlight-html notranslate"><div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Add quick note<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=width-device, initial-scale=1&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">&quot;Content-Type&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;text/html; charset=UTF-8&quot;</span> <span class="p">/&gt;</span>
+
+        <span class="p">&lt;</span><span class="nt">style</span><span class="p">&gt;</span>
+<span class="w">            </span><span class="nt">html</span><span class="o">,</span><span class="nt">body</span><span class="p">{</span>
+<span class="w">                </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">                </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">                </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">body</span><span class="p">{</span>
+<span class="w">                </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="w"> </span><span class="mi">0</span><span class="kt">px</span><span class="w"> </span><span class="mi">20</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">div</span><span class="p">{</span>
+<span class="w">                </span><span class="k">margin</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">                </span><span class="k">padding</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="p">.</span><span class="nc">container</span><span class="p">{</span>
+<span class="w">                </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">                </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="p">.</span><span class="nc">text-input</span><span class="p">{</span>
+<span class="w">                </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">                </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="nb">calc</span><span class="p">(</span><span class="mi">100</span><span class="kt">%</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">80</span><span class="kt">px</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="p">.</span><span class="nc">send-button</span><span class="p">{</span>
+<span class="w">                </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">                </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">form</span><span class="o">,</span><span class="w"> </span><span class="nt">textarea</span><span class="o">,</span><span class="w"> </span><span class="nt">button</span><span class="p">{</span>
+<span class="w">                </span><span class="k">width</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">                </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="nt">textarea</span><span class="p">{</span>
+<span class="w">                </span><span class="k">font-size</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="kt">px</span><span class="p">;</span>
+<span class="w">                </span><span class="k">resize</span><span class="p">:</span><span class="w"> </span><span class="kc">none</span><span class="p">;</span>
+<span class="w">                </span><span class="k">box-sizing</span><span class="p">:</span><span class="kc">border-box</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">&lt;/</span><span class="nt">style</span><span class="p">&gt;</span>
+
+        <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="w">            </span><span class="kd">function</span><span class="w"> </span><span class="nx">submit_form</span><span class="p">(){</span>
+<span class="w">                </span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;quick-note-form&#39;</span><span class="p">).</span><span class="nx">submit</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;container&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;text-input&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">form</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;quick-note-form&quot;</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span><span class="p">&gt;</span>
+                <span class="p">&lt;</span><span class="nt">textarea</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;text&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">textarea</span><span class="p">&gt;</span>
+            <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;send-button&quot;</span><span class="p">&gt;</span>
+            <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&quot;submit_form()&quot;</span><span class="p">&gt;</span>Send<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+        <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+<p>Finally, we setup the script <code class="docutils literal notranslate"><span class="pre">add-quick-note.sh</span></code> that will consume the markdown text entered
+in the html page above. This script must be located at <code class="docutils literal notranslate"><span class="pre">http-server/bin/add-quick-note</span></code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You need to have the <a class="reference external" href="https://github.com/danoan/quick-notes">quick-notes</a> project installed.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#! /usr/bin/env bash</span>
+
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="p">%add-quick-note*</span><span class="si">}</span><span class="s2">add-quick-note&quot;</span>
+
+<span class="nv">INPUT_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="si">}</span><span class="s2">/input&quot;</span>
+<span class="nv">OUTPUT_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_PATH</span><span class="si">}</span><span class="s2">/output&quot;</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT_FOLDER</span><span class="si">}</span><span class="s2">&quot;</span>
+
+
+<span class="nv">JOURNAL_NAME</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nv">TEXT_NOTE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="nv">JOURNAL_LOCATION_FOLDER</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>journal-manager<span class="w"> </span>journal<span class="w"> </span>show<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JOURNAL_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;location_folder&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">QUICK_NOTES_MARKDOWN</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JOURNAL_LOCATION_FOLDER</span><span class="si">}</span><span class="s2">/docs/quick-notes.md&quot;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_MARKDOWN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="k">then</span>
+<span class="w">    </span>touch<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_MARKDOWN</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+
+<span class="nv">QUICK_NOTES_TOML</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="w"> </span>-t<span class="w"> </span>-p<span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT_FOLDER</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+quick-notes<span class="w"> </span>generate-toml<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_MARKDOWN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_TOML</span><span class="si">}</span><span class="s2">&quot;</span>
+quick-notes<span class="w"> </span>generate-quick-note<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">TEXT_NOTE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_TOML</span><span class="si">}</span><span class="s2">&quot;</span>
+quick-notes<span class="w"> </span>generate-markdown<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_TOML</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_MARKDOWN</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># This is necessary to trigger `entr`. Otherwise, the build job is not executed.</span>
+touch<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_MARKDOWN</span><span class="si">}</span><span class="s2">&quot;</span>
+rm<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">QUICK_NOTES_TOML</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<p>Now we need to restart the server:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>nodejs<span class="w"> </span>http-server/init.js
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In order to not loose the modifications done in the <code class="docutils literal notranslate"><span class="pre">http-server</span></code> folder, next time
+you will build your journals, do not use the <code class="docutils literal notranslate"><span class="pre">--with-http-server</span></code> flag and start your
+http server manually with the command above.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="build-journals.html" class="btn btn-neutral float-left" title="Build journals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="setup-a-personal-journals-server.html" class="btn btn-neutral float-right" title="Setup a personal journals server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

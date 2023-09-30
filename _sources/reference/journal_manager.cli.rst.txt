@@ -1,0 +1,25 @@
+journal\_manager.cli package
+============================
+
+.. automodule:: journal_manager.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   journal_manager.cli.commands
+   journal_manager.cli.wrappers
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   journal_manager.cli.cli
+   journal_manager.cli.utils

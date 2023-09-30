@@ -1,0 +1,7 @@
+journal\_manager.cli.commands.journal\_commands.deregister module
+=================================================================
+
+.. automodule:: journal_manager.cli.commands.journal_commands.deregister
+   :members:
+   :undoc-members:
+   :show-inheritance:

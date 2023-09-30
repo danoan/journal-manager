@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>journal_manager.cli.commands.build &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to/setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to/create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to/build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to/setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to/setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">journal_manager.cli.commands.build</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for journal_manager.cli.commands.build</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">danoan.journal_manager.core</span> <span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">exceptions</span>
+
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli.wrappers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">general_proc_call</span><span class="p">,</span>
+    <span class="n">mkdocs_wrapper</span><span class="p">,</span>
+    <span class="n">node_wrapper</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli.commands.journal_commands.register</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">register</span> <span class="k">as</span> <span class="n">register_journal</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">importlib_resources</span> <span class="kn">import</span> <span class="n">files</span><span class="p">,</span> <span class="n">as_file</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">PackageLoader</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+
+
+<span class="c1"># -------------------- Helper Functions --------------------</span>
+<span class="k">def</span> <span class="nf">__register_journals_by_location__</span><span class="p">(</span><span class="n">locations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Register journals by location in the registry.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        locations: A list of journal location folders.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        InvalidLocation if one or more locations are not valid or do</span>
+<span class="sd">        not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">invalid_locations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">journal_location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">journal_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">invalid_locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">journal_location</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">invalid_locations</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidLocation</span><span class="p">(</span><span class="n">invalid_locations</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">journal_location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
+        <span class="n">journal_title</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">journal_location</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">register_journal</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">journal_location</span><span class="p">),</span> <span class="n">journal_title</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__collect_journal_names_from_location__</span><span class="p">(</span>
+    <span class="n">list_of_locations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a list of journals names based on their journal location.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        list_of_locations: A list with journal location folders.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of journal names.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        InvalidLocation if one or more locations are not valid or do</span>
+<span class="sd">        not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_journal_data_file</span><span class="p">()</span>
+    <span class="n">journals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">location</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">find_journal_by_location</span><span class="p">(</span>
+            <span class="n">journal_data_file</span><span class="p">,</span> <span class="n">location</span>
+        <span class="p">),</span>
+        <span class="n">list_of_locations</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">journal</span><span class="p">:</span> <span class="n">journal</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">journal</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">journals</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">__validate_journal_names_in_registry__</span><span class="p">(</span>
+    <span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Separate a list of journal names in registered and non registered.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        names: List of journal names.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Two lists of journal names. The first one contain journal names that</span>
+<span class="sd">        were found in the registry and the second one contain journal names</span>
+<span class="sd">        that were not found in the registry.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_journal_data_file</span><span class="p">()</span>
+    <span class="n">registered_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">find_journal_by_name</span><span class="p">(</span><span class="n">journal_data_file</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">names</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">non_registered_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">registered_names</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">registered_names</span><span class="p">,</span> <span class="n">non_registered_names</span>
+
+
+<span class="k">def</span> <span class="nf">__validate_journal_locations_in_registry__</span><span class="p">(</span>
+    <span class="n">locations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Separate a list of journal locations in registered and non registered.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        list_of_locations: A list with journal location folders.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Two lists of journal names. The first one contain journal names that</span>
+<span class="sd">        were found in the registry and the second one contain journal names</span>
+<span class="sd">        that were not found in the registry.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_journal_data_file</span><span class="p">()</span>
+    <span class="n">registered_locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">find_journal_by_location</span><span class="p">(</span><span class="n">journal_data_file</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span>
+            <span class="n">locations</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">non_registered_locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">registered_locations</span><span class="p">,</span> <span class="n">locations</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">registered_locations</span><span class="p">,</span> <span class="n">non_registered_locations</span>
+
+
+<span class="k">def</span> <span class="nf">__validate_journal_from_include_all_folder__</span><span class="p">(</span>
+    <span class="n">include_all_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Separate a list of journal locations in registered and non registered.</span>
+
+<span class="sd">    All folders located in include_all_folder are considered as a journal location.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        include_all_folder: Location where all children folders are considered</span>
+<span class="sd">                            as a journal location.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Two lists of journal names. The first one contain journal names that</span>
+<span class="sd">        were found in the registry and the second one contain journal names</span>
+<span class="sd">        that were not found in the registry.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        IncludeLocation if the include_all_folder is not valid or does not</span>
+<span class="sd">        exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">include_all_folder</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidLocation</span><span class="p">(</span><span class="n">include_all_folder</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">__validate_journal_locations_in_registry__</span><span class="p">(</span>
+        <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="n">include_all_folder</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()))</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># -------------------- Build Utilities --------------------</span>
+
+
+<div class="viewcode-block" id="BuildStep"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep">[docs]</a><span class="k">class</span> <span class="nc">BuildStep</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for a build step in the process of building a journal.</span>
+
+<span class="sd">    This class defined the interface and also the basic implementations</span>
+<span class="sd">    of the methods that made the BuildStep interface.</span>
+
+<span class="sd">    The design of the journal build process expects build steps to be</span>
+<span class="sd">    called in a chain. For example:</span>
+
+<span class="sd">        MyFirstBuildStep(some_parameters)</span>
+<span class="sd">        .build()</span>
+<span class="sd">        .next(MySecondBuildStep(another_parameters))</span>
+
+<span class="sd">    The parameters passed to a build step persist in following steps.</span>
+<span class="sd">    If a parameter of same name had been set before, it will be overwritten.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BuildStep.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BuildStep.next"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step_class</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">build_step_class</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="FailedStep"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep">[docs]</a><span class="k">class</span> <span class="nc">FailedStep</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BuildStep to be returned whenever an error is detected.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step</span><span class="p">:</span> <span class="n">BuildStep</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_step</span> <span class="o">=</span> <span class="n">build_step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>
+
+<div class="viewcode-block" id="FailedStep.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FailedStep.next"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="BuildJournals"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildJournals">[docs]</a><span class="k">class</span> <span class="nc">BuildJournals</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build html static pages from journals using mkdocs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span> <span class="o">=</span> <span class="n">build_instructions</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Journal could not be built because a location was not specified.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;site&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BuildJournals.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildJournals.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;journals&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+            <span class="k">for</span> <span class="n">journal_name</span> <span class="ow">in</span> <span class="n">get_journals_names_to_build</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span>
+            <span class="p">):</span>
+                <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_journal_data_file</span><span class="p">()</span>
+                <span class="n">journal_data</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">find_journal_by_name</span><span class="p">(</span>
+                    <span class="n">journal_data_file</span><span class="p">,</span> <span class="n">journal_name</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">journal_data</span> <span class="ow">and</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">journal_name</span><span class="p">:</span>
+                    <span class="n">mkdocs_wrapper</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+                        <span class="n">Path</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">),</span>
+                        <span class="n">Path</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">journal_data</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">)</span>
+                    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;journals&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">journal_data</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">journal_data</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidName</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">ss</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="s2">&quot;The following journal names are not part of the registry:&quot;</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">journal_name</span> <span class="ow">in</span> <span class="n">ex</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+                <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">journal_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Build is aborted.&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ss</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidLocation</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">ss</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="s2">&quot;The following journal location folders were not found in the registry:&quot;</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">journal_location</span> <span class="ow">in</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">journal_location</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Build is aborted.&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ss</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidIncludeAllFolder</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="n">ss</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+            <span class="n">ss</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The path specified in the build instructions: </span><span class="si">{</span><span class="n">ex</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2"> does not exist. Build is aborted.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ss</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="BuildIndexPage"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildIndexPage">[docs]</a><span class="k">class</span> <span class="nc">BuildIndexPage</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build the index page with links to all rendered journals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">assets</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span><span class="s2">&quot;danoan.journal_manager.assets.templates&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+        <span class="s2">&quot;material-index&quot;</span><span class="p">,</span> <span class="s2">&quot;assets&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Not really necessay, but this make explicit the variables that are inherit</span>
+        <span class="c1"># by other build steps and that are necessary to be defined at this point. It</span>
+        <span class="c1"># is also useful as a sanity check during static type checking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;journals_site_folder&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span>
+            <span class="s2">&quot;build_instructions&quot;</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="BuildIndexPage.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildIndexPage.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_index</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span>
+            <span class="n">loader</span><span class="o">=</span><span class="n">PackageLoader</span><span class="p">(</span>
+                <span class="s2">&quot;danoan.journal_manager.assets&quot;</span><span class="p">,</span> <span class="n">package_path</span><span class="o">=</span><span class="s2">&quot;templates&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span><span class="n">BuildIndexPage</span><span class="o">.</span><span class="n">assets</span><span class="p">)</span> <span class="k">as</span> <span class="n">assets_path</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
+                <span class="n">assets_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;assets&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;index.html&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;material-index/index.tpl.html&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;journal_data&quot;</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="BuildHttpServer"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildHttpServer">[docs]</a><span class="k">class</span> <span class="nc">BuildHttpServer</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets up the http server that will serve the journals.</span>
+
+<span class="sd">    The http server structure is composed of:</span>
+<span class="sd">        1. An http server written in node.js + express</span>
+<span class="sd">        2. A file monitor script using entr</span>
+<span class="sd">        3. A file monitor action to rebuild journals that are updated</span>
+
+<span class="sd">    The http server and the file monitor run independently. Whenever a</span>
+<span class="sd">    markdown file is modified, the file monitor triggers the file monitor</span>
+<span class="sd">    action scripts that rebuilds only the journal affected. The http server</span>
+<span class="sd">    will automatically reflect the changes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidAttribute</span><span class="p">(</span><span class="s2">&quot;No build location was given&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">http_server_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;http-server&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Not really necessay, but this make explicit the variables that are inherit</span>
+        <span class="c1"># by other build steps and that are necessary to be defined at this point. It</span>
+        <span class="c1"># is also useful as a sanity check during static type checking</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;journals_site_folder&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span>
+            <span class="s2">&quot;build_instructions&quot;</span>
+        <span class="p">]</span>
+
+<div class="viewcode-block" id="BuildHttpServer.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildHttpServer.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">with_http_server</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span>
+
+            <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span>
+                <span class="n">loader</span><span class="o">=</span><span class="n">PackageLoader</span><span class="p">(</span>
+                    <span class="s2">&quot;danoan.journal_manager.assets&quot;</span><span class="p">,</span> <span class="n">package_path</span><span class="o">=</span><span class="s2">&quot;templates&quot;</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">http_server</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span>
+                <span class="s2">&quot;danoan.journal_manager.assets.templates&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;http-server&quot;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">http_server</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_server_folder</span><span class="p">)</span>
+
+            <span class="n">node_wrapper</span><span class="o">.</span><span class="n">install_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">http_server_folder</span><span class="p">)</span>
+
+            <span class="n">file_monitor_action_template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span>
+                <span class="s2">&quot;file-monitor/file-monitor-action.tpl.sh&quot;</span>
+            <span class="p">)</span>
+            <span class="n">file_monitor_template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span>
+                <span class="s2">&quot;file-monitor/file-monitor.tpl.sh&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No build location was given.&quot;</span><span class="p">)</span>
+
+            <span class="n">file_monitor_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;file-monitor&quot;</span><span class="p">)</span>
+            <span class="n">file_monitor_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_monitor_script</span> <span class="o">=</span> <span class="n">file_monitor_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+                <span class="s2">&quot;file-monitor.sh&quot;</span>
+            <span class="p">)</span>
+            <span class="n">file_monitor_action_script</span> <span class="o">=</span> <span class="n">file_monitor_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+                <span class="s2">&quot;file-monitor-action.sh&quot;</span>
+            <span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;journals_site_folder&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="p">,</span>
+                <span class="s2">&quot;journals_files_folder&quot;</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span><span class="o">.</span><span class="n">default_journal_folder</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_monitor_script</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_monitor_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_monitor_script</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o777</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_monitor_action_script</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_monitor_action_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">file_monitor_action_script</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o777</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div></div>
+
+
+<span class="c1"># -------------------- API --------------------</span>
+
+
+<div class="viewcode-block" id="get_journals_names_to_build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.get_journals_names_to_build">[docs]</a><span class="k">def</span> <span class="nf">get_journals_names_to_build</span><span class="p">(</span>
+    <span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read the build instructions and collect the journal names to build.</span>
+
+<span class="sd">    There are four ways to build journals:</span>
+<span class="sd">        1. Giving a list of journal names;</span>
+<span class="sd">        2. Giving a list of journal locations;</span>
+<span class="sd">        3. Giving a directory that contains journal folders and build all of them;</span>
+<span class="sd">        4. Saying nothing and then all registered journals are built.</span>
+
+<span class="sd">    This function reads the build instructions and extracts the journals names</span>
+<span class="sd">    accordingly with the chosen method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        build_instructions: A BuildInstructions object.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of journal names to build.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        InvalidName if invalid journal names are given.</span>
+<span class="sd">        InvalidLocation if invalid journal locations are given.</span>
+<span class="sd">        InvalidIncludeAllFolder if invalid include_all_folder location</span>
+<span class="sd">        is given.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_journal_data_file</span><span class="p">()</span>
+
+    <span class="n">journals_names_to_build</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">build_instructions</span><span class="o">.</span><span class="n">journals_names_to_build</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="p">(</span>
+            <span class="n">registered_names</span><span class="p">,</span>
+            <span class="n">non_registered_names</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">__validate_journal_names_in_registry__</span><span class="p">(</span>
+            <span class="n">build_instructions</span><span class="o">.</span><span class="n">journals_names_to_build</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_registered_names</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidName</span><span class="p">(</span><span class="n">non_registered_names</span><span class="p">)</span>
+
+        <span class="n">journals_names_to_build</span> <span class="o">=</span> <span class="n">registered_names</span>
+    <span class="k">elif</span> <span class="n">build_instructions</span><span class="o">.</span><span class="n">journals_locations_to_build</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="p">(</span>
+            <span class="n">registered_locations</span><span class="p">,</span>
+            <span class="n">non_registered_locations</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">__validate_journal_locations_in_registry__</span><span class="p">(</span>
+            <span class="n">build_instructions</span><span class="o">.</span><span class="n">journals_locations_to_build</span>
+        <span class="p">)</span>
+        <span class="n">__register_journals_by_location__</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">non_registered_locations</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">journals_names_to_build</span> <span class="o">=</span> <span class="n">__collect_journal_names_from_location__</span><span class="p">(</span>
+            <span class="n">registered_locations</span> <span class="o">+</span> <span class="n">non_registered_locations</span>
+        <span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">build_instructions</span><span class="o">.</span><span class="n">include_all_folder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="p">(</span>
+            <span class="n">registered_locations</span><span class="p">,</span>
+            <span class="n">non_registered_locations</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">__validate_journal_from_include_all_folder__</span><span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">include_all_folder</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">__register_journals_by_location__</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">non_registered_locations</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">journals_names_to_build</span> <span class="o">=</span> <span class="n">__collect_journal_names_from_location__</span><span class="p">(</span>
+            <span class="n">registered_locations</span> <span class="o">+</span> <span class="n">non_registered_locations</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Build all registered journals</span>
+        <span class="n">journals_names_to_build</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">journal_data_file</span><span class="o">.</span><span class="n">list_of_journal_data</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">journals_names_to_build</span></div>
+
+
+<div class="viewcode-block" id="build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.build">[docs]</a><span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build html static pages from journals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No build location was given.&quot;</span><span class="p">)</span>
+
+    <span class="n">build_location</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span><span class="p">)</span>
+    <span class="n">build_location</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">BuildJournals</span><span class="p">(</span><span class="n">build_instructions</span><span class="o">=</span><span class="n">build_instructions</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">build</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">BuildIndexPage</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">BuildHttpServer</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1"># -------------------- CLI --------------------</span>
+
+
+<span class="k">def</span> <span class="nf">__start_http_server__</span><span class="p">(</span><span class="n">http_server_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">file_monitor_script</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Start a local http server.</span>
+
+<span class="sd">    This function is offered as as a helper for test purposes. It expects</span>
+<span class="sd">    that the structure of the http_server_folder is exactly the same created</span>
+<span class="sd">    by the BuildHttpServer build step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">node_wrapper</span><span class="o">.</span><span class="n">start_server</span><span class="p">,</span>
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">http_server_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;init.js&quot;</span><span class="p">)],</span>
+    <span class="p">)</span>
+    <span class="n">t2</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span>
+        <span class="n">target</span><span class="o">=</span><span class="n">general_proc_call</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">file_monitor_script</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">t1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;HTTP server could not be started. Make sure you have `nodejs` installed.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">t2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;File monitor could not be started. Make sure you have `entr` installed.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">terminate_processes</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Terminating http server&quot;</span><span class="p">)</span>
+        <span class="n">t1</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Terminating file-monitor&quot;</span><span class="p">)</span>
+        <span class="n">t2</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">terminate_processes</span><span class="p">)</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">,</span> <span class="n">terminate_processes</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">t1</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span> <span class="ow">and</span> <span class="n">t2</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+        <span class="n">t1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">t2</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__merge_build_instructions__</span><span class="p">(</span>
+    <span class="n">build_location</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">build_instructions_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to merge build instructions.</span>
+
+<span class="sd">    The cli parser offer several options to build journals. This helper function</span>
+<span class="sd">    merge all these parameters in a unique object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">build_instructions</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">build_instructions_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">build_instructions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">(</span><span class="n">build_location</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">build_instructions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+            <span class="n">build_instructions_path</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">build_instructions</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span><span class="p">:</span>
+        <span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">build_location</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">build_instructions</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">keyword</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">build_instructions</span>
+
+
+<span class="k">def</span> <span class="nf">__build__</span><span class="p">(</span>
+    <span class="n">build_location</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">build_instructions_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">build_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">journals_names_to_build</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">journals_locations_to_build</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">with_http_server</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ignore_safety_questions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">ensure_configuration_file_exists</span><span class="p">()</span>
+    <span class="n">build_location</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">build_location</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">build_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_safety_questions</span><span class="p">:</span>
+            <span class="n">ok_continue</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The directory </span><span class="si">{</span><span class="n">build_location</span><span class="si">}</span><span class="s2"> exists already. If you continue the operation the files there will be overwritten. Are you sure you want to continue?</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">ok_continue</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;yes&quot;</span><span class="p">]:</span>
+                <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">build_location</span><span class="p">)</span>
+
+    <span class="n">build_instructions</span> <span class="o">=</span> <span class="n">__merge_build_instructions__</span><span class="p">(</span>
+        <span class="n">build_location</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(),</span>
+        <span class="n">build_instructions_path</span><span class="p">,</span>
+        <span class="n">build_index</span><span class="o">=</span><span class="n">build_index</span><span class="p">,</span>
+        <span class="n">journals_names_to_build</span><span class="o">=</span><span class="n">journals_names_to_build</span><span class="p">,</span>
+        <span class="n">journals_locations_to_build</span><span class="o">=</span><span class="n">journals_locations_to_build</span><span class="p">,</span>
+        <span class="n">with_http_server</span><span class="o">=</span><span class="n">with_http_server</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">build_result</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="n">build_instructions</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">build_result</span><span class="p">,</span> <span class="n">FailedStep</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">with_http_server</span><span class="p">:</span>
+            <span class="n">__start_http_server__</span><span class="p">(</span>
+                <span class="n">build_result</span><span class="o">.</span><span class="n">http_server_folder</span><span class="p">,</span>
+                <span class="n">build_result</span><span class="o">.</span><span class="n">file_monitor_script</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Build was not successful with error: </span><span class="si">{</span><span class="n">build_result</span><span class="o">.</span><span class="n">msg</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">command_description</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">build</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">command_help</span> <span class="o">=</span> <span class="n">command_description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">subparser_action</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">subparser_action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">command_help</span><span class="p">,</span>
+            <span class="n">aliases</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--build-location&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where build artifacts will be stored. If not specified, current working directory is used&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--build-instructions&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;build_instructions_path&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Configuration file with build instructions.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--do-not-build-index&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;build_index&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The index page with the table of content won&#39;t be rebuilt&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_false&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--journal-name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--jn&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;journals_names_to_build&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the journal to build&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--journal-location&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--jl&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;journals_locations_to_build&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of the journal to build&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--with-http-server&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A http-server will be started and the journals files monitored.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--ignore-safety-questions&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If specified, the program will overwrite the contents of BUILD_LOCATION without previous warning.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">__build__</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

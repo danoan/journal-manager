@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>journal_manager.cli.commands.setup_commands.init &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">journal_manager.cli.commands.setup_commands.init</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for journal_manager.cli.commands.setup_commands.init</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">danoan.journal_manager.core</span> <span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli</span> <span class="kn">import</span> <span class="n">utils</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
+
+
+<span class="c1"># -------------------- API --------------------</span>
+
+
+<div class="viewcode-block" id="init_journal_manager"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.setup_commands.init.html#journal_manager.cli.commands.setup_commands.init.init_journal_manager">[docs]</a><span class="k">def</span> <span class="nf">init_journal_manager</span><span class="p">(</span>
+    <span class="n">default_journal_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">default_template_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">default_text_editor_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize journal-manager settings.</span>
+
+<span class="sd">    This sets up configuration values of journal-manager.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        default_journal_folder: Path to the default location where journals will be created.</span>
+<span class="sd">        default_template_folder: Path to the default location where journal templates will be stored.</span>
+<span class="sd">        default_text_editor_path: Path to the text editor used by journal-manager to edit journals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
+
+    <span class="n">config_file</span><span class="o">.</span><span class="n">default_journal_folder</span> <span class="o">=</span> <span class="n">default_journal_folder</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">config_file</span><span class="o">.</span><span class="n">default_template_folder</span> <span class="o">=</span> <span class="n">default_template_folder</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="n">config_file</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">default_text_editor_path</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">default_text_editor_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_filepath</span><span class="p">(),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">config_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<span class="c1"># -------------------- CLI --------------------</span>
+
+
+<span class="k">def</span> <span class="nf">__init_journal_manager__</span><span class="p">(</span>
+    <span class="n">default_journal_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">default_template_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">ensure_configuration_folder_exists</span><span class="p">()</span>
+
+    <span class="n">config_file_exists_already</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigurationFileDoesNotExist</span><span class="p">:</span>
+        <span class="n">api</span><span class="o">.</span><span class="n">create_configuration_file</span><span class="p">(</span>
+            <span class="n">default_journal_folder</span><span class="p">,</span> <span class="n">default_template_folder</span>
+        <span class="p">)</span>
+        <span class="n">config_file_exists_already</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">current_editor_str_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">config_file_exists_already</span><span class="p">:</span>
+        <span class="n">current_editor_str_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">config_file</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">default_text_editor_path</span>
+        <span class="p">)</span>
+
+    <span class="n">new_editor_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">current_editor_str_path</span> <span class="ow">or</span> <span class="n">current_editor_str_path</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter the path of your default editor (e.g. nvim): &quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">entered_editor_path</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Enter the path of your default editor (type enter to keep the current one: </span><span class="si">{</span><span class="n">current_editor_str_path</span><span class="si">}</span><span class="s2">): &quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">entered_editor_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">entered_editor_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current_editor_str_path</span><span class="p">)</span>
+
+    <span class="n">init_journal_manager</span><span class="p">(</span>
+        <span class="n">default_journal_folder</span><span class="p">,</span> <span class="n">default_template_folder</span><span class="p">,</span> <span class="n">new_editor_path</span>
+    <span class="p">)</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">config_file_exists_already</span><span class="p">:</span>
+        <span class="n">start_message</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            The configuration file exists already. </span>
+<span class="s2">            It is located at: </span><span class="si">{</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_filepath</span><span class="p">()</span><span class="si">}</span><span class="s2"> and here it is its content after the update:</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start_message</span> <span class="o">=</span> <span class="n">dedent</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            The configuration file was created and initialized. </span>
+<span class="s2">            It is located at: </span><span class="si">{</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_filepath</span><span class="p">()</span><span class="si">}</span><span class="s2"> and here it is its content:</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">start_message</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="n">dedent</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">              default_journal_folder=</span><span class="si">{</span><span class="n">config_file</span><span class="o">.</span><span class="n">default_journal_folder</span><span class="si">}</span>
+<span class="s2">              default_template_folder=</span><span class="si">{</span><span class="n">config_file</span><span class="o">.</span><span class="n">default_template_folder</span><span class="si">}</span>
+<span class="s2">              journal_data_filepath=</span><span class="si">{</span><span class="n">config_file</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="si">}</span>
+<span class="s2">              template_data_filepath=</span><span class="si">{</span><span class="n">config_file</span><span class="o">.</span><span class="n">template_data_filepath</span><span class="si">}</span>
+<span class="s2">              </span>
+<span class="s2">              default_text_editor_path=</span><span class="si">{</span><span class="n">config_file</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">default_text_editor_path</span><span class="si">}</span>
+
+<span class="s2">              You can edit this file directly with the command: jm setup</span>
+<span class="s2">              &quot;&quot;&quot;</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.setup_commands.init.html#journal_manager.cli.commands.setup_commands.init.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;init&quot;</span>
+    <span class="n">command_description</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">init_journal_manager</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">init_journal_manager</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">)</span>
+    <span class="n">command_help</span> <span class="o">=</span> <span class="n">command_description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">subparser_action</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">subparser_action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">command_help</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--default-journal-folder&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where journals will be created by default&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_folder</span><span class="p">()</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;journals&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--default-template-folder&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where journals will be created by default&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_folder</span><span class="p">()</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;templates&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span>
+        <span class="n">subcommand_help</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">__init_journal_manager__</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

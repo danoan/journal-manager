@@ -1,0 +1,21 @@
+journal\_manager.cli.commands.journal\_commands package
+=======================================================
+
+.. automodule:: journal_manager.cli.commands.journal_commands
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   journal_manager.cli.commands.journal_commands.activate
+   journal_manager.cli.commands.journal_commands.create
+   journal_manager.cli.commands.journal_commands.deactivate
+   journal_manager.cli.commands.journal_commands.deregister
+   journal_manager.cli.commands.journal_commands.edit
+   journal_manager.cli.commands.journal_commands.register
+   journal_manager.cli.commands.journal_commands.show

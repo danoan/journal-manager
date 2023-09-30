@@ -1,0 +1,7 @@
+journal\_manager.cli.commands.template\_commands.remove module
+==============================================================
+
+.. automodule:: journal_manager.cli.commands.template_commands.remove
+   :members:
+   :undoc-members:
+   :show-inheritance:

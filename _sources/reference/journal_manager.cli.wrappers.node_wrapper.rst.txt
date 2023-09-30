@@ -1,0 +1,7 @@
+journal\_manager.cli.wrappers.node\_wrapper module
+==================================================
+
+.. automodule:: journal_manager.cli.wrappers.node_wrapper
+   :members:
+   :undoc-members:
+   :show-inheritance:

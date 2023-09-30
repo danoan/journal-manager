@@ -1,0 +1,7 @@
+journal\_manager.core.exceptions module
+=======================================
+
+.. automodule:: journal_manager.core.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

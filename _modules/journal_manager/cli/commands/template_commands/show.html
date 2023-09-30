@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>journal_manager.cli.commands.template_commands.show &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">journal_manager.cli.commands.template_commands.show</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for journal_manager.cli.commands.template_commands.show</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">danoan.journal_manager.core</span> <span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli</span> <span class="kn">import</span> <span class="n">utils</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="c1"># -------------------- API --------------------</span>
+
+
+<div class="viewcode-block" id="show"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.template_commands.show.html#journal_manager.cli.commands.template_commands.show.show">[docs]</a><span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attribute_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get attribute data from a registered template.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template_name: The template name.</span>
+<span class="sd">        attribute_names (optional): List of attribute names which values one wants to show.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The attribute value if a single attribute was requested. For two or more</span>
+<span class="sd">        attributes, several strings are returned. One for line requested attribute.</span>
+<span class="sd">        The string has the format &quot;attribute_name: attribute_value&quot;.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        InvalidName if the template name is invalid.</span>
+<span class="sd">        InvalidAttribute if an attribute name is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template_list_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_template_list_file</span><span class="p">()</span>
+
+    <span class="n">template</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">find_template_by_name</span><span class="p">(</span><span class="n">template_list_file</span><span class="p">,</span> <span class="n">template_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">template</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">attribute_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">attribute_name</span> <span class="o">=</span> <span class="n">attribute_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">attribute_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">template</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidAttribute</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">template</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">attribute_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">attribute_names</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">template</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidName</span><span class="p">(</span><span class="n">template_name</span><span class="p">)</span></div>
+
+
+<span class="c1"># -------------------- CLI --------------------</span>
+
+
+<span class="k">def</span> <span class="nf">__show_template__</span><span class="p">(</span>
+    <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attribute_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">attribute_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attribute_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">attribute_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">attribute_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attribute_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">utils</span><span class="o">.</span><span class="n">ensure_configuration_file_exists</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">show</span><span class="p">(</span><span class="n">template_name</span><span class="p">,</span> <span class="n">attribute_names</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidName</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The template name: </span><span class="si">{</span><span class="n">template_name</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidAttribute</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The attribute name: </span><span class="si">{</span><span class="n">ex</span><span class="o">.</span><span class="n">msg</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.template_commands.show.html#journal_manager.cli.commands.template_commands.show.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;show&quot;</span>
+    <span class="n">command_description</span> <span class="o">=</span> <span class="n">show</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">show</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">command_help</span> <span class="o">=</span> <span class="n">command_description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">subparser_action</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">subparser_action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">command_help</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;template_name&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Template name&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;attribute_names&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Attribute name which value one wants to show.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">__show_template__</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

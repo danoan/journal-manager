@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>journal_manager.core.api &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to/setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to/create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to/build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to/setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to/setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">journal_manager.core.api</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for journal_manager.core.api</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Core methods that form the journal-manager api. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.core</span> <span class="kn">import</span> <span class="n">exceptions</span><span class="p">,</span> <span class="n">model</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="n">ENV_JOURNAL_MANAGER_CONFIG_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;JOURNAL_MANAGER_CONFIG_FOLDER&quot;</span>
+
+
+<span class="c1"># -------------------- Configuration API --------------------</span>
+
+
+<div class="viewcode-block" id="get_configuration_folder"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_folder">[docs]</a><span class="k">def</span> <span class="nf">get_configuration_folder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the value stored by environment variable JOURNAL_MANAGER_CONFIG_FOLDER</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigurationFolderDoesNotExist: if JOURNAL_MANAGER_CONFIG_FOLDER is not set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ENV_JOURNAL_MANAGER_CONFIG_FOLDER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigurationFolderDoesNotExist</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">ENV_JOURNAL_MANAGER_CONFIG_FOLDER</span><span class="p">])</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_configuration_filepath"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_filepath">[docs]</a><span class="k">def</span> <span class="nf">get_configuration_filepath</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the path to the journal-manager configuration file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_configuration_folder</span><span class="p">()</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;config.toml&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_configuration_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_file">[docs]</a><span class="k">def</span> <span class="nf">get_configuration_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">ConfigurationFile</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return ConfigurationFile dataclass instantiated from the configuration file.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigurationFileDoesNotExist: if configuration file does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">get_configuration_filepath</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ConfigurationFileDoesNotExist</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">ConfigurationFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">get_configuration_filepath</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="get_template_list_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_template_list_file">[docs]</a><span class="k">def</span> <span class="nf">get_template_list_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return JournalTemplateList dataclass instantiated from the templates register file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">get_configuration_file</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">template_data_filepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_journal_data_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_journal_data_file">[docs]</a><span class="k">def</span> <span class="nf">get_journal_data_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return JournalDataList dataclass instantiated from the journals register file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">get_configuration_file</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_configuration_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.create_configuration_file">[docs]</a><span class="k">def</span> <span class="nf">create_configuration_file</span><span class="p">(</span>
+    <span class="n">journal_folder_default</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">templates_folder_default</span><span class="p">:</span> <span class="n">Path</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create journal-manager application configuration file.</span>
+
+<span class="sd">    Additionally, it creates two more configuration files:</span>
+<span class="sd">        - journal_data.toml</span>
+<span class="sd">        - template_data.toml</span>
+
+<span class="sd">    and a folder to store journal templates.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        journal_folder_default: Default location to store journals.</span>
+<span class="sd">        templates_folder_default: Default location to store journal templates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">get_configuration_folder</span><span class="p">()</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">journal_folder_default</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">templates_folder_default</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">journal_data_filepath</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">get_configuration_folder</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;journal_data.toml&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">journal_template_data_filepath</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">Path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">get_configuration_folder</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;template_data.toml&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="n">parameters</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Parameters</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">get_configuration_filepath</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">ConfigurationFile</span><span class="p">(</span>
+            <span class="n">journal_folder_default</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+            <span class="n">templates_folder_default</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+            <span class="n">journal_data_filepath</span><span class="p">,</span>
+            <span class="n">journal_template_data_filepath</span><span class="p">,</span>
+            <span class="n">parameters</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">journal_data_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">([])</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">journal_template_data_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">([])</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_valid_template_path"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.is_valid_template_path">[docs]</a><span class="k">def</span> <span class="nf">is_valid_template_path</span><span class="p">(</span><span class="n">template_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates a journal templates folder.</span>
+
+<span class="sd">    The journal template folder must contain the file mkdocs.tpl.yml.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template_path: The journal template folder to check.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mkdocs_template_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">template_path</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;mkdocs.tpl.yml&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mkdocs_template_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
+
+
+<span class="c1"># -------------------- Data Model Query API --------------------</span>
+<div class="viewcode-block" id="find_template_by_name"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_template_by_name">[docs]</a><span class="k">def</span> <span class="nf">find_template_by_name</span><span class="p">(</span>
+    <span class="n">template_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">,</span> <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">JournalTemplate</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search a registered template by name.</span>
+
+<span class="sd">    If the template is not found, a None object is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        template_file: Dataclass representation of the journal template register file.</span>
+<span class="sd">        template_name: Template name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">template_file</span><span class="o">.</span><span class="n">list_of_template_data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">template_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">entry</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="find_journal_by_name"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal_by_name">[docs]</a><span class="k">def</span> <span class="nf">find_journal_by_name</span><span class="p">(</span>
+    <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search a registered journal by name.</span>
+
+<span class="sd">    If the journal is not found, a None object is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        journal_data_file: Dataclass representation of the journal register file.</span>
+<span class="sd">        journal_name: Journla name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">journal_data</span> <span class="ow">in</span> <span class="n">journal_data_file</span><span class="o">.</span><span class="n">list_of_journal_data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">journal_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">journal_data</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="find_journal_by_location"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal_by_location">[docs]</a><span class="k">def</span> <span class="nf">find_journal_by_location</span><span class="p">(</span>
+    <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_location</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Search a registered journal by location.</span>
+
+<span class="sd">    If the journal is not found, a None object is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        journal_data_file: Dataclass representation of the journal register file.</span>
+<span class="sd">        journal_location: Path to the journal folder.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">journal_data</span> <span class="ow">in</span> <span class="n">journal_data_file</span><span class="o">.</span><span class="n">list_of_journal_data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span> <span class="o">==</span> <span class="n">journal_location</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">journal_data</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="update_journal"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.update_journal">[docs]</a><span class="k">def</span> <span class="nf">update_journal</span><span class="p">(</span>
+    <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_data</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalData</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update journal entry in the journal data file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        journal_data_file: Dataclass representation of the journal register file.</span>
+<span class="sd">        journal_data: Updated journal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">journal_data_file</span><span class="o">.</span><span class="n">list_of_journal_data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">journal_data_file</span><span class="o">.</span><span class="n">list_of_journal_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">journal_data</span>
+            <span class="k">break</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">get_configuration_file</span><span class="p">()</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">journal_data_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

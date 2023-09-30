@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>journal_manager.cli.commands.journal_commands.create &mdash; Journal Manager 1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=359c27e9"></script>
+        <script src="../../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Journal Manager
+          </a>
+              <div class="version">
+                1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting-started.html">Getting started with journal-manager</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-journal-manager.html">Setup journal-manager</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/create-journals.html">Create journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/build-journals.html">Build journals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-quick-notes-template.html">Setup the quick-notes template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to/setup-a-personal-journals-server.html">Setup a personal journals server</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../design-and-architecture.html">Design and Architecture</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Journal Manager</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">journal_manager.cli.commands.journal_commands.create</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for journal_manager.cli.commands.journal_commands.create</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">danoan.journal_manager.core</span> <span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">danoan.journal_manager.cli.wrappers</span> <span class="kn">import</span> <span class="n">mkdocs_wrapper</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span><span class="p">,</span> <span class="n">Template</span>
+
+
+<span class="c1"># -------------------- Helper Functions --------------------</span>
+
+
+<span class="k">def</span> <span class="nf">__create_mkdocs_from_template__</span><span class="p">(</span>
+    <span class="n">journal_data</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="n">Template</span>
+<span class="p">):</span>
+    <span class="n">journal_docs_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;docs&quot;</span><span class="p">)</span>
+    <span class="n">journal_docs_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+
+    <span class="n">journal_configuration_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+        <span class="s2">&quot;mkdocs.yml&quot;</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">journal_configuration_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">({</span><span class="s2">&quot;journal&quot;</span><span class="p">:</span> <span class="n">journal_data</span><span class="p">}))</span>
+
+    <span class="n">journal_index</span> <span class="o">=</span> <span class="n">journal_docs_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;index.md&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">journal_index</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">journal_data</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__create_mkdocs_from_template_name__</span><span class="p">(</span>
+    <span class="n">journal_data</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">,</span> <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">):</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
+
+    <span class="n">journal_template_list</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+        <span class="n">config_file</span><span class="o">.</span><span class="n">template_data_filepath</span>
+    <span class="p">)</span>
+
+    <span class="n">template_entry</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">find_template_by_name</span><span class="p">(</span>
+        <span class="n">journal_template_list</span><span class="p">,</span> <span class="n">template_name</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">template_entry</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidName</span><span class="p">()</span>
+
+    <span class="n">journal_location_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">)</span>
+
+    <span class="n">template_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">template_entry</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">template_path</span><span class="p">,</span> <span class="n">journal_location_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">api</span><span class="o">.</span><span class="n">is_valid_template_path</span><span class="p">(</span><span class="n">journal_location_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidTemplate</span><span class="p">(</span>
+            <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The journal template does not have a mkdocs.tpl.yml.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mkdocs_template_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">journal_location_path</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+            <span class="s2">&quot;mkdocs.tpl.yml&quot;</span>
+        <span class="p">)</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">journal_location_path</span><span class="p">))</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;mkdocs.tpl.yml&quot;</span><span class="p">)</span>
+        <span class="n">__create_mkdocs_from_template__</span><span class="p">(</span><span class="n">journal_data</span><span class="p">,</span> <span class="n">template</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mkdocs_template_path</span><span class="p">)</span>
+
+
+<span class="c1"># -------------------- API --------------------</span>
+
+
+<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.journal_commands.create.html#journal_manager.cli.commands.journal_commands.create.create">[docs]</a><span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+    <span class="n">journal_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">journal_location_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">mkdocs_template_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a mkdocs journal file structure.</span>
+
+<span class="sd">    If the JOURNAL_LOCATION_FOLDER is not given, it uses the default_journal_folder defined</span>
+<span class="sd">    in the file pointed by the JOURNAL_MANAGER_CONFIG_FOLDER environment variable is used.</span>
+
+<span class="sd">    The MKDOCS_TEMPLATE_NAME specifies a template to create the mkdocs.yml file. To see a list</span>
+<span class="sd">    of available templates, use:</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        journal-manager setup template</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        journal_title: Name will be displayed in the html page.</span>
+<span class="sd">        journal_location_folder: Directory where the journal files will be created.</span>
+<span class="sd">        mkdocs_template_name (optional): The name of a template file for mkdocs.yml.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        InvalidName if the mkdocs_template_name is not registered.</span>
+<span class="sd">        InvalidTemplate if the registered template does not have a mkdocs.tpl.yml file.</span>
+<span class="sd">        InvalidLocation if the journal_location_folder is an existent directory.</span>
+<span class="sd">    Important:</span>
+<span class="sd">        If the journal exist already it will be overwrite.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
+
+    <span class="n">journal_name</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">journal_name_from_title</span><span class="p">(</span><span class="n">journal_title</span><span class="p">)</span>
+    <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+        <span class="n">config_file</span><span class="o">.</span><span class="n">journal_data_filepath</span>
+    <span class="p">)</span>
+
+    <span class="n">utils</span><span class="o">.</span><span class="n">ensure_journal_name_is_unique</span><span class="p">(</span><span class="n">journal_data_file</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">)</span>
+
+    <span class="n">journal_location</span> <span class="o">=</span> <span class="n">journal_location_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span>
+        <span class="n">journal_name</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">journal_location</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidLocation</span><span class="p">()</span>
+
+    <span class="n">journal_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">(</span>
+        <span class="n">journal_name</span><span class="p">,</span>
+        <span class="n">journal_location</span><span class="o">.</span><span class="n">as_posix</span><span class="p">(),</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">journal_title</span><span class="p">,</span>
+        <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">journal_data_file</span><span class="o">.</span><span class="n">list_of_journal_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">journal_data</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mkdocs_template_name</span><span class="p">:</span>
+        <span class="n">__create_mkdocs_from_template_name__</span><span class="p">(</span><span class="n">journal_data</span><span class="p">,</span> <span class="n">mkdocs_template_name</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">journal_location</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mkdocs_wrapper</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">journal_location</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">journal_data_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<span class="c1"># -------------------- CLI --------------------</span>
+
+
+<span class="k">def</span> <span class="nf">__create__</span><span class="p">(</span>
+    <span class="n">journal_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">journal_location_folder</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mkdocs_template_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">ensure_configuration_file_exists</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">journal_location_folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">journal_location_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+            <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span><span class="o">.</span><span class="n">default_journal_folder</span>
+        <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">create</span><span class="p">(</span><span class="n">journal_title</span><span class="p">,</span> <span class="n">journal_location_folder</span><span class="p">,</span> <span class="n">mkdocs_template_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidName</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The template </span><span class="si">{</span><span class="n">mkdocs_template_name</span><span class="si">}</span><span class="s2"> does not exist. Please enter an existent template name&quot;</span>
+        <span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidLocation</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The journal location </span><span class="si">{</span><span class="n">journal_location_folder</span><span class="si">}</span><span class="s2"> exists already. Exiting.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidTemplate</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ex</span><span class="o">.</span><span class="n">msg</span><span class="si">}</span><span class="s2">. Exiting.&quot;</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.journal_commands.create.html#journal_manager.cli.commands.journal_commands.create.get_parser">[docs]</a><span class="k">def</span> <span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;create&quot;</span>
+    <span class="n">command_description</span> <span class="o">=</span> <span class="n">create</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">create</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">command_help</span> <span class="o">=</span> <span class="n">command_description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">subparser_action</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">subparser_action</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">command_help</span><span class="p">,</span>
+            <span class="n">aliases</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">],</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">command_name</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">command_description</span><span class="p">,</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;journal_title&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Journal title.&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--journal-folder&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;journal_location_folder&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Location where the journal folder will be stored. If empty, the default location is chosen.&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--template-name&quot;</span><span class="p">,</span>
+        <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;mkdocs_template_name&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Template for a mkdocs configuration file. Templates are registered via the setup subcommand.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">subcommand_help</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">__create__</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Daniel Martins Antunes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
