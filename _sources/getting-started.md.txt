@@ -1,6 +1,7 @@
 # Getting started with journal-manager
 
 Organize your MkDocs journals with ease, fostering focused learning one topic at a time.
+[Read the docs](https://danoan.github.io/journal-manager/).
 
 ## What is journal-manager?
 
