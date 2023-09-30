@@ -3,8 +3,10 @@ from danoan.journal_manager.cli import utils
 from danoan.journal_manager.cli.wrappers import nvim_wrapper
 
 import argparse
+from datetime import datetime
 from pathlib import Path
 from textwrap import dedent
+from typing import Optional
 
 
 # -------------------- API --------------------
@@ -18,7 +20,8 @@ def edit(journal_name: str):
     in the file pointed by JOURNAL_MANAGER_CONFIG_FOLDER.
 
     Args:
-        journal_name: The name of a journal in the registry.
+        journal_name: The name of a journal in the registry. If empty a list with
+                      the last three modified journals appears for selection.
 
     Raises:
         NotImplementedError if the requested editor application is not supported.
@@ -34,15 +37,16 @@ def edit(journal_name: str):
 
     text_editor_path = Path(config_file.parameters.default_text_editor_path)
 
-    if not Path(text_editor_path).name.startswith("vim") and not Path(
-        text_editor_path
-    ).name.startswith("nvim"):
+    if not text_editor_path:
         raise NotImplementedError(
-            "This application only knows how to start vim or nvim editors."
+            "Text editor path not found. Please set it with: jm setup init."
         )
 
     journal = api.find_journal_by_name(journal_data_file, journal_name)
     if journal:
+        journal.last_edit_date = datetime.now().isoformat()
+        api.update_journal(journal_data_file, journal)
+
         mkdocs_config_path = Path(journal.location_folder).joinpath(
             "mkdocs.yml"
         )
@@ -56,8 +60,22 @@ def edit(journal_name: str):
 # -------------------- CLI --------------------
 
 
-def __edit__(journal_name: str, **kwargs):
+def __edit__(journal_name: Optional[str], **kwargs):
     utils.ensure_configuration_file_exists()
+
+    if not journal_name:
+        last_three_journals = sorted(
+            api.get_journal_data_file().list_of_journal_data,
+            key=lambda entry: entry.last_edit_date,
+            reverse=True,
+        )[:3]
+
+        for i, journal in enumerate(last_three_journals, 1):
+            print(f"({i}): {journal.name}")
+
+        journal_number = int(input("Which item you would like to edit? "))
+        journal_name = last_three_journals[journal_number - 1].name
+
     try:
         edit(journal_name)
     except NotImplementedError as ex:
@@ -102,7 +120,7 @@ def get_parser(subparser_action=None):
             formatter_class=argparse.RawDescriptionHelpFormatter,
         )
 
-    parser.add_argument("journal_name", help="Journal name")
+    parser.add_argument("journal_name", nargs="?", help="Journal name")
     parser.set_defaults(subcommand_help=parser.print_help, func=__edit__)
 
     return parser

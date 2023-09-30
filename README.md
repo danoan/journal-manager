@@ -1,40 +1,74 @@
-# Journal Manager
+# Getting started with journal-manager
 
-Command line interface to manage mkdocs journals
+Organize your MkDocs journals with ease, fostering focused learning one topic at a time.
+[Read the docs](https://danoan.github.io/journal-manager/).
 
-## Features
+## What is journal-manager?
 
-- Centralized interface: Create, build and edit multiple journals.
-- Quick updates: Add a note to your journal from anywhere with quick-notes.
-- Journals TOC: Automatically generate a web page with the table of content pointing to your journals.
+*journal-manager* is a command-line interface (CLI) application designed for the
+organization of MkDocs notebooks and journals. *journal-manager* facilitates 
+the prioritization of learning, one topic and one journal at time.
 
-### Centralized interface
+The terminal interface in combination with markdown text reduces distraction and 
+improves productivity. *journal-manager* will be a valuable companion on your 
+learning quest.
+
+## Installation
 
 ```bash
-journal-manager setup init
-journal-manager create "Language Modelling"
-journal-manager journal edit language-models
-journal-manager build --with-http-server language-models
+$ git clone https://github.com/danoan/journal-manager
+$ cd journal-manager
+$ pip install .
 ```
 
-### Quick updates
+## Setup
 
-#### Click on the plus sign to add a quick note
+```bash
+# Setup environment variable (e.g. in ~/.bashrc)
+export JOURNAL_MANAGER_CONFIG_FOLDER="~/.config/journal-manager" 
+```
 
-![Click on the plus sign to add a quick note](docs/assets/figures/feature-quick-note-1.png)
+```python
+$ jm setup init
+$ Enter the path of your default editor: nvim
 
-#### Enter your quick note in markdown format
+default_journal_folder=/home/my-user/.config/journal-manager/journals
+default_template_folder=/home/my-user/.config/journal-manager/templates
+journal_data_filepath=/home/my-user/.config/journal-manager/journal_data.toml
+template_data_filepath=/home/my-user/.config/journal-manager/template_data.toml
 
-![Enter quick note in markdown format](docs/assets/figures/feature-quick-note-2.png)
+default_text_editor_path=nvim
+```
 
-#### Visualize all your quick notes in the Quick Notes link
+## Usage
 
-![Visualize all your quick notes in the Quick Notes link](docs/assets/figures/feature-quick-note-3.png)
+### Create and edit journals
+
+```bash
+$ jm journal create "nlp" 
+$ jm journal
+nlp:/home/my-user/.config/journal-manager/journals/nlp
+$ jm journal edit nlp
+```
+
+### Create journal-manager template
+
+```bash
+$ jm template register "with-latex" "~/my-journal-manager-templates/with-latex"
+$ jm template 
+with-latex:/home/my-user/.config/journal-manager/templates/with-latex
+$ jm journal create "statistics" --template-name "with-latex"
+$ jm journal
+nlp:/home/my-user/.config/journal-manager/journals/nlp
+statistics:/home/my-user/.config/journal-manager/journals/statistics
+```
+
+### Build static web page
+
+```bash
+$ jm build --build-location "~/my-journal-web-page"
+```
 
 
-### Journals TOC
 
-A table of content is automatically generates as the index page.
-
-![Automatically generated table of contents](docs/assets/figures/feature-toc.png)
 

@@ -39,7 +39,9 @@ def activate(journal_names: List[str]):
         raise exceptions.InvalidName(not_found_journal_names)
 
     journal_data_list = model.JournalDataList(updated_journal_data_list)
-    journal_data_list.write(config_file.journal_data_filepath)
+
+    with open(config_file.journal_data_filepath, "w") as f:
+        journal_data_list.write(f)
 
 
 # -------------------- CLI --------------------

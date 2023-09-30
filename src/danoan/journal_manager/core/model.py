@@ -1,4 +1,8 @@
-from danoan.utils.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
+"""
+Data model for journal-manager api.
+"""
+
+from danoan.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
 
 from dataclasses import dataclass
 from typing import List, Optional, TypeVar, Type, Dict, Any
@@ -38,6 +42,7 @@ class JournalData(TomlDataClassIO):
     location_folder: str
     active: bool
     title: str
+    last_edit_date: str
 
 
 @dataclass

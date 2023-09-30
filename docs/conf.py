@@ -7,20 +7,21 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 # Add the package source to the sys.path
+import sphinx_rtd_theme
+from importlib import metadata
 import pathlib
 import sys
 
-source_folder = pathlib.Path(__file__).parents[1].joinpath("src/danoan").resolve().as_posix()
+source_folder = pathlib.Path(__file__).parents[1].joinpath(
+    "src/danoan").resolve().as_posix()
 sys.path.insert(0, source_folder)
 
 # Tell sphinx the package version
-from importlib import metadata
 
 PACKAGE_VERSION = metadata.version("journal-manager")
 version = release = PACKAGE_VERSION
 
 # Import read the docs theme
-import sphinx_rtd_theme
 
 project = 'Journal Manager'
 copyright = '2023, Daniel Martins Antunes'
@@ -31,17 +32,23 @@ author = 'Daniel Martins Antunes'
 
 extensions = [
     "sphinx.ext.autodoc",  # Collect docstrings
+    "sphinx.ext.autosummary",  # Collect docstrings
     "sphinx.ext.autodoc.typehints",  # Use typehints
     "sphinx.ext.napoleon",  # NumPy and Google docstring format
     "sphinx.ext.viewcode",  # Source code link at function, class, module documentation
     "sphinx_rtd_theme",  # Read the docs theme
+    "myst_parser"
 ]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
 
 autodoc_typehints = "both"
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 
 # -- Options for HTML output -------------------------------------------------

@@ -2,6 +2,7 @@ from danoan.journal_manager.core import api, exceptions, model
 from danoan.journal_manager.cli import utils
 
 import argparse
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -28,11 +29,16 @@ def register(location_folder: Path, journal_title: str):
         raise exceptions.InvalidLocation(location_folder)
 
     journal_data = model.JournalData(
-        journal_name, location_folder.as_posix(), True, journal_title
+        journal_name,
+        location_folder.as_posix(),
+        True,
+        journal_title,
+        datetime.now().isoformat(),
     )
     journal_data_file.list_of_journal_data.append(journal_data)
 
-    journal_data_file.write(api.get_configuration_file().journal_data_filepath)
+    with open(api.get_configuration_file().journal_data_filepath, "w") as f:
+        journal_data_file.write(f)
 
 
 # -------------------- CLI --------------------

@@ -3,6 +3,7 @@ from danoan.journal_manager.cli import utils
 from danoan.journal_manager.cli.wrappers import mkdocs_wrapper
 
 import argparse
+from datetime import datetime
 import os
 from pathlib import Path
 import shutil
@@ -112,7 +113,11 @@ def create(
         raise exceptions.InvalidLocation()
 
     journal_data = model.JournalData(
-        journal_name, journal_location.as_posix(), True, journal_title
+        journal_name,
+        journal_location.as_posix(),
+        True,
+        journal_title,
+        datetime.now().isoformat(),
     )
     journal_data_file.list_of_journal_data.append(journal_data)
 
@@ -122,7 +127,8 @@ def create(
         journal_location.mkdir(parents=True)
         mkdocs_wrapper.create(journal_location)
 
-    journal_data_file.write(config_file.journal_data_filepath)
+    with open(config_file.journal_data_filepath, "w") as f:
+        journal_data_file.write(f)
 
 
 # -------------------- CLI --------------------

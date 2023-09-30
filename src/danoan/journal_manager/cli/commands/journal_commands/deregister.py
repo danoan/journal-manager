@@ -37,7 +37,8 @@ def deregister(journal_names: List[str]):
     if len(not_found_journal_names) > 0:
         raise exceptions.InvalidName(not_found_journal_names)
 
-    journal_data_file.write(api.get_configuration_file().journal_data_filepath)
+    with open(api.get_configuration_file().journal_data_filepath, "w") as f:
+        journal_data_file.write(f)
 
 
 # -------------------- CLI --------------------

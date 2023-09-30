@@ -1,3 +1,7 @@
+"""
+Core methods that form the journal-manager api. 
+"""
+
 from danoan.journal_manager.core import exceptions, model
 
 import os
@@ -12,10 +16,10 @@ ENV_JOURNAL_MANAGER_CONFIG_FOLDER = "JOURNAL_MANAGER_CONFIG_FOLDER"
 
 def get_configuration_folder() -> Path:
     """
-    Return the value contained in environment variable JOURNAL_MANAGER_CONFIG_FOLDER
+    Return the value stored by environment variable JOURNAL_MANAGER_CONFIG_FOLDER
 
-    If the environment variable is not set, a message with instructions on how to set
-    is displayed.
+    Raises:
+        ConfigurationFolderDoesNotExist: if JOURNAL_MANAGER_CONFIG_FOLDER is not set.
     """
     if ENV_JOURNAL_MANAGER_CONFIG_FOLDER not in os.environ:
         raise exceptions.ConfigurationFolderDoesNotExist()
@@ -24,14 +28,18 @@ def get_configuration_folder() -> Path:
 
 
 def get_configuration_filepath():
+    """
+    Return the path to the journal-manager configuration file.
+    """
     return get_configuration_folder().joinpath("config.toml")
 
 
 def get_configuration_file() -> model.ConfigurationFile:
     """
-    Return a python dataclass representation of the journal-manager configuration file.
+    Return ConfigurationFile dataclass instantiated from the configuration file.
 
-    If the file does not exist, an error message is printed and the program exits.
+    Raises:
+        ConfigurationFileDoesNotExist: if configuration file does not exist.
     """
     if not get_configuration_filepath().exists():
         raise exceptions.ConfigurationFileDoesNotExist()
@@ -41,7 +49,7 @@ def get_configuration_file() -> model.ConfigurationFile:
 
 def get_template_list_file() -> model.JournalTemplateList:
     """
-    Return a dataclass representation of the list of journal templates register file.
+    Return JournalTemplateList dataclass instantiated from the templates register file.
     """
     config_file = get_configuration_file()
     return model.JournalTemplateList.read(config_file.template_data_filepath)
@@ -49,7 +57,7 @@ def get_template_list_file() -> model.JournalTemplateList:
 
 def get_journal_data_file() -> model.JournalDataList:
     """
-    Return a dataclass representation of the list of journals register file.
+    Return JournalDataList dataclass instantiated from the journals register file.
     """
     config_file = get_configuration_file()
     return model.JournalDataList.read(config_file.journal_data_filepath)
@@ -70,8 +78,6 @@ def create_configuration_file(
     Args:
         journal_folder_default: Default location to store journals.
         templates_folder_default: Default location to store journal templates.
-    Returns:
-        Nothing.
     """
     get_configuration_folder().mkdir(parents=True)
     journal_folder_default.mkdir(parents=True)
@@ -89,18 +95,31 @@ def create_configuration_file(
     )
 
     parameters = model.Parameters()
-    model.ConfigurationFile(
-        journal_folder_default.as_posix(),
-        templates_folder_default.as_posix(),
-        journal_data_filepath,
-        journal_template_data_filepath,
-        parameters,
-    ).write(get_configuration_filepath().as_posix())
-    model.JournalDataList([]).write(journal_data_filepath)
-    model.JournalTemplateList([]).write(journal_template_data_filepath)
+    with open(get_configuration_filepath().as_posix(), "w") as f:
+        model.ConfigurationFile(
+            journal_folder_default.as_posix(),
+            templates_folder_default.as_posix(),
+            journal_data_filepath,
+            journal_template_data_filepath,
+            parameters,
+        ).write(f)
+
+    with open(journal_data_filepath, "w") as f:
+        model.JournalDataList([]).write(f)
+
+    with open(journal_template_data_filepath, "w") as f:
+        model.JournalTemplateList([]).write(f)
 
 
 def is_valid_template_path(template_path: Path):
+    """
+    Validates a journal templates folder.
+
+    The journal template folder must contain the file mkdocs.tpl.yml.
+
+    Args:
+        template_path: The journal template folder to check.
+    """
     mkdocs_template_path = Path(template_path).joinpath("mkdocs.tpl.yml")
     return mkdocs_template_path.exists()
 
@@ -110,9 +129,13 @@ def find_template_by_name(
     template_file: model.JournalTemplateList, template_name: str
 ) -> Optional[model.JournalTemplate]:
     """
-    Search a registered template by name and return it.
+    Search a registered template by name.
 
     If the template is not found, a None object is returned.
+
+    Args:
+        template_file: Dataclass representation of the journal template register file.
+        template_name: Template name.
     """
     for entry in template_file.list_of_template_data:
         if entry.name == template_name:
@@ -124,9 +147,13 @@ def find_journal_by_name(
     journal_data_file: model.JournalDataList, journal_name: str
 ) -> Optional[model.JournalData]:
     """
-    Search a registered journal by name and return it.
+    Search a registered journal by name.
 
     If the journal is not found, a None object is returned.
+
+    Args:
+        journal_data_file: Dataclass representation of the journal register file.
+        journal_name: Journla name.
     """
     for journal_data in journal_data_file.list_of_journal_data:
         if journal_data.name == journal_name:
@@ -139,11 +166,35 @@ def find_journal_by_location(
     journal_data_file: model.JournalDataList, journal_location: str
 ) -> Optional[model.JournalData]:
     """
-    Search a registered journal by location and return it.
+    Search a registered journal by location.
 
     If the journal is not found, a None object is returned.
+
+    Args:
+        journal_data_file: Dataclass representation of the journal register file.
+        journal_location: Path to the journal folder.
     """
     for journal_data in journal_data_file.list_of_journal_data:
         if journal_data.location_folder == journal_location:
             return journal_data
     return None
+
+
+def update_journal(
+    journal_data_file: model.JournalDataList, journal_data: model.JournalData
+):
+    """
+    Update journal entry in the journal data file.
+
+    Args:
+        journal_data_file: Dataclass representation of the journal register file.
+        journal_data: Updated journal.
+    """
+
+    for i, entry in enumerate(journal_data_file.list_of_journal_data):
+        if entry.name == journal_data.name:
+            journal_data_file.list_of_journal_data[i] = journal_data
+            break
+
+    with open(get_configuration_file().journal_data_filepath, "w") as f:
+        journal_data_file.write(f)

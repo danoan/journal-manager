@@ -1,5 +1,9 @@
+"""
+Exceptions raised by journal-manager api.
+"""
+
 from pathlib import Path
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Union
 
 
 class ConfigurationFileDoesNotExist(BaseException):
@@ -20,8 +24,14 @@ class InvalidName(Exception):
 
 
 class InvalidLocation(Exception):
-    def __init__(self, locations: Iterable[Path] = []):
+    def __init__(self, locations: Union[Iterable[Path], Path] = []):
         self.locations = locations
+
+    def __iter__(self):
+        if isinstance(self.locations, Path):
+            yield self.locations
+        else:
+            return self.locations.__iter__()
 
 
 class InvalidIncludeAllFolder(Exception):
