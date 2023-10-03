@@ -64,9 +64,7 @@ def get_journal_data_file() -> model.JournalDataList:
 
 
 def create_configuration_file(
-    journal_folder_default: Path,
-    templates_folder_default: Path,
-    text_editor_default: Path,
+    journal_folder_default: Path, templates_folder_default: Path
 ):
     """
     Create journal-manager application configuration file.
@@ -98,7 +96,6 @@ def create_configuration_file(
     )
 
     parameters = model.Parameters()
-    parameters.default_text_editor_path = text_editor_default
     with open(get_configuration_filepath().as_posix(), "w") as f:
         model.ConfigurationFile(
             journal_folder_default.as_posix(),

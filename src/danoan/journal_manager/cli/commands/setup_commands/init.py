@@ -53,7 +53,7 @@ def __init_journal_manager__(
         config_file = api.get_configuration_file()
     except exceptions.ConfigurationFileDoesNotExist:
         api.create_configuration_file(
-            default_journal_folder, default_template_folder, default_text_editor
+            default_journal_folder, default_template_folder
         )
         config_file_exists_already = False
 

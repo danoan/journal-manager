@@ -28,7 +28,7 @@ def f_setup_init(f_set_env_variable, tmp_path):
         config_file = api.get_configuration_file()
     except exceptions.ConfigurationFileDoesNotExist:
         api.create_configuration_file(
-            default_journal_folder, default_template_folder, default_editor_path
+            default_journal_folder, default_template_folder
         )
     init.init_journal_manager(
         default_journal_folder, default_template_folder, default_editor_path

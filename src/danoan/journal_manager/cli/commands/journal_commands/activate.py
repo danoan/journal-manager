@@ -21,8 +21,6 @@ def activate(journal_names: List[str]):
     Raises:
         InvalidName if one or more journal names are not present in the list of registered journals.
     """
-
-    config_file = api.get_configuration_file()
     journal_data_file = api.get_journal_data_file()
 
     updated_journal_data_list = []
@@ -31,17 +29,15 @@ def activate(journal_names: List[str]):
         journal = api.find_journal_by_name(journal_data_file, journal_name)
         if journal:
             journal.active = True
+            updated_journal_data_list.append(journal)
         else:
             not_found_journal_names.append(journal_name)
-        updated_journal_data_list.append(journal)
 
     if len(not_found_journal_names) > 0:
         raise exceptions.InvalidName(not_found_journal_names)
 
-    journal_data_list = model.JournalDataList(updated_journal_data_list)
-
-    with open(config_file.journal_data_filepath, "w") as f:
-        journal_data_list.write(f)
+    for journal in updated_journal_data_list:
+        api.update_journal(journal_data_file, journal)
 
 
 # -------------------- CLI --------------------
