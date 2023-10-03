@@ -67,7 +67,9 @@ class TestInit:
             "templates"
         ).expanduser()
         api.create_configuration_file(
-            first_default_journal_folder, first_default_template_folder
+            first_default_journal_folder,
+            first_default_template_folder,
+            Path("nvim"),
         )
 
         config_file = api.get_configuration_file()
