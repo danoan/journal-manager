@@ -91,6 +91,7 @@
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 
 <span class="c1"># -------------------- API --------------------</span>
@@ -127,7 +128,10 @@
 
 
 <span class="k">def</span> <span class="nf">__init_journal_manager__</span><span class="p">(</span>
-    <span class="n">default_journal_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">default_template_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="n">default_journal_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">default_template_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">default_text_editor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="n">utils</span><span class="o">.</span><span class="n">ensure_configuration_folder_exists</span><span class="p">()</span>
 
@@ -147,18 +151,21 @@
         <span class="p">)</span>
 
     <span class="n">new_editor_path</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">current_editor_str_path</span> <span class="ow">or</span> <span class="n">current_editor_str_path</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-        <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
-            <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter the path of your default editor (e.g. nvim): &quot;</span><span class="p">)</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">entered_editor_path</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Enter the path of your default editor (type enter to keep the current one: </span><span class="si">{</span><span class="n">current_editor_str_path</span><span class="si">}</span><span class="s2">): &quot;</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="n">entered_editor_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">entered_editor_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">default_text_editor</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">current_editor_str_path</span> <span class="ow">or</span> <span class="n">current_editor_str_path</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span>
+                <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter the path of your default editor (e.g. nvim): &quot;</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current_editor_str_path</span><span class="p">)</span>
+            <span class="n">entered_editor_path</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Enter the path of your default editor (type enter to keep the current one: </span><span class="si">{</span><span class="n">current_editor_str_path</span><span class="si">}</span><span class="s2">): &quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">entered_editor_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">entered_editor_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current_editor_str_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_editor_path</span> <span class="o">=</span> <span class="n">default_text_editor</span>
 
     <span class="n">init_journal_manager</span><span class="p">(</span>
         <span class="n">default_journal_folder</span><span class="p">,</span> <span class="n">default_template_folder</span><span class="p">,</span> <span class="n">new_editor_path</span>
@@ -230,6 +237,11 @@
         <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where journals will be created by default&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_folder</span><span class="p">()</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;templates&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--default-text-editor&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to text editor used by journal-manager by default.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span>
         <span class="n">subcommand_help</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">__init_journal_manager__</span>

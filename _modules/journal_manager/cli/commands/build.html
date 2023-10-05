@@ -103,13 +103,24 @@
 <span class="kn">from</span> <span class="nn">importlib_resources</span> <span class="kn">import</span> <span class="n">files</span><span class="p">,</span> <span class="n">as_file</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">PackageLoader</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">signal</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;danoan.journal_manager&quot;</span><span class="p">)</span>
 
 <span class="c1"># -------------------- Helper Functions --------------------</span>
+
+
+<span class="k">def</span> <span class="nf">__remove_directory_before_copy__</span><span class="p">(</span><span class="n">src_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">dest_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">src_dir</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">)</span>
+
+
 <span class="k">def</span> <span class="nf">__register_journals_by_location__</span><span class="p">(</span><span class="n">locations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Register journals by location in the registry.</span>
@@ -314,13 +325,27 @@
                     <span class="n">journal_data_file</span><span class="p">,</span> <span class="n">journal_name</span>
                 <span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">journal_data</span> <span class="ow">and</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">journal_name</span><span class="p">:</span>
-                    <span class="n">mkdocs_wrapper</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
-                        <span class="n">Path</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">),</span>
-                        <span class="n">Path</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">journal_data</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
-                        <span class="p">),</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">journal_data</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">active</span>
+                    <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_inactive</span>
+                <span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Skipping </span><span class="si">{</span><span class="n">journal_data</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> because it is marked as inactive.&quot;</span>
                     <span class="p">)</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">journal_data</span> <span class="ow">and</span> <span class="n">journal_data</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">journal_name</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">journal_data</span><span class="o">.</span><span class="n">active</span>
+                        <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_inactive</span>
+                    <span class="p">):</span>
+                        <span class="n">mkdocs_wrapper</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+                            <span class="n">Path</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">),</span>
+                            <span class="n">Path</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">journal_data</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">),</span>
+                        <span class="p">)</span>
                     <span class="n">data</span><span class="p">[</span><span class="s2">&quot;journals&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">journal_data</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">journal_data</span> <span class="o">=</span> <span class="n">data</span>
@@ -386,7 +411,7 @@
         <span class="p">)</span>
 
         <span class="k">with</span> <span class="n">as_file</span><span class="p">(</span><span class="n">BuildIndexPage</span><span class="o">.</span><span class="n">assets</span><span class="p">)</span> <span class="k">as</span> <span class="n">assets_path</span><span class="p">:</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
+            <span class="n">__remove_directory_before_copy__</span><span class="p">(</span>
                 <span class="n">assets_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;assets&quot;</span><span class="p">)</span>
             <span class="p">)</span>
 
@@ -665,6 +690,7 @@
 
 <span class="k">def</span> <span class="nf">__build__</span><span class="p">(</span>
     <span class="n">build_location</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">build_inactive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">build_instructions_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">build_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">journals_names_to_build</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -685,11 +711,10 @@
             <span class="k">if</span> <span class="n">ok_continue</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;yes&quot;</span><span class="p">]:</span>
                 <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">build_location</span><span class="p">)</span>
-
     <span class="n">build_instructions</span> <span class="o">=</span> <span class="n">__merge_build_instructions__</span><span class="p">(</span>
         <span class="n">build_location</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(),</span>
         <span class="n">build_instructions_path</span><span class="p">,</span>
+        <span class="n">build_inactive</span><span class="o">=</span><span class="n">build_inactive</span><span class="p">,</span>
         <span class="n">build_index</span><span class="o">=</span><span class="n">build_index</span><span class="p">,</span>
         <span class="n">journals_names_to_build</span><span class="o">=</span><span class="n">journals_names_to_build</span><span class="p">,</span>
         <span class="n">journals_locations_to_build</span><span class="o">=</span><span class="n">journals_locations_to_build</span><span class="p">,</span>
@@ -730,10 +755,10 @@
         <span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--build-location&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where build artifacts will be stored. If not specified, current working directory is used&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span>
+        <span class="s2">&quot;--build-inactive&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If passed, inactive journals will also be built.&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--build-instructions&quot;</span><span class="p">,</span>
@@ -742,11 +767,22 @@
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Configuration file with build instructions.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--build-location&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory where build artifacts will be stored. If not specified, current working directory is used&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">Path</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--do-not-build-index&quot;</span><span class="p">,</span>
         <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;build_index&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The index page with the table of content won&#39;t be rebuilt&quot;</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_false&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--ignore-safety-questions&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If specified, the program will overwrite the contents of BUILD_LOCATION without previous warning.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--journal-name&quot;</span><span class="p">,</span>
@@ -766,11 +802,6 @@
         <span class="s2">&quot;--with-http-server&quot;</span><span class="p">,</span>
         <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A http-server will be started and the journals files monitored.&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--ignore-safety-questions&quot;</span><span class="p">,</span>
-        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;If specified, the program will overwrite the contents of BUILD_LOCATION without previous warning.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">__build__</span><span class="p">)</span>
 
