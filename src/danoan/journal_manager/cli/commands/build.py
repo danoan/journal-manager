@@ -16,13 +16,24 @@ import argparse
 from importlib_resources import files, as_file
 from io import StringIO
 from jinja2 import Environment, PackageLoader
+import logging
 from pathlib import Path
 import shutil
 import signal
-from typing import List, Iterator, Iterable, Any, Optional, Dict, Tuple
+from typing import List, Any, Optional, Dict, Tuple
 
+
+logger = logging.getLogger("danoan.journal_manager")
 
 # -------------------- Helper Functions --------------------
+
+
+def __remove_directory_before_copy__(src_dir: Path, dest_dir: Path):
+    if dest_dir.exists():
+        shutil.rmtree(dest_dir)
+    shutil.copytree(src_dir, dest_dir)
+
+
 def __register_journals_by_location__(locations: List[Path]):
     """
     Register journals by location in the registry.
@@ -227,13 +238,27 @@ class BuildJournals(BuildStep):
                     journal_data_file, journal_name
                 )
 
-                if journal_data and journal_data.name == journal_name:
-                    mkdocs_wrapper.build(
-                        Path(journal_data.location_folder),
-                        Path(
-                            f"{self.journals_site_folder}/{journal_data.name}"
-                        ),
+                if (
+                    journal_data
+                    and not journal_data.active
+                    and not self.build_instructions.build_inactive
+                ):
+                    logger.info(
+                        f"Skipping {journal_data.name} because it is marked as inactive."
                     )
+                    continue
+
+                if journal_data and journal_data.name == journal_name:
+                    if (
+                        journal_data.active
+                        or self.build_instructions.build_inactive
+                    ):
+                        mkdocs_wrapper.build(
+                            Path(journal_data.location_folder),
+                            Path(
+                                f"{self.journals_site_folder}/{journal_data.name}"
+                            ),
+                        )
                     data["journals"].append(journal_data)
 
             self.journal_data = data
@@ -299,7 +324,7 @@ class BuildIndexPage(BuildStep):
         )
 
         with as_file(BuildIndexPage.assets) as assets_path:
-            shutil.copytree(
+            __remove_directory_before_copy__(
                 assets_path, self.journals_site_folder.joinpath("assets")
             )
 
@@ -578,6 +603,7 @@ def __merge_build_instructions__(
 
 def __build__(
     build_location: Path,
+    build_inactive: bool = False,
     build_instructions_path: Optional[Path] = None,
     build_index: Optional[bool] = None,
     journals_names_to_build: Optional[List[str]] = None,
@@ -598,11 +624,10 @@ def __build__(
             if ok_continue.lower() not in ["y", "yes"]:
                 exit(1)
 
-        shutil.rmtree(build_location)
-
     build_instructions = __merge_build_instructions__(
         build_location.expanduser(),
         build_instructions_path,
+        build_inactive=build_inactive,
         build_index=build_index,
         journals_names_to_build=journals_names_to_build,
         journals_locations_to_build=journals_locations_to_build,
@@ -643,10 +668,10 @@ def get_parser(subparser_action=None):
         )
 
     parser.add_argument(
-        "--build-location",
-        help="Directory where build artifacts will be stored. If not specified, current working directory is used",
-        type=Path,
-        default=Path.cwd(),
+        "--build-inactive",
+        help="If passed, inactive journals will also be built.",
+        action="store_true",
+        default=False,
     )
     parser.add_argument(
         "--build-instructions",
@@ -655,11 +680,22 @@ def get_parser(subparser_action=None):
         help="Configuration file with build instructions.",
     )
     parser.add_argument(
+        "--build-location",
+        help="Directory where build artifacts will be stored. If not specified, current working directory is used",
+        type=Path,
+        default=Path.cwd(),
+    )
+    parser.add_argument(
         "--do-not-build-index",
         dest="build_index",
         help="The index page with the table of content won't be rebuilt",
         action="store_false",
         default=True,
+    )
+    parser.add_argument(
+        "--ignore-safety-questions",
+        action="store_true",
+        help="If specified, the program will overwrite the contents of BUILD_LOCATION without previous warning.",
     )
     parser.add_argument(
         "--journal-name",
@@ -679,11 +715,6 @@ def get_parser(subparser_action=None):
         "--with-http-server",
         action="store_true",
         help="A http-server will be started and the journals files monitored.",
-    )
-    parser.add_argument(
-        "--ignore-safety-questions",
-        action="store_true",
-        help="If specified, the program will overwrite the contents of BUILD_LOCATION without previous warning.",
     )
     parser.set_defaults(func=__build__)
 

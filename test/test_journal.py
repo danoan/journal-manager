@@ -7,6 +7,7 @@ from danoan.journal_manager.cli.commands.template_commands.register import (
 
 import argparse
 from conftest import *
+from datetime import datetime
 from pathlib import Path
 import pytest
 
@@ -62,27 +63,56 @@ class TestRegister:
 
 class TestActivate:
     def test_activate_deactivate_journal(self, f_setup_init, tmp_path):
+        for i in range(5):
+            jm.create.create(f"journal-{i}", tmp_path / f"j{i}")
+
+        list_of_journals = api.get_journal_data_file().list_of_journal_data
+
         journal_title = "My Journal Title"
         jm.register.register(tmp_path, journal_title)
 
-        journal_data = api.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.find_journal_by_location(
+            api.get_journal_data_file(), str(tmp_path)
+        )
+
+        assert journal_data
         assert journal_data.title == journal_title
         assert journal_data.active == True
 
         # Deactivate
         jm.deactivate.deactivate([journal_data.name])
-        journal_data = api.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.find_journal_by_location(
+            api.get_journal_data_file(), str(tmp_path)
+        )
 
+        assert journal_data
         assert journal_data.title == journal_title
         assert journal_data.active == False
+
+        for journal in list_of_journals:
+            found_journal = api.find_journal_by_location(
+                api.get_journal_data_file(), journal.location_folder
+            )
+            assert found_journal is not None
+            assert found_journal.active == True
 
         # Activate
 
         jm.activate.activate([journal_data.name])
-        journal_data = api.get_journal_data_file().list_of_journal_data[0]
+        journal_data = api.find_journal_by_location(
+            api.get_journal_data_file(), str(tmp_path)
+        )
 
+        assert journal_data
         assert journal_data.title == journal_title
         assert journal_data.active == True
+
+        for journal in list_of_journals:
+            found_journal = api.find_journal_by_location(
+                api.get_journal_data_file(), journal.location_folder
+            )
+            assert found_journal is not None
+            assert found_journal.active == True
 
 
 class TestCreate:

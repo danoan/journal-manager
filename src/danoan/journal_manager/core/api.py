@@ -78,6 +78,7 @@ def create_configuration_file(
     Args:
         journal_folder_default: Default location to store journals.
         templates_folder_default: Default location to store journal templates.
+        text_editor_default: Path to the default editor used by journal-manager.
     """
     get_configuration_folder().mkdir(parents=True)
     journal_folder_default.mkdir(parents=True)

@@ -4,6 +4,7 @@ from danoan.journal_manager.cli import utils
 import argparse
 from pathlib import Path
 from textwrap import dedent
+from typing import Optional
 
 
 # -------------------- API --------------------
@@ -40,7 +41,10 @@ def init_journal_manager(
 
 
 def __init_journal_manager__(
-    default_journal_folder: Path, default_template_folder: Path, **kwargs
+    default_journal_folder: Path,
+    default_template_folder: Path,
+    default_text_editor: Optional[Path],
+    **kwargs,
 ):
     utils.ensure_configuration_folder_exists()
 
@@ -60,18 +64,21 @@ def __init_journal_manager__(
         )
 
     new_editor_path = None
-    if not current_editor_str_path or current_editor_str_path == "":
-        new_editor_path = Path(
-            input("Enter the path of your default editor (e.g. nvim): ")
-        )
-    else:
-        entered_editor_path = input(
-            f"Enter the path of your default editor (type enter to keep the current one: {current_editor_str_path}): "
-        )
-        if entered_editor_path != "":
-            new_editor_path = Path(entered_editor_path)
+    if not default_text_editor:
+        if not current_editor_str_path or current_editor_str_path == "":
+            new_editor_path = Path(
+                input("Enter the path of your default editor (e.g. nvim): ")
+            )
         else:
-            new_editor_path = Path(current_editor_str_path)
+            entered_editor_path = input(
+                f"Enter the path of your default editor (type enter to keep the current one: {current_editor_str_path}): "
+            )
+            if entered_editor_path != "":
+                new_editor_path = Path(entered_editor_path)
+            else:
+                new_editor_path = Path(current_editor_str_path)
+    else:
+        new_editor_path = default_text_editor
 
     init_journal_manager(
         default_journal_folder, default_template_folder, new_editor_path
@@ -143,6 +150,11 @@ def get_parser(subparser_action=None):
         type=Path,
         help="Directory where journals will be created by default",
         default=api.get_configuration_folder().joinpath("templates"),
+    )
+    parser.add_argument(
+        "--default-text-editor",
+        type=Path,
+        help="Path to text editor used by journal-manager by default.",
     )
     parser.set_defaults(
         subcommand_help=parser.print_help, func=__init_journal_manager__

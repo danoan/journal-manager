@@ -66,6 +66,7 @@ class BuildInstructions(TomlDataClassIO):
     build_location: Optional[str] = None
 
     build_index: bool = True
+    build_inactive: bool = False
     with_http_server: bool = False
 
     journals_names_to_build: Optional[List[str]] = None

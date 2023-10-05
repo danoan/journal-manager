@@ -17,6 +17,8 @@ def build(journal_location: Path, build_location: Path):
     cwd = os.getcwd()
 
     os.chdir(journal_location)
+    # By default, mkdocs uses a clean build. Files present in the
+    # build location are removed before the new build starts.
     subprocess.run(["mkdocs", "build", "-d", build_location])
 
     os.chdir(cwd)
