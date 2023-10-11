@@ -381,7 +381,9 @@ class BuildHttpServer(BuildStep):
             http_server = files(
                 "danoan.journal_manager.assets.templates"
             ).joinpath("http-server")
-            shutil.copytree(http_server, self.http_server_folder)
+            shutil.copytree(
+                http_server, self.http_server_folder, dirs_exist_ok=True
+            )
 
             node_wrapper.install_dependencies(self.http_server_folder)
 
@@ -407,9 +409,20 @@ class BuildHttpServer(BuildStep):
                 "file-monitor-action.sh"
             )
 
+            folders_to_monitor = set()
+            journal_data_file = api.get_journal_data_file()
+            for journal_name in get_journals_names_to_build(
+                self.build_instructions
+            ):
+                journal_data = api.find_journal_by_name(
+                    journal_data_file, journal_name
+                )
+                if journal_data:
+                    folders_to_monitor.add(journal_data.location_folder)
+
             data = {
                 "journals_site_folder": self.journals_site_folder,
-                "journals_files_folder": api.get_configuration_file().default_journal_folder,
+                "journals_files_folder": list(folders_to_monitor),
             }
 
             with open(self.file_monitor_script, "w") as f:
