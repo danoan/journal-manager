@@ -14,7 +14,7 @@ jobs:
       with:
           python-version: '3.8'
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Create Virtual Environment
       uses: danoan/setup-python-project-environment-action@v0.1
       with:
@@ -27,7 +27,7 @@ jobs:
       with:
           python-version: '3.8'
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Restore cache
       uses: danoan/setup-python-project-environment-action@v0.1
       with:
@@ -43,7 +43,7 @@ jobs:
       with:
           python-version: '3.10'
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Restore cache
       uses: danoan/setup-python-project-environment-action@v0.1
       with:
@@ -59,7 +59,7 @@ jobs:
       with:
           python-version: '3.8'
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Restore cache
       uses: danoan/setup-python-project-environment-action@v0.1
       with:
@@ -75,7 +75,7 @@ jobs:
       with:
           python-version: '3.8'
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Restore cache
       uses: danoan/setup-python-project-environment-action@v0.1
       with:
