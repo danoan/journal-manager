@@ -76,6 +76,8 @@ jobs:
           python-version: '3.8'
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        persist-credentials: false
     - name: Restore cache
       uses: danoan/setup-python-project-environment-action@v0.1
       with:
