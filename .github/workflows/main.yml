@@ -10,7 +10,7 @@ jobs:
   setup-venv:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
           python-version: '3.8'
     - name: Checkout repository
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-venv
     steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
           python-version: '3.8'
     - name: Checkout repository
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-venv
     steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
           python-version: '3.10'
     - name: Checkout repository
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-venv
     steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
           python-version: '3.8'
     - name: Checkout repository
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check-formatting, check-type, run-tests]
     steps:
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
           python-version: '3.8'
     - name: Checkout repository
