@@ -165,7 +165,6 @@ def find_journal(journal_data_file: model.JournalDataList, journal_components: m
             if value is None:
                 continue
 
-            print(key, value, journal_components.location_folder)
             potential_matches += 1
             if journal_data.__dict__[key] == value:
                 concrete_matches += 1
