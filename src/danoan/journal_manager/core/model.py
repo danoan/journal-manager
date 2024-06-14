@@ -5,7 +5,13 @@ Data model for journal-manager api.
 from danoan.toml_dataclass import TomlDataClassIO, TomlTableDataClassIO
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import List, Optional, TypeVar, Type, Dict, Any
+
+
+class LogicOperator(Enum):
+    OR = 0
+    AND = 1
 
 
 @dataclass
