@@ -6,7 +6,7 @@ from danoan.journal_manager.core import exceptions, model
 
 import os
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 ENV_JOURNAL_MANAGER_CONFIG_FOLDER = "JOURNAL_MANAGER_CONFIG_FOLDER"
 
@@ -144,6 +144,42 @@ def find_template_by_name(
     return None
 
 
+def find_journal(journal_data_file: model.JournalDataList, journal_components: model.JournalData, logic_operator: model.LogicOperator) -> List[model.JournalData]:
+    """
+    Search among the registered journals all entries that matches the query.
+
+    The `journal_components` is an instance of JournalData. Attributes with 
+    a None value are not considered in the search.
+
+    Args:
+        journal_data_file: Dataclass representation of the journal register file.
+        journal_components: Journal attributes being searched.
+        logic_operator: If OR, all journals matching at least one attribute are returned.
+                        If AND, a journal must match all attributes to be returned.
+    """
+    results: List[model.JournalData] = []
+    for journal_data in journal_data_file.list_of_journal_data:
+        potential_matches = 0
+        concrete_matches = 0
+        for key, value in journal_components.__dict__.items():
+            if value is None:
+                continue
+
+            print(key, value, journal_components.location_folder)
+            potential_matches += 1
+            if journal_data.__dict__[key] == value:
+                concrete_matches += 1
+
+        if logic_operator == model.LogicOperator.OR:
+            if concrete_matches > 0:
+                results.append(journal_data)
+        elif logic_operator == model.LogicOperator.AND:
+            if concrete_matches == potential_matches:
+                results.append(journal_data)
+
+    return results
+
+
 def find_journal_by_name(
     journal_data_file: model.JournalDataList, journal_name: str
 ) -> Optional[model.JournalData]:
@@ -154,13 +190,14 @@ def find_journal_by_name(
 
     Args:
         journal_data_file: Dataclass representation of the journal register file.
-        journal_name: Journla name.
+        journal_name: Journal name.
     """
-    for journal_data in journal_data_file.list_of_journal_data:
-        if journal_data.name == journal_name:
-            return journal_data
-
-    return None
+    journal_components = model.JournalData(journal_name, None, None, None, None)
+    results = find_journal(journal_data_file, journal_components, model.LogicOperator.AND)
+    if len(results) > 0:
+        return results[0]
+    else:
+        return None
 
 
 def find_journal_by_location(
@@ -175,10 +212,12 @@ def find_journal_by_location(
         journal_data_file: Dataclass representation of the journal register file.
         journal_location: Path to the journal folder.
     """
-    for journal_data in journal_data_file.list_of_journal_data:
-        if journal_data.location_folder == journal_location:
-            return journal_data
-    return None
+    journal_components = model.JournalData(None, journal_location, None, None, None)
+    results = find_journal(journal_data_file, journal_components, model.LogicOperator.AND)
+    if len(results) > 0:
+        return results[0]
+    else:
+        return None
 
 
 def update_journal(
