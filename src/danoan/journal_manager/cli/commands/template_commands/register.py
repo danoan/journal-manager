@@ -4,6 +4,7 @@ from danoan.journal_manager.cli import utils
 import argparse
 from pathlib import Path
 import shutil
+import subprocess
 
 
 # -------------------- API --------------------
@@ -56,6 +57,11 @@ def register(template_name: str, template_path: Path):
     )
     target_template_path.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(template_path, target_template_path)
+
+    requirements_filepath = template_path / "requirements.txt"
+    if requirements_filepath.exists():
+        proc_args = ["pip", "install", "-r", str(requirements_filepath)]
+        subprocess.run(proc_args)
 
     template_data = model.JournalTemplate(
         template_name, target_template_path.expanduser().as_posix()
