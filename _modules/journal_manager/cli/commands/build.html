@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>journal_manager.cli.commands.build &mdash; Journal Manager 1.1 documentation</title>
+  <title>journal_manager.cli.commands.build &mdash; Journal Manager 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=a3d76245" />
@@ -15,7 +15,7 @@
   
         <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=91e4a3f0"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=7a812f30"></script>
         <script src="../../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -35,7 +35,7 @@
             Journal Manager
           </a>
               <div class="version">
-                1.1
+                1.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -470,9 +470,7 @@
             <span class="n">http_server</span> <span class="o">=</span> <span class="n">files</span><span class="p">(</span>
                 <span class="s2">&quot;danoan.journal_manager.assets.templates&quot;</span>
             <span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;http-server&quot;</span><span class="p">)</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span>
-                <span class="n">http_server</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_server_folder</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="kc">True</span>
-            <span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">http_server</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">http_server_folder</span><span class="p">)</span>
 
             <span class="n">node_wrapper</span><span class="o">.</span><span class="n">install_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">http_server_folder</span><span class="p">)</span>
 
@@ -498,20 +496,9 @@
                 <span class="s2">&quot;file-monitor-action.sh&quot;</span>
             <span class="p">)</span>
 
-            <span class="n">folders_to_monitor</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-            <span class="n">journal_data_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_journal_data_file</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">journal_name</span> <span class="ow">in</span> <span class="n">get_journals_names_to_build</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span>
-            <span class="p">):</span>
-                <span class="n">journal_data</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">find_journal_by_name</span><span class="p">(</span>
-                    <span class="n">journal_data_file</span><span class="p">,</span> <span class="n">journal_name</span>
-                <span class="p">)</span>
-                <span class="k">if</span> <span class="n">journal_data</span><span class="p">:</span>
-                    <span class="n">folders_to_monitor</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">journal_data</span><span class="o">.</span><span class="n">location_folder</span><span class="p">)</span>
-
             <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;journals_site_folder&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">journals_site_folder</span><span class="p">,</span>
-                <span class="s2">&quot;journals_files_folder&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">folders_to_monitor</span><span class="p">),</span>
+                <span class="s2">&quot;journals_files_folder&quot;</span><span class="p">:</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span><span class="o">.</span><span class="n">default_journal_folder</span><span class="p">,</span>
             <span class="p">}</span>
 
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_monitor_script</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
