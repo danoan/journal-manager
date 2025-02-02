@@ -34,7 +34,10 @@ def list_journals(list_all: bool = False):
         journals_to_list = api.get_journal_data_file().list_of_journal_data
     else:
         journals_to_list = api.find_journal(
-            api.get_journal_data_file(), journal_components, model.LogicOperator.AND)
+            api.get_journal_data_file(),
+            journal_components,
+            model.LogicOperator.AND,
+        )
 
     if len(journals_to_list) == 0:
         raise exceptions.EmptyList()
@@ -78,8 +81,13 @@ def get_parser(subparser_action=None):
             command_name, description=command_description
         )
 
-    parser.add_argument("--all", "-a", dest="list_all", action="store_true",
-                        help="List all journals, including the inactive ones")
+    parser.add_argument(
+        "--all",
+        "-a",
+        dest="list_all",
+        action="store_true",
+        help="List all journals, including the inactive ones",
+    )
 
     list_of_commands = [
         activate,

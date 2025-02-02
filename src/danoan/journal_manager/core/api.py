@@ -144,11 +144,15 @@ def find_template_by_name(
     return None
 
 
-def find_journal(journal_data_file: model.JournalDataList, journal_components: model.JournalData, logic_operator: model.LogicOperator) -> List[model.JournalData]:
+def find_journal(
+    journal_data_file: model.JournalDataList,
+    journal_components: model.JournalData,
+    logic_operator: model.LogicOperator,
+) -> List[model.JournalData]:
     """
     Search among the registered journals all entries that matches the query.
 
-    The `journal_components` is an instance of JournalData. Attributes with 
+    The `journal_components` is an instance of JournalData. Attributes with
     a None value are not considered in the search.
 
     Args:
@@ -192,7 +196,9 @@ def find_journal_by_name(
         journal_name: Journal name.
     """
     journal_components = model.JournalData(journal_name, None, None, None, None)
-    results = find_journal(journal_data_file, journal_components, model.LogicOperator.AND)
+    results = find_journal(
+        journal_data_file, journal_components, model.LogicOperator.AND
+    )
     if len(results) > 0:
         return results[0]
     else:
@@ -211,8 +217,12 @@ def find_journal_by_location(
         journal_data_file: Dataclass representation of the journal register file.
         journal_location: Path to the journal folder.
     """
-    journal_components = model.JournalData(None, journal_location, None, None, None)
-    results = find_journal(journal_data_file, journal_components, model.LogicOperator.AND)
+    journal_components = model.JournalData(
+        None, journal_location, None, None, None
+    )
+    results = find_journal(
+        journal_data_file, journal_components, model.LogicOperator.AND
+    )
     if len(results) > 0:
         return results[0]
     else:
