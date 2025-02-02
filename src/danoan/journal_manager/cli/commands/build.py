@@ -202,7 +202,7 @@ class FailedStep(BuildStep):
         self.build_step = build_step
         self.msg = msg
 
-    def build(self):
+    def build(self, **kwargs):
         return self
 
     def next(self, build_step):
@@ -227,7 +227,7 @@ class BuildJournals(BuildStep):
             self.build_instructions.build_location
         ).joinpath("site")
 
-    def build(self):
+    def build(self, **kwargs):
         try:
             data: Dict[str, Any] = {"journals": []}
             for journal_name in get_journals_names_to_build(
@@ -313,7 +313,7 @@ class BuildIndexPage(BuildStep):
             "build_instructions"
         ]
 
-    def build(self):
+    def build(self, **kwargs):
         if not self.build_instructions.build_index:
             return self
 
@@ -367,7 +367,7 @@ class BuildHttpServer(BuildStep):
             "build_instructions"
         ]
 
-    def build(self):
+    def build(self, **kwargs):
         try:
             if not self.build_instructions.with_http_server:
                 return self
