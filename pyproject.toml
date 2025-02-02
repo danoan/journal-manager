@@ -22,7 +22,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["dataclasses", "jinja2", "toml","typing_extensions", "mkdocs", "mkdocs-material", "mkdocs-material-extensions", "importlib_resources", "quick_notes @ http://pypi-server.barriguinhas.fr/packages/quick_notes-1.0-py3-none-any.whl#md5=f841159054ed6a97bec9f6af7a244b62", "toml_dataclass @ http://pypi-server.barriguinhas.fr/packages/toml_dataclass-0.1.0-py3-none-any.whl#md5=002285ded5b7e2b5ad1301015f874c70"]
+dependencies = ["dataclasses", "jinja2", "toml","typing_extensions", "mkdocs", "mkdocs-material", "mkdocs-material-extensions", "importlib_resources", "toml-dataclass", "quick_notes @ http://pypi-server.barriguinhas.fr/packages/quick_notes-1.0-py3-none-any.whl#md5=f841159054ed6a97bec9f6af7a244b62"]
 
 [project.urls]
 Documentation = "https://github.com/danoan/journal-manager#readme"
