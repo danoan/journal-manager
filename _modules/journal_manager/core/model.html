@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>journal_manager.core.model &mdash; Journal Manager 1.1.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+  <title>journal_manager.core.model &mdash; Journal Manager 1.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=a3d76245" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=7a812f30"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=a61c299a"></script>
+      <script src="../../../_static/doctools.js?v=888ff710"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -34,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             Journal Manager
           </a>
-              <div class="version">
-                1.1.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -91,19 +86,25 @@
 <span class="sd">Data model for journal-manager api.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">danoan.toml_dataclass</span> <span class="kn">import</span> <span class="n">TomlDataClassIO</span><span class="p">,</span> <span class="n">TomlTableDataClassIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">danoan.toml_dataclass</span><span class="w"> </span><span class="kn">import</span> <span class="n">TomlDataClassIO</span><span class="p">,</span> <span class="n">TomlTableDataClassIO</span>
 
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+
+<div class="viewcode-block" id="LogicOperator"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.LogicOperator">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">LogicOperator</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">OR</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">AND</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="Parameters"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.Parameters">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Parameters</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parameters</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
     <span class="n">default_text_editor_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="ConfigurationFile"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.ConfigurationFile">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ConfigurationFile</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationFile</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
     <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s2">&quot;ConfigurationFile&quot;</span><span class="p">)</span>
 
     <span class="n">default_journal_folder</span><span class="p">:</span> <span class="nb">str</span>
@@ -114,11 +115,11 @@
     <span class="n">parameters</span><span class="p">:</span> <span class="n">Parameters</span>
 
 <div class="viewcode-block" id="ConfigurationFile.from_dict"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.ConfigurationFile.from_dict">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ConfigurationFile.as_dict"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.ConfigurationFile.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="ConfigurationFile.as_dict"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.ConfigurationFile.as_dict">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
 
@@ -126,7 +127,7 @@
 
 
 <div class="viewcode-block" id="JournalData"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.JournalData">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">JournalData</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JournalData</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">location_folder</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span>
@@ -135,23 +136,23 @@
 
 
 <div class="viewcode-block" id="JournalDataList"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.JournalDataList">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">JournalDataList</span><span class="p">(</span><span class="n">TomlTableDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JournalDataList</span><span class="p">(</span><span class="n">TomlTableDataClassIO</span><span class="p">):</span>
     <span class="n">list_of_journal_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">JournalData</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="JournalTemplate"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.JournalTemplate">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">JournalTemplate</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JournalTemplate</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span></div>
 
 
 <div class="viewcode-block" id="JournalTemplateList"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.JournalTemplateList">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">JournalTemplateList</span><span class="p">(</span><span class="n">TomlTableDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">JournalTemplateList</span><span class="p">(</span><span class="n">TomlTableDataClassIO</span><span class="p">):</span>
     <span class="n">list_of_template_data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">JournalTemplate</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="BuildInstructions"><a class="viewcode-back" href="../../../reference/journal_manager.core.model.html#journal_manager.core.model.BuildInstructions">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">BuildInstructions</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuildInstructions</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
     <span class="n">build_location</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">build_index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
