@@ -7,7 +7,7 @@ name = "journal-manager"
 version = "1.2"
 description = ""
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = { file = "LICENSE.txt" }
 keywords = []
 authors = [
@@ -16,11 +16,11 @@ authors = [
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python",
-  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["dataclasses", "jinja2", "toml","typing_extensions", "mkdocs", "mkdocs-material", "mkdocs-material-extensions", "importlib_resources", "toml-dataclass", "quick_notes @ http://pypi-server.barriguinhas.fr/packages/quick_notes-1.0-py3-none-any.whl#md5=f841159054ed6a97bec9f6af7a244b62"]
+dependencies = ["dataclasses", "jinja2", "toml","typing_extensions", "mkdocs", "mkdocs-material", "importlib_resources", "quick-notes", "toml_dataclass"]
 
 [project.urls]
 Documentation = "https://github.com/danoan/journal-manager#readme"

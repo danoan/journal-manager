@@ -1,5 +1,5 @@
 """
-Core methods that form the journal-manager api. 
+Core methods that form the journal-manager api.
 """
 
 from danoan.journal_manager.core import exceptions, model
