@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,9 +13,9 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -93,7 +93,9 @@
 <span class="c1"># -------------------- API --------------------</span>
 
 
-<div class="viewcode-block" id="edit_file"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">edit_file</span><span class="p">(</span><span class="n">text_filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<div class="viewcode-block" id="edit_file">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit_file</span><span class="p">(</span><span class="n">text_filepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
     <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
     <span class="n">_text_editor_path</span> <span class="o">=</span> <span class="n">config_file</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">default_text_editor_path</span>
 
@@ -112,18 +114,28 @@
     <span class="n">nvim_wrapper</span><span class="o">.</span><span class="n">edit_file</span><span class="p">(</span><span class="n">text_filepath</span><span class="p">,</span> <span class="n">text_editor_path</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="edit_config_file"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_config_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">edit_config_file</span><span class="p">():</span>
+
+<div class="viewcode-block" id="edit_config_file">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_config_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit_config_file</span><span class="p">():</span>
     <span class="n">edit_file</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">get_configuration_filepath</span><span class="p">()</span><span class="o">.</span><span class="n">expanduser</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="edit_journal_data_file"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_journal_data_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">edit_journal_data_file</span><span class="p">():</span>
+
+<div class="viewcode-block" id="edit_journal_data_file">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_journal_data_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit_journal_data_file</span><span class="p">():</span>
     <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
     <span class="n">edit_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="edit_template_data_file"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_template_data_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">edit_template_data_file</span><span class="p">():</span>
+
+<div class="viewcode-block" id="edit_template_data_file">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.edit_template_data_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit_template_data_file</span><span class="p">():</span>
     <span class="n">config_file</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_configuration_file</span><span class="p">()</span>
     <span class="n">edit_file</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">template_data_filepath</span><span class="p">))</span></div>
+
 
 
 <span class="c1"># -------------------- CLI --------------------</span>
@@ -140,7 +152,9 @@
         <span class="n">edit_config_file</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.get_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_parser">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.setup.html#journal_manager.cli.commands.setup.get_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;setup&quot;</span>
     <span class="n">command_description</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    Configure journal-manager settings.</span>
@@ -181,6 +195,7 @@
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
+
 </pre></div>
 
            </div>

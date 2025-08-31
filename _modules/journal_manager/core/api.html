@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,9 +13,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -83,7 +83,7 @@
              
   <h1>Source code for journal_manager.core.api</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Core methods that form the journal-manager api. </span>
+<span class="sd">Core methods that form the journal-manager api.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">danoan.journal_manager.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">exceptions</span><span class="p">,</span> <span class="n">model</span>
@@ -98,7 +98,9 @@
 <span class="c1"># -------------------- Configuration API --------------------</span>
 
 
-<div class="viewcode-block" id="get_configuration_folder"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_folder">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_folder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="get_configuration_folder">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_folder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the value stored by environment variable JOURNAL_MANAGER_CONFIG_FOLDER</span>
 
@@ -111,14 +113,20 @@
     <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">ENV_JOURNAL_MANAGER_CONFIG_FOLDER</span><span class="p">])</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_configuration_filepath"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_filepath">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_filepath</span><span class="p">():</span>
+
+<div class="viewcode-block" id="get_configuration_filepath">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_filepath">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_filepath</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the path to the journal-manager configuration file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">get_configuration_folder</span><span class="p">()</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;config.toml&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_configuration_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">ConfigurationFile</span><span class="p">:</span>
+
+<div class="viewcode-block" id="get_configuration_file">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_configuration_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_configuration_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">ConfigurationFile</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return ConfigurationFile dataclass instantiated from the configuration file.</span>
 
@@ -131,7 +139,10 @@
     <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">ConfigurationFile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">get_configuration_filepath</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="get_template_list_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_template_list_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_template_list_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">:</span>
+
+<div class="viewcode-block" id="get_template_list_file">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_template_list_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_template_list_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return JournalTemplateList dataclass instantiated from the templates register file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -139,7 +150,10 @@
     <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">template_data_filepath</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_journal_data_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_journal_data_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_journal_data_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">:</span>
+
+<div class="viewcode-block" id="get_journal_data_file">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.get_journal_data_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_journal_data_file</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return JournalDataList dataclass instantiated from the journals register file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -147,7 +161,10 @@
     <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="create_configuration_file"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.create_configuration_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_configuration_file</span><span class="p">(</span>
+
+<div class="viewcode-block" id="create_configuration_file">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.create_configuration_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_configuration_file</span><span class="p">(</span>
     <span class="n">journal_folder_default</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">templates_folder_default</span><span class="p">:</span> <span class="n">Path</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -196,7 +213,10 @@
         <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">([])</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_valid_template_path"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.is_valid_template_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">is_valid_template_path</span><span class="p">(</span><span class="n">template_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_valid_template_path">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.is_valid_template_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_valid_template_path</span><span class="p">(</span><span class="n">template_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validates a journal templates folder.</span>
 
@@ -209,8 +229,11 @@
     <span class="k">return</span> <span class="n">mkdocs_template_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 
+
 <span class="c1"># -------------------- Data Model Query API --------------------</span>
-<div class="viewcode-block" id="find_template_by_name"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_template_by_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_template_by_name</span><span class="p">(</span>
+<div class="viewcode-block" id="find_template_by_name">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_template_by_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_template_by_name</span><span class="p">(</span>
     <span class="n">template_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalTemplateList</span><span class="p">,</span> <span class="n">template_name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">JournalTemplate</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -228,7 +251,10 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="find_journal"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_journal</span><span class="p">(</span>
+
+<div class="viewcode-block" id="find_journal">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_journal</span><span class="p">(</span>
     <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span>
     <span class="n">journal_components</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">,</span>
     <span class="n">logic_operator</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">LogicOperator</span><span class="p">,</span>
@@ -267,7 +293,10 @@
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-<div class="viewcode-block" id="find_journal_by_name"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal_by_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_journal_by_name</span><span class="p">(</span>
+
+<div class="viewcode-block" id="find_journal_by_name">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal_by_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_journal_by_name</span><span class="p">(</span>
     <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -289,7 +318,10 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="find_journal_by_location"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal_by_location">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_journal_by_location</span><span class="p">(</span>
+
+<div class="viewcode-block" id="find_journal_by_location">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.find_journal_by_location">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_journal_by_location</span><span class="p">(</span>
     <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_location</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">JournalData</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -313,7 +345,10 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="update_journal"><a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.update_journal">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">update_journal</span><span class="p">(</span>
+
+<div class="viewcode-block" id="update_journal">
+<a class="viewcode-back" href="../../../reference/journal_manager.core.api.html#journal_manager.core.api.update_journal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_journal</span><span class="p">(</span>
     <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_data</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalData</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -331,6 +366,7 @@
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">get_configuration_file</span><span class="p">()</span><span class="o">.</span><span class="n">journal_data_filepath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">journal_data_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

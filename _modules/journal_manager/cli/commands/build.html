@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,9 +13,9 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -246,7 +246,9 @@
 <span class="c1"># -------------------- Build Utilities --------------------</span>
 
 
-<div class="viewcode-block" id="BuildStep"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BuildStep</span><span class="p">:</span>
+<div class="viewcode-block" id="BuildStep">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuildStep</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for a build step in the process of building a journal.</span>
 
@@ -267,17 +269,26 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BuildStep.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep.build">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildStep.build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="BuildStep.next"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep.next">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step_class</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BuildStep.next">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildStep.next">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step_class</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">build_step_class</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="FailedStep"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">FailedStep</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FailedStep">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FailedStep</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    BuildStep to be returned whenever an error is detected.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -286,14 +297,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">build_step</span> <span class="o">=</span> <span class="n">build_step</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>
 
-<div class="viewcode-block" id="FailedStep.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep.build">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="FailedStep.build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FailedStep.next"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep.next">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+<div class="viewcode-block" id="FailedStep.next">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.FailedStep.next">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">build_step</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
 
 
-<div class="viewcode-block" id="BuildJournals"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildJournals">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BuildJournals</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BuildJournals">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildJournals">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuildJournals</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build html static pages from journals using mkdocs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -311,7 +331,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_location</span>
         <span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;site&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BuildJournals.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildJournals.build">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildJournals.build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildJournals.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;journals&quot;</span><span class="p">:</span> <span class="p">[]}</span>
             <span class="k">for</span> <span class="n">journal_name</span> <span class="ow">in</span> <span class="n">get_journals_names_to_build</span><span class="p">(</span>
@@ -374,10 +396,14 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ss</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div></div>
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div>
+</div>
 
 
-<div class="viewcode-block" id="BuildIndexPage"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildIndexPage">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BuildIndexPage</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BuildIndexPage">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildIndexPage">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuildIndexPage</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build the index page with links to all rendered journals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -397,7 +423,9 @@
             <span class="s2">&quot;build_instructions&quot;</span>
         <span class="p">]</span>
 
-<div class="viewcode-block" id="BuildIndexPage.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildIndexPage.build">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildIndexPage.build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildIndexPage.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">build_index</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
 
@@ -416,10 +444,14 @@
             <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;material-index/index.tpl.html&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;journal_data&quot;</span><span class="p">]))</span>
 
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
 
 
-<div class="viewcode-block" id="BuildHttpServer"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildHttpServer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BuildHttpServer</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BuildHttpServer">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildHttpServer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BuildHttpServer</span><span class="p">(</span><span class="n">BuildStep</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets up the http server that will serve the journals.</span>
 
@@ -451,7 +483,9 @@
             <span class="s2">&quot;build_instructions&quot;</span>
         <span class="p">]</span>
 
-<div class="viewcode-block" id="BuildHttpServer.build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildHttpServer.build">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BuildHttpServer.build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.BuildHttpServer.build">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_instructions</span><span class="o">.</span><span class="n">with_http_server</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span>
@@ -519,13 +553,17 @@
 
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div></div>
+            <span class="k">return</span> <span class="n">FailedStep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div>
+</div>
+
 
 
 <span class="c1"># -------------------- API --------------------</span>
 
 
-<div class="viewcode-block" id="get_journals_names_to_build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.get_journals_names_to_build">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_journals_names_to_build</span><span class="p">(</span>
+<div class="viewcode-block" id="get_journals_names_to_build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.get_journals_names_to_build">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_journals_names_to_build</span><span class="p">(</span>
     <span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -602,7 +640,10 @@
     <span class="k">return</span> <span class="n">journals_names_to_build</span></div>
 
 
-<div class="viewcode-block" id="build"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.build">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">):</span>
+
+<div class="viewcode-block" id="build">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.build">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="n">build_instructions</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">BuildInstructions</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build html static pages from journals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -618,6 +659,7 @@
         <span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">BuildIndexPage</span><span class="p">)</span>
         <span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">BuildHttpServer</span><span class="p">)</span>
     <span class="p">)</span></div>
+
 
 
 <span class="c1"># -------------------- CLI --------------------</span>
@@ -744,7 +786,9 @@
     <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.get_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_parser">
+<a class="viewcode-back" href="../../../../reference/journal_manager.cli.commands.build.html#journal_manager.cli.commands.build.get_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;build&quot;</span>
     <span class="n">command_description</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">build</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
     <span class="n">command_help</span> <span class="o">=</span> <span class="n">command_description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -816,6 +860,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">__build__</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
+
 </pre></div>
 
            </div>

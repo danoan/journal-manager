@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,9 +13,9 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../../../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../../../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -94,7 +94,9 @@
 <span class="c1"># -------------------- API --------------------</span>
 
 
-<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.journal_commands.register.html#journal_manager.cli.commands.journal_commands.register.register">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">location_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">journal_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="register">
+<a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.journal_commands.register.html#journal_manager.cli.commands.journal_commands.register.register">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="n">location_folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">journal_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Register an existing journal structure to the list of managed journals.</span>
 
@@ -125,6 +127,7 @@
         <span class="n">journal_data_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># -------------------- CLI --------------------</span>
 
 
@@ -143,7 +146,9 @@
         <span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_parser"><a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.journal_commands.register.html#journal_manager.cli.commands.journal_commands.register.get_parser">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_parser">
+<a class="viewcode-back" href="../../../../../reference/journal_manager.cli.commands.journal_commands.register.html#journal_manager.cli.commands.journal_commands.register.get_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_parser</span><span class="p">(</span><span class="n">subparser_action</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">command_name</span> <span class="o">=</span> <span class="s2">&quot;register&quot;</span>
     <span class="n">command_description</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">if</span> <span class="n">register</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
     <span class="n">command_help</span> <span class="o">=</span> <span class="n">command_description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -170,6 +175,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">subcommand_print</span><span class="o">=</span><span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">__register__</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span></div>
+
 </pre></div>
 
            </div>

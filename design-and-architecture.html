@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -14,9 +14,9 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=a61c299a"></script>
-      <script src="_static/doctools.js?v=888ff710"></script>
-      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/documentation_options.js?v=61243dd2"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -102,29 +102,29 @@
            <div itemprop="articleBody">
              
   <section id="design-and-architecture">
-<h1>Design and Architecture<a class="headerlink" href="#design-and-architecture" title="Permalink to this heading"></a></h1>
+<h1>Design and Architecture<a class="headerlink" href="#design-and-architecture" title="Link to this heading"></a></h1>
 <section id="project-organization">
-<h2>Project Organization<a class="headerlink" href="#project-organization" title="Permalink to this heading"></a></h2>
+<h2>Project Organization<a class="headerlink" href="#project-organization" title="Link to this heading"></a></h2>
 <p>The project contains two packages (core and cli) and one assets folder.</p>
 <p><img alt="Journal Manager Project Organization" src="_images/project-organization-v1.0.svg" /></p>
 <section id="core">
-<h3>core<a class="headerlink" href="#core" title="Permalink to this heading"></a></h3>
+<h3>core<a class="headerlink" href="#core" title="Link to this heading"></a></h3>
 <p>Defines the data models, exceptions and functions to query the data model.</p>
 </section>
 <section id="cli">
-<h3>cli<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h3>
+<h3>cli<a class="headerlink" href="#cli" title="Link to this heading"></a></h3>
 <p>Contains the journal-manager command-line interface.</p>
 </section>
 <section id="assets">
-<h3>assets<a class="headerlink" href="#assets" title="Permalink to this heading"></a></h3>
+<h3>assets<a class="headerlink" href="#assets" title="Link to this heading"></a></h3>
 <p>Set of static files used as templates.</p>
 </section>
 </section>
 <section id="design">
-<h2>Design<a class="headerlink" href="#design" title="Permalink to this heading"></a></h2>
+<h2>Design<a class="headerlink" href="#design" title="Link to this heading"></a></h2>
 <p>In this project the following designs and patterns were adopted.</p>
 <section id="modular-parsers">
-<h3>Modular Parsers<a class="headerlink" href="#modular-parsers" title="Permalink to this heading"></a></h3>
+<h3>Modular Parsers<a class="headerlink" href="#modular-parsers" title="Link to this heading"></a></h3>
 <p><img alt="Journal Manager Modular Parsers" src="_images/modular-parsers-architecture-v1.0.svg" /></p>
 <p>Children parsers can exchange information with their parents via the <code class="docutils literal notranslate"><span class="pre">set_defaults</span></code> method. In the
 figure above we have some examples with <code class="docutils literal notranslate"><span class="pre">subcommand_help</span></code> and <code class="docutils literal notranslate"><span class="pre">func</span></code> parameters. These export the
@@ -136,7 +136,7 @@ print help of a subcommand and the function the subcommand triggers.</p>
 </ul>
 </section>
 <section id="data-model">
-<h3>Data Model<a class="headerlink" href="#data-model" title="Permalink to this heading"></a></h3>
+<h3>Data Model<a class="headerlink" href="#data-model" title="Link to this heading"></a></h3>
 <p>I opted to have an equivalence between file and memory representation. Each
 model class has a corresponding <code class="docutils literal notranslate"><span class="pre">toml</span></code> file that can be manually modified by
 the user.</p>
@@ -148,16 +148,16 @@ package <a class="reference external" href="https://github.com/danoan/toml-datac
 <p><img alt="Journal Manager Data Model" src="_images/data-model-v1.0.svg" /></p>
 </section>
 <section id="core-cli-architecture">
-<h3>Core/Cli architecture<a class="headerlink" href="#core-cli-architecture" title="Permalink to this heading"></a></h3>
+<h3>Core/Cli architecture<a class="headerlink" href="#core-cli-architecture" title="Link to this heading"></a></h3>
 <p>Separating the code in Core/Cli architecture made it unit test simpler. In the earlier
 stages of development I could focus on the well functioning of the <code class="docutils literal notranslate"><span class="pre">core.api</span></code> methods to
 later on create tests for the <code class="docutils literal notranslate"><span class="pre">cli</span></code> package.</p>
 </section>
 </section>
 <section id="tech-stack">
-<h2>Tech Stack<a class="headerlink" href="#tech-stack" title="Permalink to this heading"></a></h2>
+<h2>Tech Stack<a class="headerlink" href="#tech-stack" title="Link to this heading"></a></h2>
 <section id="development-toolbox">
-<h3>Development toolbox<a class="headerlink" href="#development-toolbox" title="Permalink to this heading"></a></h3>
+<h3>Development toolbox<a class="headerlink" href="#development-toolbox" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>python3.8</p></li>
 <li><p>tox (setuptools, black, mypy, pytest, sphinx)</p></li>

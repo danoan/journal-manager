@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,9 +13,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -92,7 +92,9 @@
 
 
 <span class="c1"># -------------------- &quot;Termination Criteria&quot; --------------------</span>
-<div class="viewcode-block" id="ensure_configuration_folder_exists"><a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.ensure_configuration_folder_exists">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">ensure_configuration_folder_exists</span><span class="p">():</span>
+<div class="viewcode-block" id="ensure_configuration_folder_exists">
+<a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.ensure_configuration_folder_exists">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_configuration_folder_exists</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exit application if configuration folder does not exist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -118,7 +120,10 @@
         <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ensure_configuration_file_exists"><a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.ensure_configuration_file_exists">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">ensure_configuration_file_exists</span><span class="p">():</span>
+
+<div class="viewcode-block" id="ensure_configuration_file_exists">
+<a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.ensure_configuration_file_exists">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_configuration_file_exists</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exit application if configuration file does not exist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -139,7 +144,10 @@
         <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ensure_journal_name_is_unique"><a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.ensure_journal_name_is_unique">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">ensure_journal_name_is_unique</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ensure_journal_name_is_unique">
+<a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.ensure_journal_name_is_unique">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_journal_name_is_unique</span><span class="p">(</span>
     <span class="n">journal_data_file</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">JournalDataList</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -153,7 +161,10 @@
             <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="peek_is_empty"><a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.peek_is_empty">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">peek_is_empty</span><span class="p">(</span><span class="n">iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+
+<div class="viewcode-block" id="peek_is_empty">
+<a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.peek_is_empty">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">peek_is_empty</span><span class="p">(</span><span class="n">iterator</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check for emptiness of the first element without advancing the iterator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -164,19 +175,26 @@
     <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="p">([</span><span class="n">first</span><span class="p">],</span> <span class="n">iterator</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># -------------------- &quot;Text Processing&quot; --------------------</span>
-<div class="viewcode-block" id="journal_name_from_title"><a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.journal_name_from_title">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">journal_name_from_title</span><span class="p">(</span><span class="n">journal_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="journal_name_from_title">
+<a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.journal_name_from_title">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">journal_name_from_title</span><span class="p">(</span><span class="n">journal_title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a lower-kebab-case version from a capitalized whitespace separated string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[\s]+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">journal_title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="journal_title_from_name"><a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.journal_title_from_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">journal_title_from_name</span><span class="p">(</span><span class="n">journal_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+<div class="viewcode-block" id="journal_title_from_name">
+<a class="viewcode-back" href="../../../reference/journal_manager.cli.utils.html#journal_manager.cli.utils.journal_title_from_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">journal_title_from_name</span><span class="p">(</span><span class="n">journal_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return a capitalized whitespace separted from a lower-snake-case version of a string.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">journal_name</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span></div>
+
 </pre></div>
 
            </div>

@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -14,9 +14,9 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,11 +93,11 @@
            <div itemprop="articleBody">
              
   <section id="build-journals">
-<h1>Build journals<a class="headerlink" href="#build-journals" title="Permalink to this heading"></a></h1>
+<h1>Build journals<a class="headerlink" href="#build-journals" title="Link to this heading"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">build</span></code> command creates a static web page for a set of registered
 journals plus an index page.</p>
 <section id="active-and-registered-journals">
-<h2>Active and Registered journals<a class="headerlink" href="#active-and-registered-journals" title="Permalink to this heading"></a></h2>
+<h2>Active and Registered journals<a class="headerlink" href="#active-and-registered-journals" title="Link to this heading"></a></h2>
 <p>In order to be built, a journal must be registered. All newly created
 journals are registered automatically, but if you wish to not track a
 journal anymore you need to deregister it.</p>
@@ -120,7 +120,7 @@ and that it is in archived state. The <code class="docutils literal notranslate"
 to create a list of <code class="docutils literal notranslate"><span class="pre">active</span></code> and <code class="docutils literal notranslate"><span class="pre">archived</span></code> journals.</p>
 </section>
 <section id="id1">
-<h2>Build journals<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<h2>Build journals<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>The simplest way to execute the <code class="docutils literal notranslate"><span class="pre">build</span></code> command is the following:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>jm<span class="w"> </span>journal<span class="w"> </span>build
 </pre></div>
@@ -144,7 +144,7 @@ or <code class="docutils literal notranslate"><span class="pre">--jn</span></cod
 journal location using the flag <code class="docutils literal notranslate"><span class="pre">--journal-location</span></code>.</p>
 </div>
 <section id="http-testing-server">
-<h3>HTTP testing server<a class="headerlink" href="#http-testing-server" title="Permalink to this heading"></a></h3>
+<h3>HTTP testing server<a class="headerlink" href="#http-testing-server" title="Link to this heading"></a></h3>
 <p>To test your build journals you can pass the flag <code class="docutils literal notranslate"><span class="pre">--with-http-server</span></code>. This flag
 creates a simple http server to serve the created files. You need to have <a class="reference external" href="https://nodejs.org/en">nodejs</a>
 and <a class="reference external" href="https://github.com/eradman/entr/">entr</a> installed to run this feature.</p>
@@ -156,7 +156,7 @@ in the <code class="docutils literal notranslate"><span class="pre">--build-loca
 </ul>
 </section>
 <section id="build-instructions-file">
-<h3>Build instructions file<a class="headerlink" href="#build-instructions-file" title="Permalink to this heading"></a></h3>
+<h3>Build instructions file<a class="headerlink" href="#build-instructions-file" title="Link to this heading"></a></h3>
 <p>An alternative way to call the <code class="docutils literal notranslate"><span class="pre">build</span></code> command is passing a <code class="docutils literal notranslate"><span class="pre">toml</span></code> build-instruction file.
 Here it is its dataclass definition.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BuildInstructions</span><span class="p">(</span><span class="n">TomlDataClassIO</span><span class="p">):</span>
@@ -171,9 +171,9 @@ Here it is its dataclass definition.</p>
 </pre></div>
 </div>
 <p>Below it is an example in <code class="docutils literal notranslate"><span class="pre">toml</span></code> format:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span>build_location = &quot;~/my-build-journals&quot;
-build_index = true
-include_all_folder = ~/.config/journal-manager/journals
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">build_location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;~/my-build-journals&quot;</span>
+<span class="n">build_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="n">include_all_folder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">~/.config/journal-manager/journals</span>
 </pre></div>
 </div>
 <div class="admonition tip">

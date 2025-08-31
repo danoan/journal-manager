@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -14,9 +14,9 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=a61c299a"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=61243dd2"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -83,85 +83,85 @@
            <div itemprop="articleBody">
              
   <section id="module-journal_manager.core.model">
-<span id="journal-manager-core-model-module"></span><h1>journal_manager.core.model module<a class="headerlink" href="#module-journal_manager.core.model" title="Permalink to this heading"></a></h1>
+<span id="journal-manager-core-model-module"></span><h1>journal_manager.core.model module<a class="headerlink" href="#module-journal_manager.core.model" title="Link to this heading"></a></h1>
 <p>Data model for journal-manager api.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">BuildInstructions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_inactive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_http_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journals_names_to_build</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journals_locations_to_build</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_all_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#BuildInstructions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.BuildInstructions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">BuildInstructions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_inactive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_http_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journals_names_to_build</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journals_locations_to_build</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_all_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#BuildInstructions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.BuildInstructions" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>build_location</strong> (<em>str</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>build_index</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>build_inactive</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>with_http_server</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>journals_names_to_build</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – </p></li>
-<li><p><strong>journals_locations_to_build</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>) – </p></li>
-<li><p><strong>include_all_folder</strong> (<em>str</em><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>build_location</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>build_index</strong> (<em>bool</em>)</p></li>
+<li><p><strong>build_inactive</strong> (<em>bool</em>)</p></li>
+<li><p><strong>with_http_server</strong> (<em>bool</em>)</p></li>
+<li><p><strong>journals_names_to_build</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>journals_locations_to_build</strong> (<em>List</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>include_all_folder</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.build_inactive">
-<span class="sig-name descname"><span class="pre">build_inactive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.build_inactive" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">build_inactive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.build_inactive" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.build_index">
-<span class="sig-name descname"><span class="pre">build_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.build_index" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">build_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.build_index" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.build_location">
-<span class="sig-name descname"><span class="pre">build_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.build_location" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">build_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.build_location" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.include_all_folder">
-<span class="sig-name descname"><span class="pre">include_all_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.include_all_folder" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">include_all_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.include_all_folder" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.journals_locations_to_build">
-<span class="sig-name descname"><span class="pre">journals_locations_to_build</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.journals_locations_to_build" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">journals_locations_to_build</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.journals_locations_to_build" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.journals_names_to_build">
-<span class="sig-name descname"><span class="pre">journals_names_to_build</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.journals_names_to_build" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">journals_names_to_build</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.journals_names_to_build" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.BuildInstructions.with_http_server">
-<span class="sig-name descname"><span class="pre">with_http_server</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.with_http_server" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">with_http_server</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#journal_manager.core.model.BuildInstructions.with_http_server" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">ConfigurationFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_journal_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_template_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal_data_filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_data_filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#journal_manager.core.model.Parameters" title="journal_manager.core.model.Parameters"><span class="pre">journal_manager.core.model.Parameters</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#ConfigurationFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">ConfigurationFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_journal_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_template_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">journal_data_filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_data_filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#journal_manager.core.model.Parameters" title="journal_manager.core.model.Parameters"><span class="pre">journal_manager.core.model.Parameters</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#ConfigurationFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>default_journal_folder</strong> (<em>str</em>) – </p></li>
-<li><p><strong>default_template_folder</strong> (<em>str</em>) – </p></li>
-<li><p><strong>journal_data_filepath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>template_data_filepath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>parameters</strong> (<a class="reference internal" href="#journal_manager.core.model.Parameters" title="journal_manager.core.model.Parameters"><em>Parameters</em></a>) – </p></li>
+<li><p><strong>default_journal_folder</strong> (<em>str</em>)</p></li>
+<li><p><strong>default_template_folder</strong> (<em>str</em>)</p></li>
+<li><p><strong>journal_data_filepath</strong> (<em>str</em>)</p></li>
+<li><p><strong>template_data_filepath</strong> (<em>str</em>)</p></li>
+<li><p><strong>parameters</strong> (<a class="reference internal" href="#journal_manager.core.model.Parameters" title="journal_manager.core.model.Parameters"><em>Parameters</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.T">
-<span class="sig-name descname"><span class="pre">T</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">~T</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.T" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">T</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">~T</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.T" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.as_dict">
-<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/journal_manager/core/model.html#ConfigurationFile.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.as_dict" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/journal_manager/core/model.html#ConfigurationFile.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.as_dict" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Dict</em>[str, <em>Any</em>]</p>
@@ -171,20 +171,20 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.default_journal_folder">
-<span class="sig-name descname"><span class="pre">default_journal_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.default_journal_folder" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default_journal_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.default_journal_folder" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.default_template_folder">
-<span class="sig-name descname"><span class="pre">default_template_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.default_template_folder" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default_template_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.default_template_folder" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/model.html#ConfigurationFile.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="reference internal" href="../_modules/journal_manager/core/model.html#ConfigurationFile.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.from_dict" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>d</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>d</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>T</em></p>
@@ -194,148 +194,148 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.journal_data_filepath">
-<span class="sig-name descname"><span class="pre">journal_data_filepath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.journal_data_filepath" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">journal_data_filepath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.journal_data_filepath" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.parameters">
-<span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#journal_manager.core.model.Parameters" title="journal_manager.core.model.Parameters"><span class="pre">Parameters</span></a></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.parameters" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#journal_manager.core.model.Parameters" title="journal_manager.core.model.Parameters"><span class="pre">Parameters</span></a></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.parameters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.ConfigurationFile.template_data_filepath">
-<span class="sig-name descname"><span class="pre">template_data_filepath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.template_data_filepath" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">template_data_filepath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.ConfigurationFile.template_data_filepath" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_edit_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalData" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_edit_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalData" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – </p></li>
-<li><p><strong>location_folder</strong> (<em>str</em>) – </p></li>
-<li><p><strong>active</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>title</strong> (<em>str</em>) – </p></li>
-<li><p><strong>last_edit_date</strong> (<em>str</em>) – </p></li>
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>location_folder</strong> (<em>str</em>)</p></li>
+<li><p><strong>active</strong> (<em>bool</em>)</p></li>
+<li><p><strong>title</strong> (<em>str</em>)</p></li>
+<li><p><strong>last_edit_date</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalData.active">
-<span class="sig-name descname"><span class="pre">active</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.active" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">active</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.active" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalData.last_edit_date">
-<span class="sig-name descname"><span class="pre">last_edit_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.last_edit_date" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">last_edit_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.last_edit_date" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalData.location_folder">
-<span class="sig-name descname"><span class="pre">location_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.location_folder" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">location_folder</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.location_folder" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalData.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalData.title">
-<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.title" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalData.title" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalDataList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalDataList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_journal_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalData" title="journal_manager.core.model.JournalData"><span class="pre">journal_manager.core.model.JournalData</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalDataList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalDataList" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalDataList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_journal_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalData" title="journal_manager.core.model.JournalData"><span class="pre">journal_manager.core.model.JournalData</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalDataList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalDataList" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlTableDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>list_of_journal_data</strong> (<em>List</em><em>[</em><a class="reference internal" href="#journal_manager.core.model.JournalData" title="journal_manager.core.model.JournalData"><em>JournalData</em></a><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>list_of_journal_data</strong> (<em>List</em><em>[</em><a class="reference internal" href="#journal_manager.core.model.JournalData" title="journal_manager.core.model.JournalData"><em>JournalData</em></a><em>]</em>)</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalDataList.list_of_journal_data">
-<span class="sig-name descname"><span class="pre">list_of_journal_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalData" title="journal_manager.core.model.JournalData"><span class="pre">JournalData</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#journal_manager.core.model.JournalDataList.list_of_journal_data" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">list_of_journal_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalData" title="journal_manager.core.model.JournalData"><span class="pre">JournalData</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#journal_manager.core.model.JournalDataList.list_of_journal_data" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalTemplate">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalTemplate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalTemplate" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalTemplate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalTemplate" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – </p></li>
-<li><p><strong>filepath</strong> (<em>str</em>) – </p></li>
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalTemplate.filepath">
-<span class="sig-name descname"><span class="pre">filepath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalTemplate.filepath" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">filepath</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalTemplate.filepath" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalTemplate.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalTemplate.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#journal_manager.core.model.JournalTemplate.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalTemplateList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalTemplateList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_template_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalTemplate" title="journal_manager.core.model.JournalTemplate"><span class="pre">journal_manager.core.model.JournalTemplate</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalTemplateList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalTemplateList" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">JournalTemplateList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_template_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalTemplate" title="journal_manager.core.model.JournalTemplate"><span class="pre">journal_manager.core.model.JournalTemplate</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#JournalTemplateList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.JournalTemplateList" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlTableDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>list_of_template_data</strong> (<em>List</em><em>[</em><a class="reference internal" href="#journal_manager.core.model.JournalTemplate" title="journal_manager.core.model.JournalTemplate"><em>JournalTemplate</em></a><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>list_of_template_data</strong> (<em>List</em><em>[</em><a class="reference internal" href="#journal_manager.core.model.JournalTemplate" title="journal_manager.core.model.JournalTemplate"><em>JournalTemplate</em></a><em>]</em>)</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.JournalTemplateList.list_of_template_data">
-<span class="sig-name descname"><span class="pre">list_of_template_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalTemplate" title="journal_manager.core.model.JournalTemplate"><span class="pre">JournalTemplate</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#journal_manager.core.model.JournalTemplateList.list_of_template_data" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">list_of_template_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#journal_manager.core.model.JournalTemplate" title="journal_manager.core.model.JournalTemplate"><span class="pre">JournalTemplate</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#journal_manager.core.model.JournalTemplateList.list_of_template_data" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.LogicOperator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">LogicOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#LogicOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.LogicOperator" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">LogicOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#LogicOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.LogicOperator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>An enumeration.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.LogicOperator.AND">
-<span class="sig-name descname"><span class="pre">AND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#journal_manager.core.model.LogicOperator.AND" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">AND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#journal_manager.core.model.LogicOperator.AND" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.LogicOperator.OR">
-<span class="sig-name descname"><span class="pre">OR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#journal_manager.core.model.LogicOperator.OR" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">OR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#journal_manager.core.model.LogicOperator.OR" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="journal_manager.core.model.Parameters">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_text_editor_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">NoneType</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#Parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.Parameters" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">journal_manager.core.model.</span></span><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default_text_editor_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/journal_manager/core/model.html#Parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#journal_manager.core.model.Parameters" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TomlDataClassIO</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>default_text_editor_path</strong> (<em>str</em><em> | </em><em>None</em>) – </p>
+<dd class="field-odd"><p><strong>default_text_editor_path</strong> (<em>str</em><em> | </em><em>None</em>)</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="journal_manager.core.model.Parameters.default_text_editor_path">
-<span class="sig-name descname"><span class="pre">default_text_editor_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.Parameters.default_text_editor_path" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default_text_editor_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#journal_manager.core.model.Parameters.default_text_editor_path" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
